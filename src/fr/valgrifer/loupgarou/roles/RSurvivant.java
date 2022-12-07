@@ -1,0 +1,207 @@
+package fr.valgrifer.loupgarou.roles;
+
+import fr.valgrifer.loupgarou.inventory.ItemBuilder;
+import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
+import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
+import fr.valgrifer.loupgarou.inventory.MenuPreset;
+import static org.bukkit.ChatColor.*;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import fr.valgrifer.loupgarou.MainLg;
+import fr.valgrifer.loupgarou.classes.LGGame;
+import fr.valgrifer.loupgarou.classes.LGPlayer;
+import fr.valgrifer.loupgarou.classes.LGWinType;
+import fr.valgrifer.loupgarou.events.LGGameEndEvent;
+import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
+import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
+import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
+import fr.valgrifer.loupgarou.events.LGVampiredEvent;
+
+public class RSurvivant extends Role{
+    private static final MenuPreset preset = new MenuPreset(1) {
+        @Override
+        protected void preset() {
+            setSlot(3, new Slot(ItemBuilder
+                    .make(Material.IRON_NUGGET)
+                    .setCustomId("ac_skip")
+                    .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+                    .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
+                if(!(holder instanceof LGPrivateInventoryHolder))
+                    return;
+
+                LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
+
+                if(!(lgp.getRole() instanceof RSurvivant))
+                    return;
+
+                RSurvivant role = (RSurvivant) lgp.getRole();
+
+                role.closeInventory(lgp);
+                lgp.sendMessage(DARK_RED+""+ITALIC+"Tu es sans défense...");
+                lgp.hideView();
+                role.callback.run();
+            });
+
+            setSlot(5, new Slot(ItemBuilder
+                            .make(Material.GOLD_NUGGET)
+                            .setCustomId("ac_protect")
+                            .setLore(DARK_GRAY+"Tu ne pourras pas être tué par",
+                                    DARK_GRAY+"les "+RED+""+BOLD+"Loups"+DARK_GRAY+" cette nuit.")){
+                        @Override
+                        protected ItemBuilder getItem(LGInventoryHolder holder) {
+                            if(!(holder instanceof LGPrivateInventoryHolder))
+                                return MenuPreset.lockSlot.getDefaultItem();
+
+                            LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
+
+                            return getDefaultItem()
+                                    .setDisplayName(DARK_GREEN+""+BOLD+"Se protéger ("+GOLD+""+BOLD+""+lgp.getCache().<Integer>get("survivant_left")+""+DARK_GREEN+""+BOLD+" restant)");
+                        }
+                    },
+                    (holder, event) -> {
+                        if(!(holder instanceof LGPrivateInventoryHolder))
+                            return;
+
+                        LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
+
+                        if(!(lgp.getRole() instanceof RSurvivant))
+                            return;
+
+                        RSurvivant role = (RSurvivant) lgp.getRole();
+
+                        role.closeInventory(lgp);
+                        lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu as décidé de te protéger.");
+                        lgp.sendMessage(GOLD+"Tu as décidé de te protéger.");
+                        lgp.getCache().set("survivant_left", lgp.getCache().<Integer>get("survivant_left")-1);
+                        lgp.getCache().set("survivant_protected", true);
+                        lgp.hideView();
+                        role.callback.run();
+                    });
+        }
+    };
+
+	public RSurvivant(LGGame game) {
+		super(game);
+	}
+	public static RoleType _getType() {
+		return RoleType.NEUTRAL;
+	}
+    public static RoleWinType _getWinType() {
+		return RoleWinType.NONE;
+	}
+	public static String _getName() {
+		return LIGHT_PURPLE+""+BOLD+"Survivant";
+	}
+	public static String _getFriendlyName() {
+		return "du "+_getName();
+	}
+	public static String _getShortDescription() {
+		return WHITE+"Tu gagnes si tu remplis ton objectif";
+	}
+	public static String _getDescription() {
+		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif. Ton objectif est de survivre. Tu disposes de "+BOLD+"2"+WHITE+" protections. Chaque nuit, tu peux utiliser une protection pour ne pas être tué par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+". Tu peux gagner aussi bien avec les "+RoleWinType.VILLAGE.getColoredName(BOLD)+WHITE+" qu'avec les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", tu dois juste rester en vie jusqu'à la fin de la partie.";
+	}
+	public static String _getTask() {
+		return "Veux-tu utiliser une protection cette nuit ?";
+	}
+	public static String _getBroadcastedTask() {
+		return "Le "+_getName()+""+BLUE+" décide s'il veut se protéger.";
+	}
+	@Override
+	public int getTimeout() {
+		return 15;
+	}
+
+    private boolean inMenu = false;
+    private LGPrivateInventoryHolder invHolder = null;
+
+    public void openInventory(LGPlayer player) {
+        inMenu = true;
+        invHolder = new LGPrivateInventoryHolder(1, BLACK+"Veux-tu te protéger ?", player);
+        invHolder.setDefaultPreset(preset.clone(invHolder));
+        player.getPlayer().closeInventory();
+        player.getPlayer().openInventory(invHolder.getInventory());
+	}
+	@Override
+	public void join(LGPlayer player) {
+		super.join(player);
+		player.getCache().set("survivant_left", 2);
+	}
+
+	Runnable callback;
+	@Override
+	protected void onNightTurn(LGPlayer player, Runnable callback) {
+		player.showView();
+		this.callback = callback;
+		openInventory(player);
+	}
+	@Override
+	protected void onNightTurnTimeout(LGPlayer player) {
+		player.hideView();
+		closeInventory(player);
+		player.sendMessage(DARK_RED+""+ITALIC+"Tu es sans défense...");
+	}
+
+    private void closeInventory(LGPlayer player) {
+        inMenu = false;
+        invHolder = null;
+        player.getPlayer().closeInventory();
+    }
+
+	@EventHandler
+	public void onPlayerKill(LGNightPlayerPreKilledEvent e) {
+		if(e.getGame() == getGame() && (e.getReason() == Reason.LOUP_GAROU || e.getReason() == Reason.LOUP_BLANC || e.getReason() == Reason.GM_LOUP_GAROU || e.getReason() == Reason.ASSASSIN) && e.getKilled().getCache().getBoolean("survivant_protected") && e.getKilled().isRoleActive()) {
+			e.setReason(Reason.DONT_DIE);
+		}
+	}
+	@EventHandler
+	public void onVampired(LGVampiredEvent e) {
+		if(e.getGame() == getGame() && e.getPlayer().getCache().getBoolean("survivant_protected"))
+			e.setProtect(true);
+	}
+	@EventHandler
+	public void onDayStart(LGPreDayStartEvent e) {
+		if(e.getGame() == getGame())
+			for(LGPlayer lgp : getGame().getInGame())
+				if(lgp.isRoleActive())
+					lgp.getCache().remove("survivant_protected");
+	}
+
+    @EventHandler
+    public void onQuitInventory(InventoryCloseEvent e) {
+        if(!(e.getInventory().getHolder() instanceof LGInventoryHolder) ||
+                !e.getInventory().getHolder().equals(invHolder) ||
+                LGPlayer.thePlayer((Player)e.getPlayer()).getRole() != this ||
+                !inMenu)
+            return;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                e.getPlayer().openInventory(e.getInventory());
+            }
+        }.runTaskLater(MainLg.getInstance(), 1);
+    }
+	
+	
+	
+	
+	
+	@EventHandler
+	public void onWin(LGGameEndEvent e) {
+		if(e.getGame() == getGame() && getPlayers().size() > 0 && e.getWinType() != LGWinType.ANGE) {
+			for(LGPlayer lgp : getPlayers())
+				e.getWinners().add(lgp);
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					getGame().broadcastMessage(GOLD+""+ITALIC+"Le "+getName()+""+GOLD+""+ITALIC+" a rempli son objectif.", true);
+				}
+			}.runTaskAsynchronously(MainLg.getInstance());
+		}
+	}
+}

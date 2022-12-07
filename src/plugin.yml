@@ -1,0 +1,17 @@
+name: LoupGarou
+version: ${project.version}
+description: Permet de jouer au jeu du loup garou
+main: fr.valgrifer.loupgarou.MainLg
+depend: [ProtocolLib]
+authors:
+  - Valgrifer
+  - Leomelki
+  - Shytoos
+api-version: 1.16
+commands:
+  lg:
+    description: lg command
+    usage: /lg
+  spec:
+    description: spec command
+    usage: /spec
