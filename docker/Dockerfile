@@ -22,7 +22,7 @@ FROM openjdk:8
 ARG SPIGOT_VERSION
 WORKDIR /_minecraft
 COPY --from=LOUP_GAROU_BUILDER /app/target/LoupGarou.jar ./plugins/
-ADD https://github.com/dmulloy2/ProtocolLib/releases/download/4.5.0/ProtocolLib.jar ./plugins
+ADD https://github.com/dmulloy2/ProtocolLib/releases/download/4.6.0/ProtocolLib.jar ./plugins
 COPY --from=SPIGOT_BUILDER /spigot/spigot-${SPIGOT_VERSION}.jar ./spigot.jar
 
 VOLUME /minecraft

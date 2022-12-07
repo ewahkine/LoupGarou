@@ -1,12 +1,9 @@
 
 
 
-  
-
 ## Table des matières
 
 - [À propos](#à-propos)
-- [Jouer facilement](#jouer-facilement)
 - [Installation](#installation)
   - [Dépendances requises](#dépendances-requises)
   - [Installation classique](#installation-classique)
@@ -29,11 +26,6 @@ Le mode Loup-Garou est un mode inspiré du jeu de société [Les Loups-Garous de
 - Rôles du jeu de base, et nouveaux rôles
 - Utilisable sur n'importe quelle map
 
-## Jouer facilement
-Un serveur est mis à votre disposition pour vous permettre de jouer au LoupGarou rapidement et facilement entre amis ou avec des inconnus. Vous avez juste à créer une partie et y inviter vos amis, ou à rejoindre des parties publiques.
-
-**IP:** `lg.leomelki.fr`
-**Version:** `1.9.4`
 
 ## Installation
 
@@ -41,16 +33,15 @@ Un serveur est mis à votre disposition pour vous permettre de jouer au LoupGaro
 - [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/)
 
 ### Installation classique
-**Minecraft 1.15.1 est requis.**  
+**Minecraft 1.16.5 est requis.**  
 Pour installer le plug-in, merci de suivre les étapes suivantes:
-  - Téléchargez Spigot 1.15.1 et lancez une fois le serveur
-  - Dans le dossier `plugins`, insérez [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) et [LoupGarou.jar](https://github.com/leomelki/LoupGarou/releases)
+  - Téléchargez Spigot 1.16.5 et lancez une fois le serveur
+  - Dans le dossier `plugins`, insérez [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) et [LoupGarou.jar](https://github.com/Valgrifer/LoupGarou/releases)
   - Redémarrez votre serveur puis donnez vous les permissions administrateur (/op <votre_pseudo> dans la console)
   - Allez sur la map et ajoutez les points de spawn sur chaque dalle `/lg addSpawn`
-  - Connectez-vous au serveur et choisissez les rôles à utiliser avec `/lg roles set <ROLE> <MONTANT>`
+  - Connectez-vous au serveur et choisissez les rôles à utiliser avec `/lg`
 	  - ⚠️ Il faut qu'il y ait autant de places dans les rôles que de joueur pour lancer une partie
-  - Vous pouvez démarrer la partie avec `/lg start <pseudo>` 
-	  - ⚠️ N'oubliez pas de mettre votre pseudo. Exemple : `/lg start leomelki` 
+  - Vous pouvez démarrer la partie avec `/lg start` 
 
 Lien des releases : [Cliquez ici](https://github.com/leomelki/LoupGarou/releases)
 
@@ -107,10 +98,6 @@ Par soucis de temps, nous ne pouvons pas faire de support au cas par cas, mais v
 
 Cela arrive après avoir `reload` au cours d'une partie, tous les joueurs qui ont ce problème doivent se déconnecter et se reconnecter.
 
-- Pourquoi la partie ne se lance pas ?  
-
-Il faut taper la commande `/lg start <PSEUDO>` en mettant le pseudo d'un des joueurs qui sera présent dans la partie. Si cela ne fonctionne toujours pas, c'est parce qu'il n'y a pas suffisamment de rôles pour le nombre de joueurs, il doit y avoir le même nombre de rôles qu'il y aura de joueurs dans la partie. N'oubliez pas de taper `/lg joinAll` après avoir modifié la liste des rôles.
-
 - J'ai mal placés mes spawns ou je veux utiliser une nouvelle map, comment faire ?  
 
 Il suffit d'ouvrir le fichier `plugins\LoupGarou\config.yml` et de supprimer les points de spawn.
@@ -120,9 +107,6 @@ Il suffit d'ouvrir le fichier `plugins\LoupGarou\config.yml` et de supprimer les
 Cela est possible pour les rôles `Loup-Garou`, `Villageois` et `Chasseur`.
 D'autres rôles peuvent aussi marcher mais n'ont pas été testés avec plusieurs joueurs ayant ce rôle dans une seule partie. C'est à vos risques et périls.
 
-- Le tour du loup noir (ou tout autre type de loup garou) ne passe pas.
-
-Il vous faut au minimum un loup garou normal lorsque vous mettez d'autres types de loups dans la partie.
 
 ## Indications pour les développeurs
 
