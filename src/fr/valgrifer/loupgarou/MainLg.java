@@ -94,6 +94,11 @@ public class MainLg extends JavaPlugin {
             }
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("addspawn")) {
+                    if(!(sender instanceof Player))
+                    {
+                        sender.sendMessage("Erreur: Vous n'êtes pas un joueur");
+                        return true;
+                    }
                     Player player = (Player) sender;
                     Location loc = player.getLocation();
                     List<Object> list = (List<Object>) getConfig().getList("spawns");
