@@ -8,6 +8,8 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO Add Identifier for add a LGChat Event
+
 @RequiredArgsConstructor
 public class LGChat {
 	@Getter private final Map<LGPlayer, LGChatCallback> viewers = new HashMap<>();
@@ -15,7 +17,7 @@ public class LGChat {
 	
 	public interface LGChatCallback{
 		String receive(LGPlayer sender, String message);
-		default String send(LGPlayer sender, String message) {return null;};
+		default String send(LGPlayer sender, String message) {return null;}
 	}
 
 	public void sendMessage(LGPlayer sender, String message) {
@@ -25,10 +27,7 @@ public class LGChat {
 	}
 
 	public void join(LGPlayer player, LGChatCallback callback) {
-		if(getViewers().containsKey(player))
-			getViewers().replace(player, callback);
-		else
-			getViewers().put(player, callback);
+        getViewers().put(player, callback);
 	}
 	public void leave(LGPlayer player) {
 		getViewers().remove(player);

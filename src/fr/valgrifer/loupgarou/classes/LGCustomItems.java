@@ -13,6 +13,8 @@ import fr.valgrifer.loupgarou.events.LGCustomItemChangeEvent;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+// TODO Change to a Better system and add a resource pack generator
+
 @SuppressWarnings("unused")
 public class LGCustomItems {
 	static Map<Class<? extends Role>, HashMap<String, Material>> mappings = new HashMap<>();

@@ -7,6 +7,8 @@ import org.bukkit.event.Cancellable;
 import lombok.Getter;
 import lombok.Setter;
 
+// TODO Change to RoleActionEvent with Identifier
+
 public class LGPyromaneGasoilEvent extends LGEvent implements Cancellable{
 	public LGPyromaneGasoilEvent(LGGame game, LGPlayer player) {
 		super(game);
