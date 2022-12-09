@@ -44,7 +44,7 @@ Pour installer le plug-in, merci de suivre les étapes suivantes:
 	  - ⚠️ Il faut qu'il y ait autant de places dans les rôles que de joueur pour lancer une partie
   - Vous pouvez démarrer la partie avec `/lg start` 
 
-Lien des releases : [Cliquez ici](https://github.com/leomelki/LoupGarou/releases)
+Lien des releases : [Cliquez ici](https://github.com/Valgrifer/LoupGarou/releases)
 
 
 ### Installation avec docker (Alternative)
