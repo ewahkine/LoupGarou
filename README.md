@@ -85,7 +85,7 @@ Les fichiers relatifs à minecraft se situeront dans le dossier `minecraft_data`
 
 ## Todo
 
-- [ ] Add Identifier for LGChat add a Event / Ajouter un authentifier pour LGChat et lui ajouter un event
+- [ ] TODO Add Identifier for LGChat add a Event / Ajouter un authentifier pour LGChat et lui ajouter un event
 - [ ] Change to a Better system Item Card / Changement pour un meilleure system item de carte
 - [ ] Add a resource pack generator / Ajouter un géneréteur de Resource Pack
 - [ ] Add RoleActionEvent with Identifier / Ajouter un event RoleAction avec un authentifier
@@ -129,6 +129,8 @@ Vous devez aussi installer la repository `Spigot` avec [BuildTools](https://www.
 
 **Cependant, si l'envie vous prend de modifier ou d'utiliser le code ici présent en partie, ou dans sa totalité, merci de créditer [Leomelki](https://twitter.com/leomelki) et [Shytoos](https://twitter.com/shytoos_).
 Une utilisation commerciale est cependant interdite. Merci de vous référer aux informations de [license](#license)**
+
+**Il n'est nécessaire de modifier le code pour ajouter des rôles, il suffit de créer un second plugin comme addon à celui la!**
 
 ### Ajouter des rôles
 
