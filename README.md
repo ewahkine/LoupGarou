@@ -78,8 +78,8 @@ Les fichiers relatifs à minecraft se situeront dans le dossier `minecraft_data`
 `/lg roles` : Retourne la liste des rôles dans la partie  
 `/lg roles set <ID> <MONTANT>` : Définit le nombre de joueurs pour un certain rôle  
 `/lg addSpawn` : Ajoute un point de spawn (emplacement de joueur)  
-`/lg start <PSEUDO>` : Lance la partie  
-`/lg end <PSEUDO>` : Arrête une partie  
+`/lg start` : Lance la partie  
+`/lg end` : Arrête une partie  
 `/lg reloadConfig` : Recharge la configuration  
 `/lg joinAll` : À utiliser après avoir changé les rôles  
 
