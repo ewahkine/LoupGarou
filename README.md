@@ -37,7 +37,7 @@ Le mode Loup-Garou est un mode inspiré du jeu de société [Les Loups-Garous de
 **Minecraft 1.16.5 est requis.**  
 Pour installer le plug-in, merci de suivre les étapes suivantes:
   - Téléchargez Spigot 1.16.5 et lancez une fois le serveur
-  - Dans le dossier `plugins`, insérez [ProtocolLib](https://www.spigotmc.org/resources/protocollib.1997/) et [LoupGarou.jar](https://github.com/Valgrifer/LoupGarou/releases)
+  - Dans le dossier `plugins`, insérez [ProtocolLib (4.6.0 minimum)](https://www.spigotmc.org/resources/protocollib.1997/) et [LoupGarou.jar](https://github.com/Valgrifer/LoupGarou/releases)
   - Redémarrez votre serveur puis donnez vous les permissions administrateur (/op <votre_pseudo> dans la console)
   - Allez sur la map et ajoutez les points de spawn sur chaque dalle `/lg addSpawn`
   - Connectez-vous au serveur et choisissez les rôles à utiliser avec `/lg`
