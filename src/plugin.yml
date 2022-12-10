@@ -3,6 +3,7 @@ version: ${project.version}
 description: Permet de jouer au jeu du loup garou
 main: fr.valgrifer.loupgarou.MainLg
 depend: [ProtocolLib]
+softdepend: [ResourcePackHosting]
 authors:
   - Valgrifer
   - Leomelki
