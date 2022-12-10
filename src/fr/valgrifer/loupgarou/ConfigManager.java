@@ -1,6 +1,7 @@
 package fr.valgrifer.loupgarou;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
+import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
@@ -22,7 +23,7 @@ import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
-@SuppressWarnings({"unused", "CommentedOutCode"})
+@SuppressWarnings({"unused"})
 public class ConfigManager extends LGInventoryHolder
 {
     private static ConfigManager mainConfigManager = null;
@@ -62,33 +63,65 @@ public class ConfigManager extends LGInventoryHolder
                                 .setCustomId("ac_joinall")
                                 .setDisplayName(GREEN + "/lg joinall")
                                 .setLore(GRAY + "A faire après chaque édition de composition")),
-                        (holder, event) -> ((Player) event.getWhoClicked()).performCommand("lg joinall"));
+                        (holder, event) -> {
+                            for (Player p : Bukkit.getOnlinePlayers())
+                                Bukkit.getPluginManager().callEvent(new PlayerQuitEvent(p, "joinall"));
+                            for (Player p : Bukkit.getOnlinePlayers())
+                                Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(p, "joinall"));
+                        });
 
                 setSlot(1, 2,
                         new Slot(ItemBuilder.make(Material.CLOCK)
                                 .setCustomId("ac_skiptoday")
                                 .setDisplayName(GREEN + "Skip au prochain jour")),
-                        (holder, event) -> ((Player) event.getWhoClicked()).performCommand("lg nextDay"));
+                        (holder, event) -> {
+                            event.getWhoClicked().sendMessage(GREEN + "Vous êtes passé à la prochaine journée");
+                            if (MainLg.getInstance().getCurrentGame() != null) {
+                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + "" + BOLD + "Le passage à la prochaine journée a été forcé !", true);
+                                MainLg.getInstance().getCurrentGame().cancelWait();
+                                for (LGPlayer lgp : MainLg.getInstance().getCurrentGame().getInGame())
+                                    lgp.stopChoosing();
+                                MainLg.getInstance().getCurrentGame().endNight();
+                            }
+                        });
 
                 setSlot(1, 3,
                         new Slot(ItemBuilder.make(Material.CLOCK)
                                 .setCustomId("ac_skiptonight")
                                 .setDisplayName(GREEN + "Skip à la prochaine nuit")),
-                        (holder, event) -> ((Player) event.getWhoClicked()).performCommand("lg nextNight"));
+                        (holder, event) -> {
+                            event.getWhoClicked().sendMessage(GREEN + "Vous êtes passé à la prochaine nuit");
+                            if (MainLg.getInstance().getCurrentGame() != null) {
+                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + "" + BOLD + "Le passage à la prochaine nuit a été forcé !", true);
+                                for (LGPlayer lgp : MainLg.getInstance().getCurrentGame().getInGame())
+                                    lgp.stopChoosing();
+                                MainLg.getInstance().getCurrentGame().cancelWait();
+                                MainLg.getInstance().getCurrentGame().nextNight();
+                            }
+                        });
 
                 setSlot(7, 2,
                         new Slot(ItemBuilder.make(Material.SUGAR)
                                 .setCustomId("ac_reloadresourcepack")
                                 .setDisplayName(DARK_GREEN + "Recharge le resource pack")
                                 .setLore(GRAY + "pour tout le monde")),
-                        (holder, event) -> ((Player) event.getWhoClicked()).performCommand("lg reloadPacks"));
+                        (holder, event) -> {
+                            for (Player p : Bukkit.getOnlinePlayers())
+                                Bukkit.getPluginManager().callEvent(new PlayerQuitEvent(p, "reloadPacks"));
+                            for (Player p : Bukkit.getOnlinePlayers())
+                                Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(p, "reloadPacks"));
+                        });
 
                 setSlot(7, 3,
                         new Slot(ItemBuilder.make(Material.PAPER)
                                 .setCustomId("ac_reloadconfig")
                                 .setDisplayName(DARK_GREEN + "Recharge les config")
                                 .setLore(GRAY + "A faire si la compo est modifier par le fichier", RESET + "" + DARK_GRAY + "Autant dire jamais")),
-                        (holder, event) -> ((Player) event.getWhoClicked()).performCommand("lg reloadConfig"));
+                        (holder, event) -> {
+                            event.getWhoClicked().sendMessage(GREEN + "Vous avez bien reload la config !");
+                            event.getWhoClicked().sendMessage(GRAY + "" + ITALIC + "Si vous avez changé les rôles, écriver " + DARK_GRAY + "" + ITALIC + "/lg joinall" + GRAY + "" + ITALIC + " !");
+                            MainLg.getInstance().loadConfig();
+                        });
 
 
                 setSlot(4, 4,
