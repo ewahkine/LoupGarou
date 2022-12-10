@@ -92,13 +92,13 @@ public class MainLg extends JavaPlugin {
                 sender.sendMessage(DARK_RED + "Erreur: Vous n'avez pas la permission...");
                 return true;
             }
+            if(!(sender instanceof Player))
+            {
+                sender.sendMessage("Erreur: Vous n'êtes pas un joueur");
+                return true;
+            }
             if (args.length >= 1) {
                 if (args[0].equalsIgnoreCase("addspawn")) {
-                    if(!(sender instanceof Player))
-                    {
-                        sender.sendMessage("Erreur: Vous n'êtes pas un joueur");
-                        return true;
-                    }
                     Player player = (Player) sender;
                     Location loc = player.getLocation();
                     List<Object> list = (List<Object>) getConfig().getList("spawns");
@@ -110,13 +110,7 @@ public class MainLg extends JavaPlugin {
                     return true;
                 }
             }
-            else if(sender instanceof Player)
-            {
-                ((Player) sender).openInventory(ConfigManager.getMainConfigManager().getInventory());
-                return true;
-            }
-            sender.sendMessage(DARK_RED + "Erreur: " + RED + "Commande incorrecte.");
-            sender.sendMessage(DARK_RED + "Essayez /lg " + RED + "addSpawn");
+            ((Player) sender).openInventory(ConfigManager.getMainConfigManager().getInventory());
             return true;
         }
         if (command.getName().equalsIgnoreCase("spec")) {
