@@ -334,7 +334,7 @@ public class LGPlayer {
 			this.chat = chat;
 		
 		if(chat != null && player != null)
-			chat.join(this, callback == null ? chat.getDefaultCallback() : callback);
+			chat.join(this, callback);
 	}
 	
 	

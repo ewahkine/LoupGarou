@@ -27,7 +27,7 @@ public class LGChat {
 	}
 
 	public void join(LGPlayer player, LGChatCallback callback) {
-        getViewers().put(player, callback);
+        getViewers().put(player, callback == null ? defaultCallback : callback);
 	}
 	public void leave(LGPlayer player) {
 		getViewers().remove(player);
