@@ -4,9 +4,16 @@ import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -46,7 +53,7 @@ public class RLoupGarouBlanc extends Role{
 	}
 
 	public static String _getTask() {
-		return "Tu peux choisir un "+RoleType.LOUP_GAROU.getColoredName(BOLD)+GOLD+" à éliminer, ou te rendormir.";
+		return "Tu peux choisir un "+RoleType.LOUP_GAROU.getColoredName(BOLD)+GOLD+" (ou du "+RoleWinType.VILLAGE.getColoredName(BOLD)+GOLD+" si il n'y a plus de "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+GOLD+") à éliminer, ou te rendormir.";
 	}
 
 	public static String _getBroadcastedTask() {
@@ -74,7 +81,9 @@ public class RLoupGarouBlanc extends Role{
 		this.callback = callback;
         List<LGPlayer> targetable;
 		RLoupGarou lg;
-		if((lg = getGame().getRole(RLoupGarou.class)) != null && lg.getPlayers().size() > 0)
+		if((lg = getGame().getRole(RLoupGarou.class)) != null &&
+                (lg.getPlayers().stream().anyMatch(lgp -> !(lgp.getRole() instanceof RLoupGarouBlanc)) ||
+                        lg.getPlayers().stream().filter(lgp -> (lgp.getRole() instanceof RLoupGarouBlanc)).count() > 1))
             targetable = lg.getPlayers();
         else
             targetable = getGame().getAlive();
@@ -82,20 +91,46 @@ public class RLoupGarouBlanc extends Role{
 		player.showView();
 		player.getPlayer().getInventory().setItem(8, itemNoAction.build());
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-                if(!targetable.contains(choosen)) {
-                    player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'est pas un Loup-Garou.");
-                    return;
-                }
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" va mourir cette nuit");
-                player.sendMessage(GOLD+"Tu as choisi de dévorer "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                player.getPlayer().getInventory().setItem(8, null);
-                player.getPlayer().updateInventory();
-                getGame().kill(choosen, Reason.LOUP_BLANC);
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+            if(choosen == null || choosen == player)
+                return;
+
+            if(!targetable.contains(choosen)) {
+                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'est pas ciblable.");
+                return;
             }
+
+            player.getPlayer().getInventory().setItem(8, null);
+            player.getPlayer().updateInventory();
+            player.stopChoosing();
+            player.hideView();
+
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new KillAction(choosen), player);
+            Bukkit.getPluginManager().callEvent(event);
+            KillAction action = (KillAction) event.getAction();
+            if(!action.isCancelled() || action.isForceMessage())
+            {
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir cette nuit");
+                player.sendMessage(GOLD+"Tu as choisi de dévorer "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+            }
+            else
+                player.sendMessage(RED+"Votre cible est immunisée.");
+
+            if(action.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), action.getTarget(), Reason.LOUP_BLANC);
+            Bukkit.getPluginManager().callEvent(killEvent);
+            if(killEvent.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            getGame().kill(killEvent.getKilled(), Reason.LOUP_BLANC);
+            callback.run();
         });
 	}
 	@EventHandler
@@ -130,9 +165,8 @@ public class RLoupGarouBlanc extends Role{
 	
 	@EventHandler
 	public void onEndgameCheck(LGEndCheckEvent e) {
-		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO) {
+		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO && getPlayers().size() > 0)
             e.setWinType(LGWinType.LOUPGAROUBLANC);
-		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -142,5 +176,18 @@ public class RLoupGarouBlanc extends Role{
 			e.getWinners().addAll(getPlayers());
 		}
 	}
-	
+
+    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public KillAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

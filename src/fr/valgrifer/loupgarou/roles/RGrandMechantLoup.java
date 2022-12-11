@@ -1,6 +1,13 @@
 package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
+
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -61,14 +68,40 @@ public class RGrandMechantLoup extends Role{
 		
 		player.showView();
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" va mourir cette nuit");
-                player.sendMessage(GOLD+"Tu as choisi de manger "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                getGame().kill(choosen, getGame().getDeaths().containsKey(Reason.LOUP_GAROU) ? Reason.GM_LOUP_GAROU : Reason.LOUP_GAROU);
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+            if(choosen == null || choosen == player)
+                return;
+
+            player.stopChoosing();
+            player.hideView();
+
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new KillAction(choosen), player);
+            Bukkit.getPluginManager().callEvent(event);
+            KillAction action = (KillAction) event.getAction();
+            if(!action.isCancelled() || action.isForceMessage())
+            {
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir cette nuit");
+                player.sendMessage(GOLD+"Tu as choisi de manger "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
             }
+            else
+                player.sendMessage(RED+"Votre cible est immunisée.");
+
+            if(action.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), action.getTarget(), Reason.GM_LOUP_GAROU);
+            Bukkit.getPluginManager().callEvent(killEvent);
+            if(killEvent.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            getGame().kill(killEvent.getKilled(), Reason.GM_LOUP_GAROU);
+
+            callback.run();
         });
 	}
 	
@@ -93,5 +126,18 @@ public class RGrandMechantLoup extends Role{
 		super.join(player, sendMessage);
         RLoupGarou.forceJoin(player);
 	}
-	
+
+    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public KillAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

@@ -60,6 +60,7 @@ public class LGPlayer {
 	@Getter @Setter private LGGame game;
 	@Getter @Setter private String latestObjective;
 	@Getter private CustomScoreboard scoreboard;
+    @Getter @Setter boolean roleActive = true;
 	public LGPlayer(Player player) {
 		this.player = player;
 	}
@@ -290,10 +291,6 @@ public class LGPlayer {
 	}
 	public void setRoleWinType(RoleWinType winType) {
         this.getCache().set("RoleWinType", winType);
-	}
-	
-	public boolean isRoleActive() {
-		return !this.getCache().getBoolean("vampire");
 	}
 	
 	@Getter

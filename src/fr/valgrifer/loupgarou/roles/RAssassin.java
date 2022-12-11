@@ -2,7 +2,12 @@ package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
 
+import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -50,14 +55,39 @@ public class RAssassin extends Role{
 		player.showView();
 		
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-                getGame().kill(choosen, Reason.ASSASSIN);
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" va mourir");
-                player.sendMessage(GOLD+"Tu as choisi de tuer "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+            if(choosen == null || choosen == player)
+                return;
+
+            player.stopChoosing();
+            player.hideView();
+
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new KillAction(choosen), player);
+            Bukkit.getPluginManager().callEvent(event);
+            KillAction action = (KillAction) event.getAction();
+            if(!action.isCancelled() || action.isForceMessage())
+            {
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir");
+                player.sendMessage(GOLD+"Tu as choisi de tuer "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
             }
+            else
+                player.sendMessage(RED+"Votre cible est immunisée.");
+
+            if(action.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), action.getTarget(), Reason.ASSASSIN);
+            Bukkit.getPluginManager().callEvent(killEvent);
+            if(killEvent.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            getGame().kill(killEvent.getKilled(), Reason.ASSASSIN);
+            callback.run();
         });
 	}
 	
@@ -85,16 +115,16 @@ public class RAssassin extends Role{
 	}
 
 	@EventHandler
-	public void onPyroGasoil(LGRoleActionEvent e) {
+	public void onTarget(LGRoleActionEvent e) {
         if(e.getGame() != getGame())
             return;
-		if(e.getAction() instanceof RPyromane.GasoilAction)
+		if(e.isAction(RPyromane.GasoilAction.class))
         {
             RPyromane.GasoilAction action = (RPyromane.GasoilAction) e.getAction();
             if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
                 action.setCancelled(true);
         }
-		else if(e.getAction() instanceof RVampire.VampiredAction)
+		else if(e.isAction(RVampire.VampiredAction.class))
         {
             RVampire.VampiredAction action = (RVampire.VampiredAction) e.getAction();
             if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
@@ -103,25 +133,9 @@ public class RAssassin extends Role{
 	}
 	
 	@EventHandler
-	public void onDayStart(LGNightEndEvent e) {
-		if(e.getGame() == getGame()) {
-			for(LGPlayer lgp : getGame().getAlive())
-				if(lgp.getCache().getBoolean("assassin_protected"))
-					lgp.getCache().remove("assassin_protected");
-		}
-	}
-	
-	@EventHandler
 	public void onEndgameCheck(LGEndCheckEvent e) {
-		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO) {
-			if(getPlayers().size() > 0) {
-				if(getPlayers().size() > 1)
-					for(LGPlayer lgp : getPlayers())
-						if(!lgp.isRoleActive())
-							return;
-				e.setWinType(LGWinType.ASSASSIN);
-			}
-		}
+		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO && getPlayers().size() > 0)
+            e.setWinType(LGWinType.ASSASSIN);
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -136,7 +150,17 @@ public class RAssassin extends Role{
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.stopChoosing();
 		player.hideView();
-		//player.sendTitle(RED+"Vous n'avez regardé aucun rôle", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		//player.sendMessage(RED+"Vous n'avez pas utilisé votre pouvoir cette nuit.");
 	}
+
+    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public KillAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter @Setter private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

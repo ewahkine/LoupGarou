@@ -1,12 +1,21 @@
 package fr.valgrifer.loupgarou.roles;
 
+import fr.valgrifer.loupgarou.events.AbilityConsume;
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import static org.bukkit.ChatColor.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -200,8 +209,6 @@ public class RSorciere extends Role{
 		closeInventory(player);
 		player.getPlayer().updateInventory();
 		player.hideView();
-		//player.sendTitle(RED+"Vous n'avez utilisé aucune potion", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		//player.sendMessage(GOLD+"Tu n'as rien fait cette nuit.");
 	}
 
     private boolean inMenu = false;
@@ -274,21 +281,94 @@ public class RSorciere extends Role{
     }
 	
 	private void kill(LGPlayer choosen, LGPlayer player) {
+        player.hideView();
 		player.getPlayer().getInventory().setItem(8, null);
 		player.getPlayer().updateInventory();
-		player.getCache().set("witch_used_death", true);
-		getGame().kill(choosen, Reason.SORCIERE);
-		player.sendMessage(GOLD+"Tu as décidé d'assassiner "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-		player.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" a été tué.");
-		player.hideView();
+
+        LGRoleActionEvent e = new LGRoleActionEvent(getGame(), new KillAction(sauver), player);
+        Bukkit.getPluginManager().callEvent(e);
+        KillAction action = (KillAction) e.getAction();
+        if(!action.isCancelled() || action.isForceMessage())
+        {
+            player.sendMessage(GOLD+"Tu as décidé d'assassiner "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+            player.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+BLUE+" a été tué.");
+        }
+        else
+            player.sendMessage(RED+"Votre cible est immunisée.");
+
+        if(!action.isCancelled() || action.isForceConsume())
+            player.getCache().set("witch_used_death", true);
+
+        if(action.isCancelled())
+        {
+            callback.run();
+            return;
+        }
+
+        LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), action.getTarget(), Reason.SORCIERE);
+        Bukkit.getPluginManager().callEvent(killEvent);
+        if(killEvent.isCancelled())
+        {
+            callback.run();
+            return;
+        }
+
+		getGame().kill(killEvent.getKilled(), Reason.SORCIERE);
 		callback.run();
 	}
 	private void saveLife(LGPlayer player) {
-		player.getCache().set("witch_used_life", true);
-		getGame().getDeaths().remove(Reason.LOUP_GAROU, sauver);
-		player.sendMessage(GOLD+"Tu as décidé de sauver "+GRAY+""+BOLD+""+sauver.getName()+""+GOLD+".");
-		player.sendActionBarMessage(GRAY+""+BOLD+""+sauver.getName()+""+BLUE+" a été sauvé.");
-		player.hideView();
+        player.hideView();
+
+        LGRoleActionEvent e = new LGRoleActionEvent(getGame(), new SaveAction(sauver), player);
+        Bukkit.getPluginManager().callEvent(e);
+        SaveAction action = (SaveAction) e.getAction();
+        if(!action.isCancelled() || action.isForceMessage())
+        {
+            player.sendMessage(GOLD+"Tu as décidé de sauver "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+            player.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+BLUE+" a été sauvé.");
+        }
+        else
+            player.sendMessage(RED+"Votre cible est immunisée.");
+
+        if(!action.isCancelled() || action.isForceConsume())
+            player.getCache().set("witch_used_life", true);
+
+        if(action.isCancelled())
+        {
+            callback.run();
+            return;
+        }
+
+		getGame().getDeaths().remove(Reason.LOUP_GAROU, action.getTarget());
 		callback.run();
 	}
+
+    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    {
+        public KillAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+        @Getter @Setter private boolean forceConsume;
+    }
+    public static class SaveAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    {
+        public SaveAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+        @Getter @Setter private boolean forceConsume;
+    }
 }

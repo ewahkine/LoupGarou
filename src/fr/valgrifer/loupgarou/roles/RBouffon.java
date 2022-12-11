@@ -91,19 +91,20 @@ public class RBouffon extends Role{
 			player.sendMessage(GOLD+""+ITALIC+""+BOLD+""+toPut+""+GOLD+""+ITALIC+" "+(toPut.contains(",") ? "ont" : "a")+" voté pour toi.");
 				
 		player.choose((choosen)->{
-			if(choosen != null) {
-				if(!choosable.contains(choosen))
-					player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'a pas voté pour vous.");
-				else if(choosen.isDead())
-					player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" est mort.");//fix
-				else {
-					player.stopChoosing();
-					player.sendMessage(GOLD+"Ton fantôme va hanter l'esprit de "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-					getGame().kill(choosen, Reason.BOUFFON);
-					player.hideView();
-					callback.run();
-				}
-			}
+			if(choosen == null)
+                return;
+
+            if(!choosable.contains(choosen))
+                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'a pas voté pour vous.");
+            else if(choosen.isDead())
+                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" est mort.");//fix
+            else {
+                player.stopChoosing();
+                player.sendMessage(GOLD+"Ton fantôme va hanter l'esprit de "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
+                getGame().kill(choosen, Reason.BOUFFON);
+                player.hideView();
+                callback.run();
+            }
 		}, player);
 	}
 	

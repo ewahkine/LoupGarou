@@ -1,12 +1,18 @@
 package fr.valgrifer.loupgarou.roles;
 
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import static org.bukkit.ChatColor.*;
+
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,11 +21,7 @@ import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
-import fr.valgrifer.loupgarou.events.LGGameEndEvent;
-import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
-import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
-import fr.valgrifer.loupgarou.events.LGVampiredEvent;
 
 public class RSurvivant extends Role{
     private static final MenuPreset preset = new MenuPreset(1) {
@@ -74,11 +76,29 @@ public class RSurvivant extends Role{
                         RSurvivant role = (RSurvivant) lgp.getRole();
 
                         role.closeInventory(lgp);
-                        lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu as décidé de te protéger.");
-                        lgp.sendMessage(GOLD+"Tu as décidé de te protéger.");
-                        lgp.getCache().set("survivant_left", lgp.getCache().<Integer>get("survivant_left")-1);
-                        lgp.getCache().set("survivant_protected", true);
                         lgp.hideView();
+
+                        LGRoleActionEvent e = new LGRoleActionEvent(role.getGame(), new ProtectAction(), lgp);
+                        Bukkit.getPluginManager().callEvent(e);
+                        ProtectAction action = (ProtectAction) e.getAction();
+                        if(!action.isCancelled() || action.isForceMessage())
+                        {
+                            lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu as décidé de te protéger.");
+                            lgp.sendMessage(GOLD+"Tu as décidé de te protéger.");
+                        }
+                        else
+                            lgp.sendMessage(RED+"Tu ne peux pas te protégé.");
+
+                        if(!action.isCancelled() || action.isForceConsume())
+                            lgp.getCache().set("survivant_left", lgp.getCache().<Integer>get("survivant_left")-1);
+
+                        if(action.isCancelled())
+                        {
+                            role.callback.run();
+                            return;
+                        }
+
+                        lgp.getCache().set("survivant_protected", true);
                         role.callback.run();
                     });
         }
@@ -154,15 +174,21 @@ public class RSurvivant extends Role{
 
 	@EventHandler
 	public void onPlayerKill(LGNightPlayerPreKilledEvent e) {
-		if(e.getGame() == getGame() && (e.getReason() == Reason.LOUP_GAROU || e.getReason() == Reason.LOUP_BLANC || e.getReason() == Reason.GM_LOUP_GAROU || e.getReason() == Reason.ASSASSIN) && e.getKilled().getCache().getBoolean("survivant_protected") && e.getKilled().isRoleActive()) {
-			e.setReason(Reason.DONT_DIE);
-		}
+		if(e.getGame() == getGame() && (e.getReason() == Reason.LOUP_GAROU || e.getReason() == Reason.LOUP_BLANC || e.getReason() == Reason.GM_LOUP_GAROU || e.getReason() == Reason.ASSASSIN) && e.getKilled().getCache().getBoolean("survivant_protected") && e.getKilled().isRoleActive())
+			e.setCancelled(true);
 	}
-	@EventHandler
-	public void onVampired(LGVampiredEvent e) {
-		if(e.getGame() == getGame() && e.getPlayer().getCache().getBoolean("survivant_protected"))
-			e.setProtect(true);
-	}
+
+    @EventHandler
+    public void onPyroGasoil(LGRoleActionEvent e) {
+        if(e.getGame() != getGame())
+            return;
+        if(e.isAction(RVampire.VampiredAction.class))
+        {
+            RVampire.VampiredAction action = (RVampire.VampiredAction) e.getAction();
+            if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
+                action.setProtect(true);
+        }
+    }
 	@EventHandler
 	public void onDayStart(LGPreDayStartEvent e) {
 		if(e.getGame() == getGame())
@@ -204,4 +230,15 @@ public class RSurvivant extends Role{
 			}.runTaskAsynchronously(MainLg.getInstance());
 		}
 	}
+
+    public static class ProtectAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    {
+        public ProtectAction(){}
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private boolean forceMessage;
+        @Getter @Setter private boolean forceConsume;
+    }
 }

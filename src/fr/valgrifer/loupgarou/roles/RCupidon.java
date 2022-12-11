@@ -79,33 +79,34 @@ public class RCupidon extends Role{
 		player.showView();
 		
 		player.choose(choosen -> {
-            if(choosen != null) {
-                if(player.getCache().has("cupidon_first")) {
-                    LGPlayer first = player.getCache().remove("cupidon_first");
-                    if(first == choosen) {
-                        int entityId = Integer.MAX_VALUE-choosen.getPlayer().getEntityId();
-                        WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
-                        destroy.setEntityIds(new int[] {entityId});
-                        destroy.sendPacket(player.getPlayer());
-                        player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est désélectionné pour être amoureux .");
-                    } else {
-                    //	sendHead(player, choosen);
-                        int entityId = Integer.MAX_VALUE-first.getPlayer().getEntityId();
-                        WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
-                        destroy.setEntityIds(new int[] {entityId});
-                        destroy.sendPacket(player.getPlayer());
+            if(choosen == null)
+                return;
 
-                        setInLove(first, choosen);
-                        player.sendMessage(GRAY+""+BOLD+""+first.getName()+""+BLUE+" et "+GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" sont désormais follement amoureux.");
-                        player.stopChoosing();
-                        player.hideView();
-                        callback.run();
-                    }
+            if(player.getCache().has("cupidon_first")) {
+                LGPlayer first = player.getCache().remove("cupidon_first");
+                if(first == choosen) {
+                    int entityId = Integer.MAX_VALUE-choosen.getPlayer().getEntityId();
+                    WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
+                    destroy.setEntityIds(new int[] {entityId});
+                    destroy.sendPacket(player.getPlayer());
+                    player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est désélectionné pour être amoureux .");
                 } else {
-                    sendHead(player, choosen);
-                    player.getCache().set("cupidon_first", choosen);
-                    player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est sélectionné pour être amoureux .");
+                    //	sendHead(player, choosen);
+                    int entityId = Integer.MAX_VALUE-first.getPlayer().getEntityId();
+                    WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
+                    destroy.setEntityIds(new int[] {entityId});
+                    destroy.sendPacket(player.getPlayer());
+
+                    setInLove(first, choosen);
+                    player.sendMessage(GRAY+""+BOLD+""+first.getName()+""+BLUE+" et "+GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" sont désormais follement amoureux.");
+                    player.stopChoosing();
+                    player.hideView();
+                    callback.run();
                 }
+            } else {
+                sendHead(player, choosen);
+                player.getCache().set("cupidon_first", choosen);
+                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est sélectionné pour être amoureux .");
             }
         }, player);
 	}

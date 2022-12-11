@@ -59,18 +59,24 @@ public class RChasseur extends Role{
 		player.sendMessage(GOLD+""+getTask());
 		//player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 60);
 		player.choose((choosen)->{
-			if(choosen != null) {
-				player.stopChoosing();
-				getGame().cancelWait();
-				LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), choosen, Reason.CHASSEUR);
-				Bukkit.getPluginManager().callEvent(killEvent);
-				if(killEvent.isCancelled())
-					return;
-				
-				if(getGame().kill(killEvent.getKilled(), killEvent.getReason(), true))
-					return;
-				callback.run();
-			}
+			if(choosen == null)
+                return;
+
+            player.stopChoosing();
+            getGame().cancelWait();
+
+            LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), choosen, Reason.CHASSEUR);
+            Bukkit.getPluginManager().callEvent(killEvent);
+
+            if(killEvent.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            if(getGame().kill(killEvent.getKilled(), killEvent.getReason(), true))
+                return;
+            callback.run();
 		}, player);
 	}
 	

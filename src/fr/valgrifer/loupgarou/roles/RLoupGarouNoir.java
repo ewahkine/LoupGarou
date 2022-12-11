@@ -1,14 +1,18 @@
 package fr.valgrifer.loupgarou.roles;
 
-import fr.valgrifer.loupgarou.events.LGNightEndEvent;
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import static org.bukkit.ChatColor.*;
 
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -20,7 +24,6 @@ import fr.valgrifer.loupgarou.classes.LGCustomItems;
 import fr.valgrifer.loupgarou.classes.LGCustomItems.LGCustomItemsConstraints;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import fr.valgrifer.loupgarou.events.LGCustomItemChangeEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RLoupGarouNoir extends Role{
@@ -65,19 +68,38 @@ public class RLoupGarouNoir extends Role{
                 RLoupGarouNoir role = (RLoupGarouNoir) lgp.getRole();
 
                 role.closeInventory(lgp);
-
-                lgp.getCache().set("has_infected", true);
-                role.toInfect.getCache().set("infected", true);
-                role.toInfect.addEndGameReaveal(RED+"Infecté");
-                role.toInfect.setRoleType(RoleType.LOUP_GAROU);
-                role.toInfect.setRoleWinType(RoleWinType.LOUP_GAROU);
-                role.getPlayers().remove(lgp);
-                role.toInfect.getCache().set("just_infected", true);
-                lgp.sendActionBarMessage(BLUE+""+BOLD+"Vous infectez "+BLUE+""+role.toInfect.getName());
-                lgp.sendMessage(GOLD+"Tu as infecté "+GRAY+""+BOLD+""+role.toInfect.getName()+""+GOLD+".");
                 lgp.stopChoosing();
-                role.getGame().getDeaths().remove(Reason.LOUP_GAROU, role.toInfect);
                 lgp.hideView();
+
+                LGRoleActionEvent e = new LGRoleActionEvent(role.getGame(), new InfectAction(role.toInfect), lgp);
+                Bukkit.getPluginManager().callEvent(e);
+                InfectAction action = (InfectAction) e.getAction();
+                if(!action.isCancelled() || action.isForceMessage())
+                {
+                    lgp.sendActionBarMessage(BLUE+""+BOLD+"Vous infectez "+BLUE+""+action.getTarget().getName());
+                    lgp.sendMessage(GOLD+"Tu as infecté "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                }
+                else
+                    lgp.sendMessage(RED+"Votre cible est immunisée.");
+
+                if(!action.isCancelled() || action.isForceConsume())
+                {
+                    lgp.getCache().set("has_infected", true);
+                    role.getPlayers().remove(lgp);
+                }
+
+                if(action.isCancelled())
+                {
+                    role.callback.run();
+                    return;
+                }
+
+                action.getTarget().getCache().set("infected", true);
+                action.getTarget().addEndGameReaveal(RED+"Infecté");
+                action.getTarget().setRoleType(RoleType.LOUP_GAROU);
+                action.getTarget().setRoleWinType(RoleWinType.LOUP_GAROU);
+                action.getTarget().getCache().set("just_infected", true);
+                role.getGame().getDeaths().remove(Reason.LOUP_GAROU, action.getTarget());
                 role.callback.run();
             });
         }
@@ -222,5 +244,17 @@ public class RLoupGarouNoir extends Role{
 			if(e.getPlayer().getCache().getBoolean("infected"))
 				e.getConstraints().add(LGCustomItemsConstraints.INFECTED.getName());
 	}
-	
+
+    public static class InfectAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    {
+        public InfectAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter @Setter private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+        @Getter @Setter private boolean forceConsume;
+    }
 }

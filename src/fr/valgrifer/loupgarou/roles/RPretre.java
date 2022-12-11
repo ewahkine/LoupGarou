@@ -1,5 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 import com.comphenix.packetwrapper.WrapperPlayServerEntityEffect;
@@ -10,14 +11,20 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import static org.bukkit.ChatColor.*;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -110,15 +117,29 @@ public class RPretre extends Role{
                                 player.updateInventory();
                                 lgp.stopChoosing();
                                 lgp.canSelectDead = false;
-                                lgp.sendMessage(GOLD+"Tu as ramené "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" à la vie.");
-                                lgp.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" sera réssuscité");
-
-
-                                role.ressucited.add(choosen);
-                                role.getPlayers().remove(lgp);//Pour éviter qu'il puisse sauver plusieurs personnes.
-                                choosen.sendMessage(GOLD+"Tu vas être réssuscité en tant que "+GREEN+""+BOLD+"Villageois"+GOLD+".");
                                 role.hidePlayers(lgp);
                                 lgp.hideView();
+
+                                LGRoleActionEvent e = new LGRoleActionEvent(role.getGame(), new ReviveAction(choosen), lgp);
+                                Bukkit.getPluginManager().callEvent(e);
+                                ReviveAction action = (ReviveAction) e.getAction();
+                                if(!action.isCancelled() || action.isForceMessage())
+                                {
+                                    lgp.sendMessage(GOLD+"Tu as ramené "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" à la vie.");
+                                    lgp.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" sera réssuscité");
+                                }
+                                else
+                                    player.sendMessage(RED+"Votre cible est immunisée.");
+
+                                if(action.isCancelled())
+                                {
+                                    role.callback.run();
+                                    return;
+                                }
+
+                                action.getTarget().sendMessage(GOLD+"Tu vas être réssuscité en tant que "+GREEN+""+BOLD+"Villageois"+GOLD+".");
+                                role.ressucited.put(action.getTarget(), action.getNewRole());
+                                role.getPlayers().remove(lgp);//Pour éviter qu'il puisse sauver plusieurs personnes.
                                 role.callback.run();
                             }, lgp);
                         }));
@@ -279,7 +300,7 @@ public class RPretre extends Role{
 	}
 
     private final Map<LGPlayer, Boolean> inMenu = new HashMap<>();
-	List<LGPlayer> ressucited = new ArrayList<>();
+	Map<LGPlayer, Class<? extends Role>> ressucited = new HashMap<>();
 
     private void closeInventory(LGPlayer player) {
         inMenu.remove(player);
@@ -312,16 +333,28 @@ public class RPretre extends Role{
         if(ressucited.size() == 0)
             return;
 
-        for(LGPlayer lgp : ressucited) {
+        for(LGPlayer lgp : ressucited.keySet()) {
             if(lgp.getPlayer() == null || !lgp.isDead())
                 continue;
+
             lgp.setDead(false);
             lgp.getCache().reset();
-            RVillageois villagers = getGame().getRole(RVillageois.class);
-            if(villagers == null)
-                getGame().getRoles().add(villagers = new RVillageois(getGame()));
-            villagers.join(lgp, false);//Le joueur réssuscité rejoint les villageois.
-            lgp.setRole(villagers);
+            Role role = getGame().getRole(ressucited.get(lgp));
+            if(role == null) {
+                try
+                {
+                    getGame().getRoles().add(role = ressucited.get(lgp).getConstructor(LGGame.class).newInstance(getGame()));
+                }
+                catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
+                {
+                    ex.printStackTrace();
+                    role = getGame().getRole(RVillageois.class);
+                    if(role == null)
+                        getGame().getRoles().add(role = new RVillageois(getGame()));
+                }
+            }
+            role.join(lgp, false);
+            lgp.setRole(role);
             lgp.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
             lgp.getPlayer().getInventory().setHelmet(null);
             lgp.getPlayer().updateInventory();
@@ -356,5 +389,19 @@ public class RPretre extends Role{
             }
         }.runTaskLater(MainLg.getInstance(), 1);
     }
-	
+
+    public static class ReviveAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public ReviveAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private Class<? extends Role> newRole = RVillageois.class;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

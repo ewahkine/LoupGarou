@@ -2,6 +2,12 @@ package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
+
 import static org.bukkit.ChatColor.*;
 
 public class RVoyante extends Role{
@@ -43,20 +49,42 @@ public class RVoyante extends Role{
 		player.showView();
 		
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" est "+YELLOW+""+BOLD+""+choosen.getRole().getScoreBoardName());
-                player.sendMessage(GOLD+"Tu découvres que "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est "+choosen.getRole().getPublicName(choosen)+""+GOLD+".");
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+            if(choosen == null || choosen == player)
+                return;
+
+            player.stopChoosing();
+            player.hideView();
+
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new LookAction(choosen), player);
+            Bukkit.getPluginManager().callEvent(event);
+            LookAction action = (LookAction) event.getAction();
+            if(!action.isCancelled())
+            {
+                LGPlayer target = action.getTarget();
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+target.getName()+""+GOLD+" est "+YELLOW+""+BOLD+""+action.getRoleView().getPublicName(target));
+                player.sendMessage(GOLD+"Tu découvres que "+GRAY+""+BOLD+""+target.getName()+""+GOLD+" est "+action.getRoleView().getPublicName(target)+""+GOLD+".");
             }
+            else
+                player.sendMessage(RED+"Votre cible est immunisée.");
+
+            callback.run();
         });
 	}
 	@Override
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.stopChoosing();
 		player.hideView();
-		//player.sendTitle(RED+"Vous n'avez regardé aucun rôle", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		//player.sendMessage(RED+"Vous n'avez pas utilisé votre pouvoir cette nuit.");
 	}
+    public static class LookAction implements LGRoleActionEvent.RoleAction, Cancellable
+    {
+        public LookAction(LGPlayer target)
+        {
+            this.target = target;
+            this.roleView = target.getRole();
+        }
+
+        @Getter @Setter private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private Role roleView;
+    }
 }

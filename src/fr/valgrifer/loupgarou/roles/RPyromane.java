@@ -2,14 +2,19 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.util.*;
 
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -21,10 +26,6 @@ import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
-import fr.valgrifer.loupgarou.events.LGEndCheckEvent;
-import fr.valgrifer.loupgarou.events.LGGameEndEvent;
-import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
-import fr.valgrifer.loupgarou.events.LGPyromaneGasoilEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RPyromane extends Role{
@@ -130,38 +131,21 @@ public class RPyromane extends Role{
                                     lgp.sendMessage(RED+"Tu as déjà versé du gasoil sur "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
                                     return;
                                 }
-                                List<LGPlayer> liste = lgp.getCache().get("pyromane_essence");
-                                if(liste.contains(choosen)) {
+                                List<LGPlayer> gasoilList = lgp.getCache().get("pyromane_essence");
+                                if(gasoilList.contains(choosen)) {
                                     lgp.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+RED+" est déjà recouvert de gasoil.");
                                     return;
                                 }
-                                if(role.first == choosen) {
-                                    lgp.sendMessage(RED+"Vous avez déjà sélectionné "+GRAY+""+BOLD+""+choosen.getName()+""+RED+".");
-                                    return;
-                                }
+
                                 lgp.sendMessage(GOLD+"Tu as versé du gasoil sur "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
                                 lgp.sendActionBarMessage(GOLD+""+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est recouvert de gasoil");
                                 if(role.first != null || role.getGame().getAlive().size() == 2) {
                                     lgp.hideView();
                                     lgp.stopChoosing();
-                                    LGPyromaneGasoilEvent e = new LGPyromaneGasoilEvent(role.getGame(), choosen);
-                                    Bukkit.getPluginManager().callEvent(e);
-                                    if(e.isCancelled())
-                                        lgp.sendMessage(GRAY+""+BOLD+""+e.getPlayer().getName()+""+RED+" est immunisée.");
-                                    else {
-                                        e.getPlayer().sendMessage(GOLD+"Tu es recouvert de gasoil...");
-                                        liste.add(e.getPlayer());
-                                    }
-                                    if(role.first != null) {
-                                        e = new LGPyromaneGasoilEvent(role.getGame(), role.first);
-                                        Bukkit.getPluginManager().callEvent(e);
-                                        if(e.isCancelled())
-                                            lgp.sendMessage(GRAY+""+BOLD+""+e.getPlayer().getName()+""+RED+" est immunisée.");
-                                        else {
-                                            e.getPlayer().sendMessage(GOLD+"Tu es recouvert de gasoil...");
-                                            liste.add(e.getPlayer());
-                                        }
-                                    }
+                                    LGPlayer[] targets = new LGPlayer[] {role.first, choosen};
+                                    Arrays.stream(targets)
+                                            .filter(Objects::nonNull)
+                                            .forEach(target -> role.gasoil(lgp, target));
                                     player.getInventory().setItem(8, null);
                                     player.updateInventory();
                                     role.callback.run();
@@ -238,17 +222,8 @@ public class RPyromane extends Role{
 	}
 	@Override
 	protected void onNightTurnTimeout(LGPlayer player) {
-		if(first != null) {
-			List<LGPlayer> liste = player.getCache().get("pyromane_essence");
-			LGPyromaneGasoilEvent event = new LGPyromaneGasoilEvent(getGame(), first);
-			Bukkit.getPluginManager().callEvent(event);
-			if(event.isCancelled())
-				player.sendMessage(GRAY+""+BOLD+""+event.getPlayer().getName()+""+RED+" est immunisé.");
-			else {
-				event.getPlayer().sendMessage(GOLD+"Tu es recouvert de gasoil...");
-				liste.add(event.getPlayer());
-			}
-		}
+		if(first != null)
+            gasoil(player, first);
 		player.getPlayer().getInventory().setItem(8, null);
 		player.stopChoosing();
 		closeInventory(player);
@@ -311,10 +286,8 @@ public class RPyromane extends Role{
 	
 	@EventHandler
 	public void onEndgameCheck(LGEndCheckEvent e) {
-		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO) {
-			if(getPlayers().size() > 0)
-				e.setWinType(LGWinType.PYROMANE);
-		}
+		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO && getPlayers().size() > 0)
+            e.setWinType(LGWinType.PYROMANE);
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onEndGame(LGGameEndEvent e) {
@@ -323,5 +296,31 @@ public class RPyromane extends Role{
 			e.getWinners().addAll(getPlayers());
 		}
 	}
-	
+
+    public void gasoil(LGPlayer from, LGPlayer target)
+    {
+        List<LGPlayer> gasoilList = from.getCache().get("pyromane_essence");
+        LGRoleActionEvent e = new LGRoleActionEvent(getGame(), new GasoilAction(target), from);
+        Bukkit.getPluginManager().callEvent(e);
+        GasoilAction action = (GasoilAction) e.getAction();
+        if(!action.isCancelled() || action.isForceMessage())
+            action.getTarget().sendMessage(GOLD+"Tu es recouvert de gasoil...");
+        else
+            from.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+RED+" est immunisée.");
+
+        if(!action.isCancelled())
+            gasoilList.add(action.getTarget());
+    }
+
+    public static class GasoilAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public GasoilAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter @Setter private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

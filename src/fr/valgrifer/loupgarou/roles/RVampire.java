@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import fr.valgrifer.loupgarou.classes.*;
 import fr.valgrifer.loupgarou.events.*;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.*;
 import org.bukkit.event.EventHandler;
@@ -135,33 +136,43 @@ public class RVampire extends Role{
 				getGame().kill(getPlayers().get(getPlayers().size()-1), Reason.CHASSEUR_DE_VAMPIRE);
 				return;
 			}
-			
-			LGVampiredEvent event = new LGVampiredEvent(getGame(), choosen);
+
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new VampiredAction(choosen), getPlayers());
 			Bukkit.getPluginManager().callEvent(event);
-			if(event.isImmuned()) {
-				for(LGPlayer player : getPlayers())
+            RVampire.VampiredAction action = (RVampire.VampiredAction) event.getAction();
+
+			if(action.isImmuned() && !action.isForceMessage())
+            {
+				for(LGPlayer player : event.getPlayers())
 					player.sendMessage(RED+"Votre cible est immunisée.");
 				return;
-			}else if(event.isProtect()) {
-				for(LGPlayer player : getPlayers())
+			}
+            else if(action.isProtect() && !action.isForceMessage())
+            {
+				for(LGPlayer player : event.getPlayers())
 					player.sendMessage(RED+"Votre cible est protégée.");
 				return;
 			}
-			for(LGPlayer player : getPlayers())
-				player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+".");
-			choosen.sendMessage(GOLD+"Tu as été infecté par les "+DARK_PURPLE+""+BOLD+"Vampires "+GOLD+"pendant la nuit. Tu as perdu tes pouvoirs.");
-			choosen.sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+DARK_PURPLE+""+BOLD+""+ITALIC+"Vampires"+GOLD+""+ITALIC+".");
-            choosen.setRoleWinType(this.getWinType());
-            choosen.setRoleType(this.getType());
-			choosen.getCache().set("vampire", true);
-			choosen.getCache().set("just_vampire", true);
-            choosen.setRoleType(RoleType.VAMPIRE);
-            choosen.setRoleWinType(RoleWinType.VAMPIRE);
-            choosen.addEndGameReaveal(DARK_PURPLE+"Vampire");
-			nextCanInfect = getGame().getNight()+1;
-			join(choosen, false);
-			LGCustomItems.updateItem(choosen);
-		}else
+
+            for(LGPlayer player : getPlayers())
+                player.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+".");
+
+            if(!action.isForceMessage())
+            {
+                action.getTarget().sendMessage(GOLD+"Tu as été infecté par les "+DARK_PURPLE+""+BOLD+"Vampires "+GOLD+"pendant la nuit. Tu as perdu tes pouvoirs.");
+                action.getTarget().sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+DARK_PURPLE+""+BOLD+""+ITALIC+"Vampires"+GOLD+""+ITALIC+".");
+                action.getTarget().setRoleWinType(RoleWinType.VAMPIRE);
+                action.getTarget().setRoleType(RoleType.VAMPIRE);
+                action.getTarget().setRoleActive(false);
+                action.getTarget().getCache().set("vampire", true);
+                action.getTarget().getCache().set("just_vampire", true);
+                action.getTarget().addEndGameReaveal(DARK_PURPLE+"Vampire");
+                join(action.getTarget(), false);
+                LGCustomItems.updateItem(action.getTarget());
+            }
+            nextCanInfect = getGame().getNight()+1;
+		}
+        else
 			for(LGPlayer player : getPlayers())
 				player.sendMessage(GOLD+"Personne n'a été infecté.");
 	}
@@ -213,5 +224,16 @@ public class RVampire extends Role{
 			if(e.getPlayer().getCache().getBoolean("vampire"))
 				e.getConstraints().add(LGCustomItemsConstraints.VAMPIRE_INFECTE.getName());
 	}
-	
+
+    public static class VampiredAction implements LGRoleActionEvent.RoleAction, MessageForcable
+    {
+        public VampiredAction(LGPlayer target) {
+            this.target = target;
+        }
+
+        @Getter @Setter
+        private boolean immuned, protect;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

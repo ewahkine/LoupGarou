@@ -1,6 +1,13 @@
 package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
+
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -49,17 +56,33 @@ public class RCorbeau extends Role{
 		player.showView();
 		
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-                //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+""+BOLD+" est "+YELLOW+""+BOLD+""+choosen.getRole().getName(), 5*20);
+            if(choosen == null || choosen == player)
+                return;
 
-                choosen.getCache().set("corbeau_selected", true);
+            player.stopChoosing();
+            player.hideView();
+            //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+""+BOLD+" est "+YELLOW+""+BOLD+""+choosen.getRole().getName(), 5*20);
 
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" aura deux votes contre lui");
-                player.sendMessage(GOLD+"Tu nuis à la réputation de "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+            LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new VoteAction(choosen), player);
+            Bukkit.getPluginManager().callEvent(event);
+            VoteAction action = (VoteAction) event.getAction();
+            if(!action.isCancelled() || action.isForceMessage())
+            {
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" aura deux votes contre lui");
+                player.sendMessage(GOLD+"Tu nuis à la réputation de "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
             }
+            else
+                player.sendMessage(RED+"Votre cible est immunisée.");
+
+            if(action.isCancelled())
+            {
+                callback.run();
+                return;
+            }
+
+            action.getTarget().getCache().set("corbeau_selected", true);
+
+            callback.run();
         });
 	}
 	
@@ -93,7 +116,19 @@ public class RCorbeau extends Role{
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.stopChoosing();
 		player.hideView();
-		//player.sendTitle(RED+"Vous n'avez regardé aucun rôle", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		//player.sendMessage(RED+"Vous n'avez pas utilisé votre pouvoir cette nuit.");
 	}
+
+    public static class VoteAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public VoteAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }

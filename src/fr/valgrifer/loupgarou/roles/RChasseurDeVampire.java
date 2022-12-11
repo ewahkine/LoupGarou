@@ -3,7 +3,15 @@ package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
+import fr.valgrifer.loupgarou.events.MessageForcable;
+import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.event.Cancellable;
+
 import static org.bukkit.ChatColor.*;
 
 @SuppressWarnings("unused")
@@ -52,21 +60,49 @@ public class RChasseurDeVampire extends Role{
 		player.showView();
 		
 		player.choose(choosen -> {
-            if(choosen != null && choosen != player) {
-            //	player.sendMessage(GOLD+"Tu as choisi de rendre visite à "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                if(choosen.getCache().getBoolean("vampire") || choosen.getRole() instanceof RVampire) {
-                    getGame().kill(choosen, Reason.CHASSEUR_DE_VAMPIRE);
-                    player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+", à l'attaque.");
-                    player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" va mourir");
-                } else {
-                    player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
-                    player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire");
+            if(choosen == null || choosen == player)
+                return;
+
+            player.stopChoosing();
+            player.hideView();
+            if(choosen.getCache().getBoolean("vampire") || choosen.getRole() instanceof RVampire)
+            {
+                LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new KillAction(choosen), player);
+                Bukkit.getPluginManager().callEvent(event);
+                KillAction action = (KillAction) event.getAction();
+
+                if(!action.isCancelled() || action.isForceMessage())
+                {
+                    player.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" est un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+", à l'attaque.");
+                    player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir");
+                }
+                else
+                    player.sendMessage(RED+"Votre cible est immunisée.");
+
+                if(action.isCancelled())
+                {
+                    callback.run();
+                    return;
                 }
 
-                player.stopChoosing();
-                player.hideView();
-                callback.run();
+                LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), action.getTarget(), Reason.CHASSEUR_DE_VAMPIRE);
+                Bukkit.getPluginManager().callEvent(killEvent);
+
+                if(killEvent.isCancelled())
+                {
+                    callback.run();
+                    return;
+                }
+
+                getGame().kill(killEvent.getKilled(), Reason.CHASSEUR_DE_VAMPIRE);
             }
+            else
+            {
+                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
+                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire");
+            }
+
+            callback.run();
         });
 	}
 	
@@ -75,7 +111,19 @@ public class RChasseurDeVampire extends Role{
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.stopChoosing();
 		player.hideView();
-		//player.sendTitle(RED+"Vous n'avez regardé aucun rôle", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		//player.sendMessage(RED+"Vous n'avez pas utilisé votre pouvoir cette nuit.");
 	}
+
+    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    {
+        public KillAction(LGPlayer target)
+        {
+            this.target = target;
+        }
+
+        @Getter
+        @Setter
+        private boolean cancelled;
+        @Getter @Setter private LGPlayer target;
+        @Getter @Setter private boolean forceMessage;
+    }
 }
