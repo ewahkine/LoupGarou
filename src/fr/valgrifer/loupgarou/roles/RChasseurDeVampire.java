@@ -7,6 +7,7 @@ import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.TakeTarget;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -113,16 +114,14 @@ public class RChasseurDeVampire extends Role{
 		player.hideView();
 	}
 
-    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class KillAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public KillAction(LGPlayer target)
         {
             this.target = target;
         }
 
-        @Getter
-        @Setter
-        private boolean cancelled;
+        @Getter @Setter private boolean cancelled;
         @Getter @Setter private LGPlayer target;
         @Getter @Setter private boolean forceMessage;
     }

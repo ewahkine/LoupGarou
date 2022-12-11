@@ -1,9 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import fr.valgrifer.loupgarou.events.AbilityConsume;
-import fr.valgrifer.loupgarou.events.MessageForcable;
-import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
-import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
@@ -343,7 +340,7 @@ public class RSorciere extends Role{
 		callback.run();
 	}
 
-    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    public static class KillAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable, AbilityConsume
     {
         public KillAction(LGPlayer target)
         {
@@ -357,7 +354,7 @@ public class RSorciere extends Role{
         @Getter @Setter private boolean forceMessage;
         @Getter @Setter private boolean forceConsume;
     }
-    public static class SaveAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    public static class SaveAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable, AbilityConsume
     {
         public SaveAction(LGPlayer target)
         {

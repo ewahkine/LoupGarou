@@ -312,7 +312,7 @@ public class RPyromane extends Role{
             gasoilList.add(action.getTarget());
     }
 
-    public static class GasoilAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class GasoilAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public GasoilAction(LGPlayer target)
         {

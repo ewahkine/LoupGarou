@@ -5,8 +5,7 @@ import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
-import fr.valgrifer.loupgarou.events.MessageForcable;
-import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -15,9 +14,7 @@ import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
-import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
 
 public class RGarde extends Role{
 	public RGarde(LGGame game) {
@@ -137,7 +134,7 @@ public class RGarde extends Role{
 				lgp.getCache().remove("garde_protected");
 	}
     
-    public static class GuardAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class GuardAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public GuardAction(LGPlayer target)
         {

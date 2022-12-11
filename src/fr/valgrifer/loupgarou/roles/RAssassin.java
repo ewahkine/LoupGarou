@@ -152,7 +152,7 @@ public class RAssassin extends Role{
 		player.hideView();
 	}
 
-    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class KillAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public KillAction(LGPlayer target)
         {

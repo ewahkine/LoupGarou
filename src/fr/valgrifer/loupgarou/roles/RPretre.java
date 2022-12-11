@@ -13,6 +13,7 @@ import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
 import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.TakeTarget;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
@@ -390,16 +391,14 @@ public class RPretre extends Role{
         }.runTaskLater(MainLg.getInstance(), 1);
     }
 
-    public static class ReviveAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class ReviveAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public ReviveAction(LGPlayer target)
         {
             this.target = target;
         }
 
-        @Getter
-        @Setter
-        private boolean cancelled;
+        @Getter @Setter private boolean cancelled;
         @Getter @Setter private LGPlayer target;
         @Getter @Setter private Class<? extends Role> newRole = RVillageois.class;
         @Getter @Setter private boolean forceMessage;

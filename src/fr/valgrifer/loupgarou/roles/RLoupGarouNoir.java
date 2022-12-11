@@ -245,7 +245,7 @@ public class RLoupGarouNoir extends Role{
 				e.getConstraints().add(LGCustomItemsConstraints.INFECTED.getName());
 	}
 
-    public static class InfectAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable, AbilityConsume
+    public static class InfectAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable, AbilityConsume
     {
         public InfectAction(LGPlayer target)
         {

@@ -4,9 +4,7 @@ import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
-import fr.valgrifer.loupgarou.events.MessageForcable;
-import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
-import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +19,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
-import fr.valgrifer.loupgarou.events.LGEndCheckEvent;
-import fr.valgrifer.loupgarou.events.LGGameEndEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RLoupGarouBlanc extends Role{
@@ -177,16 +173,14 @@ public class RLoupGarouBlanc extends Role{
 		}
 	}
 
-    public static class KillAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class KillAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public KillAction(LGPlayer target)
         {
             this.target = target;
         }
 
-        @Getter
-        @Setter
-        private boolean cancelled;
+        @Getter @Setter private boolean cancelled;
         @Getter @Setter private LGPlayer target;
         @Getter @Setter private boolean forceMessage;
     }

@@ -225,7 +225,7 @@ public class RVampire extends Role{
 				e.getConstraints().add(LGCustomItemsConstraints.VAMPIRE_INFECTE.getName());
 	}
 
-    public static class VampiredAction implements LGRoleActionEvent.RoleAction, MessageForcable
+    public static class VampiredAction implements LGRoleActionEvent.RoleAction, TakeTarget, MessageForcable
     {
         public VampiredAction(LGPlayer target) {
             this.target = target;

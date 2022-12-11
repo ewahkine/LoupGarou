@@ -3,6 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.TakeTarget;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -75,7 +76,7 @@ public class RVoyante extends Role{
 		player.stopChoosing();
 		player.hideView();
 	}
-    public static class LookAction implements LGRoleActionEvent.RoleAction, Cancellable
+    public static class LookAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable
     {
         public LookAction(LGPlayer target)
         {

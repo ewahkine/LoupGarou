@@ -2,8 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
 
-import fr.valgrifer.loupgarou.events.MessageForcable;
-import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
+import fr.valgrifer.loupgarou.events.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -14,8 +13,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import fr.valgrifer.loupgarou.events.LGDayEndEvent;
-import fr.valgrifer.loupgarou.events.LGVoteEvent;
 
 @SuppressWarnings("unused")
 public class RCorbeau extends Role{
@@ -118,16 +115,14 @@ public class RCorbeau extends Role{
 		player.hideView();
 	}
 
-    public static class VoteAction implements LGRoleActionEvent.RoleAction, Cancellable, MessageForcable
+    public static class VoteAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable
     {
         public VoteAction(LGPlayer target)
         {
             this.target = target;
         }
 
-        @Getter
-        @Setter
-        private boolean cancelled;
+        @Getter @Setter private boolean cancelled;
         @Getter @Setter private LGPlayer target;
         @Getter @Setter private boolean forceMessage;
     }
