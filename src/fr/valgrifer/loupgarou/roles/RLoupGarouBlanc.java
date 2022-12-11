@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.bukkit.ChatColor.*;
+
+import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,15 +22,11 @@ import fr.valgrifer.loupgarou.events.LGGameEndEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RLoupGarouBlanc extends Role{
-	private static final ItemStack skip;
-	static {
-		skip = new ItemStack(Material.IRON_NUGGET);
-		ItemMeta meta = skip.getItemMeta();
-        assert meta != null;
-        meta.setDisplayName(GRAY+""+BOLD+"Ne rien faire");
-		meta.setLore(Collections.singletonList(DARK_GRAY+"Passez votre tour"));
-		skip.setItemMeta(meta);
-	}
+	private static final ItemBuilder itemNoAction = ItemBuilder
+            .make(Material.IRON_NUGGET)
+            .setCustomId("ac_skip")
+            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setLore(DARK_GRAY+"Passez votre tour");
 
 	public RLoupGarouBlanc(LGGame game) {
 		super(game);
@@ -85,7 +83,7 @@ public class RLoupGarouBlanc extends Role{
             targetable = getGame().getAlive();
 
 		player.showView();
-		player.getPlayer().getInventory().setItem(8, skip);
+		player.getPlayer().getInventory().setItem(8, itemNoAction.build());
 		player.choose(choosen -> {
             if(choosen != null && choosen != player) {
                 if(!targetable.contains(choosen)) {
@@ -107,14 +105,16 @@ public class RLoupGarouBlanc extends Role{
 	public void onClick(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		LGPlayer player = LGPlayer.thePlayer(p);
-		if(e.getItem() != null && e.getItem().getType() == Material.IRON_NUGGET && player.getRole() == this) {
-			player.stopChoosing();
-			p.getInventory().setItem(8, null);
-			p.updateInventory();
-			player.hideView();
-			player.sendMessage(GOLD+"Tu n'as tué personne.");
-			callback.run();
-		}
+
+        if(player.getRole() != this || !ItemBuilder.checkId(e.getItem(), itemNoAction.getCustomId()))
+            return;
+
+        player.stopChoosing();
+        p.getInventory().setItem(8, null);
+        p.updateInventory();
+        player.hideView();
+        player.sendMessage(GOLD+"Tu n'as tué personne.");
+        callback.run();
 	}
 	@Override
 	protected void onNightTurnTimeout(LGPlayer player) {
