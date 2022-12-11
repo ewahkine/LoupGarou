@@ -34,6 +34,7 @@ public class RoleWinType {
     public static final RoleWinType LOUP_GAROU = register("LOUP_GAROU", "Loups", RED, LGWinType.LOUPGAROU);
     public static final RoleWinType VAMPIRE = register("VAMPIRE", "Vampires", DARK_PURPLE, LGWinType.VAMPIRE);
     public static final RoleWinType SOLO = register("SOLO", "SEUL", GRAY, LGWinType.SOLO);
+    public static final RoleWinType COUPLE = register("COUPLE", "Couple", LIGHT_PURPLE, LGWinType.COUPLE);
 
     @Getter
     private final String id;

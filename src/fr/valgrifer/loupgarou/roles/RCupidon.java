@@ -44,7 +44,7 @@ public class RCupidon extends Role{
 		return RoleType.NEUTRAL;
 	}
 	public static RoleWinType _getWinType() {
-		return RoleWinType.SOLO;
+		return RoleWinType.COUPLE;
 	}
 	public static String _getName() {
 		return LIGHT_PURPLE+""+BOLD+"Cupidon";
@@ -53,7 +53,7 @@ public class RCupidon extends Role{
 		return "de "+_getName();
 	}
 	public static String _getShortDescription() {
-		return WHITE+"Tu gagnes avec le "+LIGHT_PURPLE+""+BOLD+"Couple";
+		return WHITE+"Tu gagnes avec le "+RoleWinType.COUPLE.getColoredName(BOLD);
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Dès le début de la partie, tu dois former un couple de deux joueurs. Leur objectif sera de survivre ensemble, car si l'un d'eux meurt, l'autre se suicidera.";
@@ -73,6 +73,8 @@ public class RCupidon extends Role{
 	public boolean hasPlayersLeft() {
 		return getGame().getNight() == 1;
 	}
+
+    private boolean forceCoupleWin = false;
 	
 	@Override
 	protected void onNightTurn(LGPlayer player, Runnable callback) {
@@ -84,13 +86,16 @@ public class RCupidon extends Role{
 
             if(player.getCache().has("cupidon_first")) {
                 LGPlayer first = player.getCache().remove("cupidon_first");
-                if(first == choosen) {
+                if(first == choosen)
+                {
                     int entityId = Integer.MAX_VALUE-choosen.getPlayer().getEntityId();
                     WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
                     destroy.setEntityIds(new int[] {entityId});
                     destroy.sendPacket(player.getPlayer());
                     player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est désélectionné pour être amoureux .");
-                } else {
+                }
+                else
+                {
                     //	sendHead(player, choosen);
                     int entityId = Integer.MAX_VALUE-first.getPlayer().getEntityId();
                     WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
@@ -103,26 +108,35 @@ public class RCupidon extends Role{
                     player.hideView();
                     callback.run();
                 }
-            } else {
+            }
+            else
+            {
                 sendHead(player, choosen);
                 player.getCache().set("cupidon_first", choosen);
                 player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" est sélectionné pour être amoureux .");
             }
         }, player);
 	}
-	protected void setInLove(LGPlayer player1, LGPlayer player2) {
+	protected void setInLove(LGPlayer player1, LGPlayer player2)
+    {
 		player1.getCache().set("inlove", player2);
 		player1.addEndGameReaveal(LIGHT_PURPLE+"\u2764");
-		player1.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+""+BOLD+""+player2.getName()+""+BLUE+", il est "+player2.getRole().getName());
-		player1.sendMessage(BLUE+""+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
+        player1.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+""+BOLD+""+player2.getName()+""+BLUE+", il est "+player2.getRole().getName());
+        player1.sendMessage(BLUE+""+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
 		
 		player2.getCache().set("inlove", player1);
         player2.addEndGameReaveal(LIGHT_PURPLE+"\u2764");
-		player2.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+""+BOLD+""+player1.getName()+""+BLUE+", il est "+player1.getRole().getName());
-		player2.sendMessage(BLUE+""+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
-		
-	/*	sendHead(player1, player2);
-		sendHead(player2, player1);*/
+        player2.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+""+BOLD+""+player1.getName()+""+BLUE+", il est "+player1.getRole().getName());
+        player2.sendMessage(BLUE+""+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
+
+        if(forceCoupleWin)
+        {
+            player1.setRoleWinType(RoleWinType.COUPLE);
+            player1.sendMessage(BLUE+""+ITALIC+"Vous devez gagné forcement avec votre couple et votre cupidon");
+            player2.setRoleWinType(RoleWinType.COUPLE);
+            player2.sendMessage(BLUE+""+ITALIC+"Vous devez gagné forcement avec votre couple et votre cupidon");
+        }
+
 		
 		//On peut créer des cheats grâce à ça (qui permettent de savoir qui est en couple)
 		player1.updatePrefix();
@@ -264,13 +278,4 @@ public class RCupidon extends Role{
 			if(e.getTo().getCache().get("inlove") == e.getPlayer() || ((e.getTo() == e.getPlayer() || e.getTo().getRole() == this) && e.getPlayer().getCache().has("inlove")))
 				e.setPrefix(LIGHT_PURPLE+"\u2764 "+WHITE+""+e.getPrefix());
 	}
-	
-/*	@EventHandler
-	public void onNight(LGDayEndEvent e) {
-		if(e.getGame() == getGame())
-			for(LGPlayer lgp : getGame().getAlive())
-				if(lgp.getCache().has("inlove"))
-					lgp.unMute(lgp.getCache().get("inlove"));
-	}*/
-	
 }
