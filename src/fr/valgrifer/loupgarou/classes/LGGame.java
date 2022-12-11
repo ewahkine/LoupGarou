@@ -617,18 +617,19 @@ public class LGGame implements Listener{
         Collections.reverse(reverseWinners);
 		
 		broadcastMessage(winType.getMessage(), true);
-		broadcastMessage(GOLD+""+BOLD+""+ITALIC+"Bravo à " +
-                reverseWinners
-                        .stream()
-                        .reduce("",
-                                (previous, lgPlayer) -> {
-                            if(previous.equals(""))
-                                return GRAY + "" + BOLD + lgPlayer.getName();
-                            if(!previous.contains(" "))
-                                return GRAY + "" + BOLD + lgPlayer.getName() + GOLD+""+BOLD+""+ITALIC + " et "+ previous;
-                            return GRAY + "" + BOLD + lgPlayer.getName() + GOLD+""+BOLD+""+ITALIC + ", "+ previous;
-                                }, String::concat)
-                + GOLD+""+BOLD+""+ITALIC + " !", true);
+        if(winType != LGWinType.EQUAL)
+            broadcastMessage(GOLD+""+BOLD+""+ITALIC+"Bravo à " +
+                    reverseWinners
+                            .stream()
+                            .reduce("",
+                                    (previous, lgPlayer) -> {
+                                if(previous.equals(""))
+                                    return GRAY + "" + BOLD + lgPlayer.getName();
+                                if(!previous.contains(" "))
+                                    return GRAY + "" + BOLD + lgPlayer.getName() + GOLD+""+BOLD+""+ITALIC + " et "+ previous;
+                                return GRAY + "" + BOLD + lgPlayer.getName() + GOLD+""+BOLD+""+ITALIC + ", "+ previous;
+                                    }, String::concat)
+                    + GOLD+""+BOLD+""+ITALIC + " !", true);
 		for(LGPlayer lgp : getInGame()) {
 			lgp.leaveChat();
 			lgp.joinChat(spectatorChat);
