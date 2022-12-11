@@ -340,9 +340,8 @@ public class LGPlayer {
 	}
 	
 	public void onChat(String message) {
-		if(chat != null) {
+		if(chat != null)
 			chat.sendMessage(this, message);
-		}
 	}
 	
 	

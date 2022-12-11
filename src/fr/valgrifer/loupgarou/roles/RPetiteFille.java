@@ -47,15 +47,24 @@ public class RPetiteFille extends Role{
 	
 	@EventHandler
 	public void onChangeRole(LGRoleTurnEndEvent e) {
-		if(e.getGame() == getGame()) {
-			if(e.getNewRole() instanceof RLoupGarou)
-				for(LGPlayer player : getPlayers())
-                    if(!player.getCache().getBoolean("infected") && player.isRoleActive())
-                        player.joinChat(((RLoupGarou) e.getNewRole()).getChat(), (sender, message)-> RED+""+customNames.get(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message, true);
-			if(e.getPreviousRole() instanceof RLoupGarou)
-				for(LGPlayer player : getPlayers())
-					if(!player.getCache().getBoolean("infected") && player.isRoleActive())
-						player.leaveChat();
-		}
+		if(e.getGame() != getGame())
+            return;
+
+        if(e.getNewRole() instanceof RLoupGarou)
+            getGame().getAlive()
+                    .stream()
+                    .filter(player -> player.getRole() == this &&
+                            !player.getCache().getBoolean("infected") &&
+                            player.isRoleActive())
+                    .forEach(player -> player.joinChat(((RLoupGarou) e.getNewRole()).getChat(), (sender, message)->
+                                    RED+""+customNames.get(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message,
+                            true));
+        if(e.getPreviousRole() instanceof RLoupGarou)
+            getGame().getAlive()
+                    .stream()
+                    .filter(player -> player.getRole() == this &&
+                            !player.getCache().getBoolean("infected") &&
+                            player.isRoleActive())
+                    .forEach(LGPlayer::leaveChat);
 	}
 }

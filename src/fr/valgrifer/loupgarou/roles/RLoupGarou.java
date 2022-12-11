@@ -80,7 +80,6 @@ public class RLoupGarou extends Role{
         if(lg == null)
             game.getRoles().add(lg = new RLoupGarou(game));
 
-
         lg.join(player, false);
         return lg;
     }
