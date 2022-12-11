@@ -98,17 +98,21 @@ Les fichiers relatifs à minecraft se situeront dans le dossier `minecraft_data`
 
 ## Crédits du projet d'origine
 
-- Chef de Projet : [Shytoos](https://twitter.com/shytoos_)
+- Chef de Projet : [Shytoos](https://twitter.com/Shytoos)
 - Développement : [Leomelki](https://twitter.com/leomelki)
 - Mapping : [Cosii](https://www.youtube.com/channel/UCwyOcA41QSk590fl9L0ys8A)
 
 ## Aide
 
+En cas de soucis, envoyé vos problèmes/erreurs sur Github, j'essayerais de les resoudres.
+
+### Si toujours opérationnelle
+
 Par soucis de temps, nous ne pouvons pas faire de support au cas par cas, mais vous pouvez rejoindre notre serveur [Discord](https://discord.gg/Squeezie) pour trouver de l'aide auprès de la communauté.
 
 ### Questions fréquentes
 
-- Que faire en cas de problème d'affichage (votes bloqués au dessus des têtes, etc...) ?  
+- Que faire en cas de problème d'affichage (votes bloqués aux dessus des têtes, etc...) ?  
 
 Cela arrive après avoir `reload` au cours d'une partie, tous les joueurs qui ont ce problème doivent se déconnecter et se reconnecter.
 
