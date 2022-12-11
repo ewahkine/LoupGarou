@@ -173,7 +173,8 @@ public class MainLg extends JavaPlugin {
     }
 
     public void addBlackListSpecRole(Class<? extends Role> clazz) {
-        this.blacklistRoleSpec.add(clazz);
+        if(!this.blacklistRoleSpec.contains(clazz))
+            this.blacklistRoleSpec.add(clazz);
     }
 
     private void loadRoles() {
