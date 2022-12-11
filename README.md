@@ -10,7 +10,7 @@
   - [Installation avec docker (Alternative)](#installation-avec-docker-alternative)
 - [Commandes](#commandes)
 - [Todo](#todo)
-- [Crédits](#Crédits-du-projet-d'origine)
+- [Crédits](#crédits-du-projet-dorigine)
 - [Aide](#aide)
   - [Questions fréquentes](#questions-fréquentes)
 - [Indications pour les développeurs](#indications-pour-les-développeurs)
