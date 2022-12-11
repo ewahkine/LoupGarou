@@ -1,7 +1,7 @@
 package fr.valgrifer.loupgarou.roles;
 
 import java.util.Collections;
-import java.util.Objects;
+import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 import org.bukkit.Material;
@@ -88,7 +88,7 @@ public class RLoupGarouBlanc extends Role{
 		player.getPlayer().getInventory().setItem(8, skip);
 		player.choose(choosen -> {
             if(choosen != null && choosen != player) {
-                if(!lg.getPlayers().contains(choosen)) {
+                if(!targetable.contains(choosen)) {
                     player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'est pas un Loup-Garou.");
                     return;
                 }
@@ -124,23 +124,17 @@ public class RLoupGarouBlanc extends Role{
 		player.hideView();
 		player.sendMessage(GOLD+"Tu n'as tué personne.");
 	}
-	
-	RLoupGarou lg;
+
 	@Override
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
-        lg = Objects.requireNonNull(RLoupGarou.forceJoin(player));
+        RLoupGarou.forceJoin(player);
 	}
 	
 	@EventHandler
 	public void onEndgameCheck(LGEndCheckEvent e) {
 		if(e.getGame() == getGame() && e.getWinType() == LGWinType.SOLO) {
-			if(getPlayers().size() > 0) {
-				if(lg.getPlayers().size() > getPlayers().size())
-					e.setWinType(LGWinType.NONE);
-				else if(lg.getPlayers().size() == getPlayers().size())
-					e.setWinType(LGWinType.LOUPGAROUBLANC);
-			}
+            e.setWinType(LGWinType.LOUPGAROUBLANC);
 		}
 	}
 	

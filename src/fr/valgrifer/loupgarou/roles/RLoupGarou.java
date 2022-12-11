@@ -95,12 +95,10 @@ public class RLoupGarou extends Role{
         }
 
 		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+""+BLUE+"Vous votez contre "+RED+""+BOLD+""+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+""+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+""+GOLD+" pour voter");
-		for(LGPlayer lgp : getGame().getAlive())
-			if(lgp.getRoleType() == RoleType.LOUP_GAROU)
-				lgp.showView();
 
 		for(LGPlayer player : getPlayers()) {
 			player.sendMessage(GOLD+""+getTask());
+            player.showView();
 		//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
 			player.joinChat(chat);
 		}
@@ -110,26 +108,29 @@ public class RLoupGarou extends Role{
 		});
 	}
 	private void onNightTurnEnd() {
-		for(LGPlayer lgp : getGame().getAlive())
-			if(lgp.getRoleType() == RoleType.LOUP_GAROU)
-				lgp.hideView();
 		for(LGPlayer player : getPlayers()) {
+            player.hideView();
 			player.leaveChat();
 		}
 
 		LGPlayer choosen = vote.getChoosen();
-		if(choosen == null) {
-			if(vote.getVotes().size() > 0) {
+		if(choosen == null)
+        {
+			if(vote.getVotes().size() > 0)
+            {
 				int max = 0;
 				boolean equal = false;
 				for(Entry<LGPlayer, List<LGPlayer>> entry : vote.getVotes().entrySet())
-					if(entry.getValue().size() > max) {
+					if(entry.getValue().size() > max)
+                    {
 						equal = false;
 						max = entry.getValue().size();
 						choosen = entry.getKey();
-					}else if(entry.getValue().size() == max)
+					}
+                else if(entry.getValue().size() == max)
 						equal = true;
-				if(equal) {
+				if(equal)
+                {
 					choosen = null;
 					List<LGPlayer> choosable = new ArrayList<>();
 					for(Entry<LGPlayer, List<LGPlayer>> entry : vote.getVotes().entrySet())
@@ -140,11 +141,13 @@ public class RLoupGarou extends Role{
 				}
 			}
 		}
-		if(choosen != null) {
+		if(choosen != null)
+        {
 			getGame().kill(choosen, Reason.LOUP_GAROU);
 			for(LGPlayer player : getPlayers())
 				player.sendMessage(GOLD+"Les "+RED+""+BOLD+"Loups"+GOLD+" ont décidé de tuer "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-		}else
+		}
+        else
 			for(LGPlayer player : getPlayers())
 				player.sendMessage(GOLD+"Personne n'a été désigné pour mourir.");
 	}
