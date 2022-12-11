@@ -3,7 +3,6 @@ package fr.valgrifer.loupgarou;
 import com.comphenix.protocol.ProtocolLibrary;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.listeners.*;
 import fr.valgrifer.loupgarou.roles.*;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
@@ -16,7 +15,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -143,19 +141,8 @@ public class MainLg extends JavaPlugin {
     @SuppressWarnings("NullableProblems")
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (!sender.hasPermission("loupgarou.admin"))
-            return new ArrayList<>(0);
-
-        if (args.length > 1) {
-            if (args[0].equalsIgnoreCase("roles"))
-                if (args.length == 2)
-                    return getStartingList(args[1], "list", "set");
-                else if (args.length == 3 && args[1].equalsIgnoreCase("set"))
-                    return getStartingList(args[2], getRoles().keySet().toArray(new String[0]));
-                else if (args.length == 4)
-                    return Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9");
-        } else if (args.length == 1)
-            return getStartingList(args[0], "addSpawn", "end", "start", "nextNight", "nextDay", "reloadConfig", "roles", "joinAll", "reloadPacks");
+        if (sender.hasPermission("loupgarou.admin") && args.length == 1)
+            return getStartingList(args[0], "addSpawn");
         return new ArrayList<>(0);
     }
 
