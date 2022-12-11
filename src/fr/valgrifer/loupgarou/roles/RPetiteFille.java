@@ -1,9 +1,11 @@
 package fr.valgrifer.loupgarou.roles;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.bukkit.ChatColor.*;
+
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -42,10 +44,17 @@ public class RPetiteFille extends Role{
 	public int getTimeout() {
 		return -1;
 	}
+
+    public boolean cryptAllName = false;
 	
-	List<String> customNames = Arrays.asList("Loup Glouton", "Loup Méchant", "Loup Burlesque", "Loup Peureux", "Loup Malingre", "Loup Gentil", "Loup Tueur", "Loup Énervé", "Loup Docteur");
-	
-	@EventHandler
+	List<String> customNames = Stream.of("Alpha", "Glouton", "Méchant", "Burlesque", "Peureux", "Malingre", "Gentil", "Tueur", "Énervé", "Docteur", "Enrager", "Fou", "Pensif", "réfléchi")
+            .map(ended -> "Loup " + ended).collect(Collectors.toList());
+
+    public String getCustomName(int index) {
+        return !cryptAllName ? (customNames.size() > index ? customNames.get(index) : "Loup " +  MAGIC + "123456") : MAGIC + "Loup 123456";
+    }
+
+    @EventHandler
 	public void onChangeRole(LGRoleTurnEndEvent e) {
 		if(e.getGame() != getGame())
             return;
@@ -57,7 +66,7 @@ public class RPetiteFille extends Role{
                             !player.getCache().getBoolean("infected") &&
                             player.isRoleActive())
                     .forEach(player -> player.joinChat(((RLoupGarou) e.getNewRole()).getChat(), (sender, message)->
-                                    RED+""+customNames.get(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message,
+                                    RED+""+getCustomName(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message,
                             true));
         if(e.getPreviousRole() instanceof RLoupGarou)
             getGame().getAlive()
