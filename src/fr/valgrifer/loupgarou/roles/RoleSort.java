@@ -8,6 +8,10 @@ import java.util.Objects;
 public class RoleSort {
     @Getter
     private static final ArrayList<RoleSort> values = new ArrayList<>();
+    public static RoleSort registerAt(Class<? extends Role> clazz, int index)
+    {
+        return registerAt(clazz.getSimpleName().substring(1), index);
+    }
     public static RoleSort registerAt(String name, int index)
     {
         RoleSort rolesort;
@@ -20,17 +24,29 @@ public class RoleSort {
             values.add(index, rolesort);
         return rolesort;
     }
+    public static RoleSort register(Class<? extends Role> clazz)
+    {
+        return registerAt(clazz.getSimpleName().substring(1), -1);
+    }
     public static RoleSort register(String name)
     {
         return registerAt(name, -1);
     }
-    public static RoleSort registerBefore(String name, String name2)
+    public static RoleSort registerBefore(Class<? extends Role> clazz, Class<? extends Role> at)
     {
-        return registerAt(name, indexOfRoleSort(name2));
+        return registerBefore(clazz.getSimpleName().substring(1), at.getSimpleName().substring(1));
     }
-    public static RoleSort registerAfter(String name, String name2)
+    public static RoleSort registerBefore(String name, String at)
     {
-        int index = indexOfRoleSort(name2);
+        return registerAt(name, indexOfRoleSort(at));
+    }
+    public static RoleSort registerAfter(Class<? extends Role> clazz, Class<? extends Role> at)
+    {
+        return registerAfter(clazz.getSimpleName().substring(1), at.getSimpleName().substring(1));
+    }
+    public static RoleSort registerAfter(String name, String at)
+    {
+        int index = indexOfRoleSort(at);
         if(index >= 0)
             index++;
         return registerAt(name, index);
@@ -50,27 +66,27 @@ public class RoleSort {
     }
     
     
-    public static final RoleSort ChienLoup = register("ChienLoup");
-    public static final RoleSort EnfantSauvage = register("EnfantSauvage");
-    public static final RoleSort Cupidon = register("Cupidon");
-    public static final RoleSort Garde = register("Garde");
-    public static final RoleSort Survivant = register("Survivant");
-    public static final RoleSort Voyante = register("Voyante");
-    public static final RoleSort Detective = register("Detective");
-    public static final RoleSort Dictateur = register("Dictateur");
-    public static final RoleSort Pretre = register("Pretre");
-    public static final RoleSort LoupGarou = register("LoupGarou");
-    public static final RoleSort LoupGarouNoir = register("LoupGarouNoir");
-    public static final RoleSort GrandMechantLoup = register("GrandMechantLoup");
-    public static final RoleSort LoupGarouBlanc = register("LoupGarouBlanc");
-    public static final RoleSort Assassin = register("Assassin");
-    public static final RoleSort Pyromane = register("Pyromane");
-    public static final RoleSort ChasseurDeVampire = register("ChasseurDeVampire");
-    public static final RoleSort Vampire = register("Vampire");
-    public static final RoleSort Pirate = register("Pirate");
-    public static final RoleSort Bouffon = register("Bouffon");
-    public static final RoleSort Sorciere = register("Sorciere");
-    public static final RoleSort Corbeau = register("Corbeau");
+    public static final RoleSort ChienLoup = register(RChienLoup.class);
+    public static final RoleSort EnfantSauvage = register(REnfantSauvage.class);
+    public static final RoleSort Cupidon = register(RCupidon.class);
+    public static final RoleSort Garde = register(RGarde.class);
+    public static final RoleSort Survivant = register(RSurvivant.class);
+    public static final RoleSort Voyante = register(RVoyante.class);
+    public static final RoleSort Detective = register(RDetective.class);
+    public static final RoleSort Dictateur = register(RDictateur.class);
+    public static final RoleSort Pretre = register(RPretre.class);
+    public static final RoleSort LoupGarou = register(RLoupGarou.class);
+    public static final RoleSort LoupGarouNoir = register(RLoupGarouNoir.class);
+    public static final RoleSort GrandMechantLoup = register(RGrandMechantLoup.class);
+    public static final RoleSort LoupGarouBlanc = register(RLoupGarouBlanc.class);
+    public static final RoleSort Assassin = register(RAssassin.class);
+    public static final RoleSort Pyromane = register(RPyromane.class);
+    public static final RoleSort ChasseurDeVampire = register(RChasseurDeVampire.class);
+    public static final RoleSort Vampire = register(RVampire.class);
+    public static final RoleSort Pirate = register(RPirate.class);
+    public static final RoleSort Bouffon = register(RBouffon.class);
+    public static final RoleSort Sorciere = register(RSorciere.class);
+    public static final RoleSort Corbeau = register(RCorbeau.class);
     
 
     @Getter
