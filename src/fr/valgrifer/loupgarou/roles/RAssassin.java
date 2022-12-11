@@ -2,20 +2,14 @@ package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
 
-import fr.valgrifer.loupgarou.events.LGNightEndEvent;
+import fr.valgrifer.loupgarou.events.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
-import fr.valgrifer.loupgarou.events.LGEndCheckEvent;
-import fr.valgrifer.loupgarou.events.LGGameEndEvent;
-import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
-import fr.valgrifer.loupgarou.events.LGPyromaneGasoilEvent;
-import fr.valgrifer.loupgarou.events.LGRoleTurnEndEvent;
-import fr.valgrifer.loupgarou.events.LGVampiredEvent;
 
 @SuppressWarnings("unused")
 public class RAssassin extends Role{
@@ -69,41 +63,43 @@ public class RAssassin extends Role{
 	
 	@EventHandler
 	public void onKill(LGNightPlayerPreKilledEvent e) {
-		if(e.getKilled().getRole() == this && e.getReason() == Reason.LOUP_GAROU || e.getReason() == Reason.GM_LOUP_GAROU && e.getKilled().isRoleActive()) {//Les assassins ne peuvent pas mourir la nuit !
-			e.setReason(Reason.DONT_DIE);
-			e.getKilled().getCache().set("assassin_protected", true);
-		}
+		if(e.getKilled().getRole() != this || (e.getReason() != Reason.LOUP_GAROU && e.getReason() != Reason.GM_LOUP_GAROU) || !e.getKilled().isRoleActive())
+            return;
+
+        e.setCancelled(true);
+
+        if(e.getReason() == Reason.LOUP_GAROU)
+        {
+            RLoupGarou lgs;
+            if((lgs = getGame().getRole(RLoupGarou.class)) != null)
+                for(LGPlayer lg : lgs.getPlayers())
+                    lg.sendMessage(RED+"Votre cible est immunisée.");
+        }
+        else if(e.getReason() == Reason.GM_LOUP_GAROU)
+        {
+            RGrandMechantLoup lgs;
+            if((lgs = getGame().getRole(RGrandMechantLoup.class)) != null)
+                for(LGPlayer lg : lgs.getPlayers())
+                    lg.sendMessage(RED+"Votre cible est immunisée.");
+        }
 	}
-	
+
 	@EventHandler
-	public void onTour(LGRoleTurnEndEvent e) {
-		if(e.getGame() == getGame()) {
-			if(e.getPreviousRole() instanceof RLoupGarou) {
-				for(LGPlayer lgp : getGame().getAlive())
-					if(lgp.getCache().getBoolean("assassin_protected")) {
-						for(LGPlayer l : getGame().getInGame())
-							if(l.getRoleType() == RoleType.LOUP_GAROU)
-								l.sendMessage(RED+"Votre cible est immunisée.");
-					}
-			}else if(e.getPreviousRole() instanceof RGrandMechantLoup) {
-				for(LGPlayer lgp : getGame().getAlive())
-					if(lgp.getCache().getBoolean("assassin_protected")) {
-						for(LGPlayer l : e.getPreviousRole().getPlayers())
-							l.sendMessage(RED+"Votre cible est immunisée.");
-					}
-			}
-		}
-	}
-	
-	@EventHandler
-	public void onPyroGasoil(LGPyromaneGasoilEvent e) {
-		if(e.getPlayer().getRole() == this && e.getPlayer().isRoleActive())
-			e.setCancelled(true);
-	}
-	@EventHandler
-	public void onVampired(LGVampiredEvent e) {
-		if(e.getPlayer().getRole() == this && e.getPlayer().isRoleActive())
-			e.setImmuned(true);
+	public void onPyroGasoil(LGRoleActionEvent e) {
+        if(e.getGame() != getGame())
+            return;
+		if(e.getAction() instanceof RPyromane.GasoilAction)
+        {
+            RPyromane.GasoilAction action = (RPyromane.GasoilAction) e.getAction();
+            if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
+                action.setCancelled(true);
+        }
+		else if(e.getAction() instanceof RVampire.VampiredAction)
+        {
+            RVampire.VampiredAction action = (RVampire.VampiredAction) e.getAction();
+            if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
+                action.setImmuned(true);
+        }
 	}
 	
 	@EventHandler
