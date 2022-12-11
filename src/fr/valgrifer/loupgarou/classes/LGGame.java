@@ -923,4 +923,12 @@ public class LGGame implements Listener{
 
 		return event.getWinType() != LGWinType.NONE;
 	}
+
+    public <R extends Role> R getRole(Class<R> clazz)
+    {
+        for(Role role : getRoles())
+            if(role.getClass().equals(clazz))
+                return (R) role;
+        return null;
+    }
 }

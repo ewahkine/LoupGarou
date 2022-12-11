@@ -75,16 +75,10 @@ public class RLoupGarou extends Role{
         if(game == null)
             return null;
 
-        RLoupGarou lg = null;
-        for(Role role : game.getRoles())
-            if(role instanceof RLoupGarou)
-                lg = (RLoupGarou) role;
+        RLoupGarou lg = game.getRole(RLoupGarou.class);
 
         if(lg == null)
-        {
-            lg = new RLoupGarou(game);
-            game.getRoles().add(lg);
-        }
+            game.getRoles().add(lg = new RLoupGarou(game));
 
 
         lg.join(player, false);

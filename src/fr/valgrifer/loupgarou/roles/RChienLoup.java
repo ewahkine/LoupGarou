@@ -63,10 +63,7 @@ public class RChienLoup extends Role {
                         lgp.sendMessage(GOLD+"Tu as changé de camp.");
 
                         //On le fait aussi rejoindre le camp des loups pour le tour pendant la nuit.
-                        RChienLoupLG lgChienLoup = null;
-                        for(Role r : role.getGame().getRoles())
-                            if(r instanceof RChienLoupLG)
-                                lgChienLoup = (RChienLoupLG)r;
+                        RChienLoupLG lgChienLoup = role.getGame().getRole(RChienLoupLG.class);
 
                         if(lgChienLoup == null)
                             role.getGame().getRoles().add(lgChienLoup = new RChienLoupLG(role.getGame()));

@@ -317,10 +317,7 @@ public class RPretre extends Role{
                 continue;
             lgp.setDead(false);
             lgp.getCache().reset();
-            RVillageois villagers = null;
-            for(Role role : getGame().getRoles())
-                if(role instanceof RVillageois)
-                    villagers = (RVillageois)role;
+            RVillageois villagers = getGame().getRole(RVillageois.class);
             if(villagers == null)
                 getGame().getRoles().add(villagers = new RVillageois(getGame()));
             villagers.join(lgp, false);//Le joueur réssuscité rejoint les villageois.

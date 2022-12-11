@@ -49,14 +49,9 @@ public class RPetiteFille extends Role{
 	public void onChangeRole(LGRoleTurnEndEvent e) {
 		if(e.getGame() == getGame()) {
 			if(e.getNewRole() instanceof RLoupGarou)
-				for(Role role : getGame().getRoles())
-					if(role instanceof RLoupGarou) {
-						RLoupGarou lgRole = (RLoupGarou)role;
-						for(LGPlayer player : getPlayers())
-							if(!player.getCache().getBoolean("infected") && player.isRoleActive())
-								player.joinChat(lgRole.getChat(), (sender, message)-> RED+""+customNames.get(lgRole.getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message, true);
-						break;
-					}
+				for(LGPlayer player : getPlayers())
+                    if(!player.getCache().getBoolean("infected") && player.isRoleActive())
+                        player.joinChat(((RLoupGarou) e.getNewRole()).getChat(), (sender, message)-> RED+""+customNames.get(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message, true);
 			if(e.getPreviousRole() instanceof RLoupGarou)
 				for(LGPlayer player : getPlayers())
 					if(!player.getCache().getBoolean("infected") && player.isRoleActive())

@@ -77,14 +77,13 @@ public class RLoupGarouBlanc extends Role{
 	@Override
 	protected void onNightTurn(LGPlayer player, Runnable callback) {
 		this.callback = callback;
-		RLoupGarou lg_ = null;
-		for(Role role : getGame().getRoles())
-			if(role instanceof RLoupGarou) {
-				lg_ = (RLoupGarou)role;
-				break;
-			}
-		
-		RLoupGarou lg = lg_;
+        List<LGPlayer> targetable;
+		RLoupGarou lg;
+		if((lg = getGame().getRole(RLoupGarou.class)) != null && lg.getPlayers().size() > 0)
+            targetable = lg.getPlayers();
+        else
+            targetable = getGame().getAlive();
+
 		player.showView();
 		player.getPlayer().getInventory().setItem(8, skip);
 		player.choose(choosen -> {

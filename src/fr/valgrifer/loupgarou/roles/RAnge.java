@@ -60,11 +60,7 @@ public class RAnge extends Role{
 	public void onDayEnd(LGDayEndEvent e) {
 		if(e.getGame() == getGame()) {
 			if(getPlayers().size() > 0 && getGame().getNight() == night+1 && vote) {
-				Role villageois = null;
-				for(Role role : getGame().getRoles()) {
-					if(role instanceof RVillageois)
-						villageois = role;
-				}
+				Role villageois = getGame().getRole(RVillageois.class);
 				
 				if(villageois == null)
 					getGame().getRoles().add(villageois = new RVillageois(getGame()));

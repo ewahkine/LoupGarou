@@ -60,9 +60,10 @@ public class RFaucheur extends Role{
 				// Mort par les LG
 				// Tue un lg au hasard
 				LGPlayer selected = null;
-				for (Role role : getGame().getRoles())
-					if (role instanceof RLoupGarou)
-						selected = role.getPlayers().get(random.nextInt(role.getPlayers().size()));
+                RLoupGarou role;
+                if ((role = getGame().getRole(RLoupGarou.class)) != null)
+                    selected = role.getPlayers().get(random.nextInt(role.getPlayers().size()));
+
 				if (selected != null) {
 					LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(getGame(), selected, Reason.FAUCHEUR);
 					Bukkit.getPluginManager().callEvent(killEvent);
