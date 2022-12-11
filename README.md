@@ -92,6 +92,7 @@ Les fichiers relatifs à minecraft se situeront dans le dossier `minecraft_data`
 - [ ] Add A Option System / Ajouter un system d'option
 - [ ] Change SpawnPoint System / Changer le system de SpawnPoint
 - [ ] Add A Map selection System / Ajouter un system de selection de map
+- [ ] Add Language selection System / Ajouter un system de Langue
 - [ ] Add a wiki / Ajouter un Wiki
 
 
