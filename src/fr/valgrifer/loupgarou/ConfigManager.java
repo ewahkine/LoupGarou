@@ -120,7 +120,7 @@ public class ConfigManager extends LGInventoryHolder
                         (holder, event) -> {
                             event.getWhoClicked().sendMessage(GREEN + "Vous avez bien reload la config !");
                             event.getWhoClicked().sendMessage(GRAY + "" + ITALIC + "Si vous avez changé les rôles, écriver " + DARK_GRAY + "" + ITALIC + "/lg joinall" + GRAY + "" + ITALIC + " !");
-                            MainLg.getInstance().loadConfig();
+                            MainLg.getInstance().loadMaxPlayers();
                         });
 
 
@@ -248,7 +248,7 @@ public class ConfigManager extends LGInventoryHolder
                                 getCache().set("roleChanged", true);
                                 MainLg.getInstance().getConfig().set("role." + role, newCount);
                                 MainLg.getInstance().saveConfig();
-                                MainLg.getInstance().loadConfig();
+                                MainLg.getInstance().loadMaxPlayers();
                                 MainLg.makeNewGame();
                                 apply();
                             });

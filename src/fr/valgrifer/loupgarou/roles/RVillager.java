@@ -3,8 +3,8 @@ package fr.valgrifer.loupgarou.roles;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import static org.bukkit.ChatColor.*;
 
-public class RVillageois extends Role{
-	public RVillageois(LGGame game) {
+public class RVillager extends Role{
+	public RVillager(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {

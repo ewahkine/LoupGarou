@@ -16,17 +16,16 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.LGCustomItems;
-import fr.valgrifer.loupgarou.classes.LGCustomItems.LGCustomItemsConstraints;
+import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RLoupGarouNoir extends Role{
+public class RBlackWerewolf extends Role{
     private static final MenuPreset preset = new MenuPreset(1) {
         @Override
         protected void preset() {
@@ -40,10 +39,10 @@ public class RLoupGarouNoir extends Role{
 
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                if(!(lgp.getRole() instanceof RLoupGarouNoir))
+                if(!(lgp.getRole() instanceof RBlackWerewolf))
                     return;
 
-                RLoupGarouNoir role = (RLoupGarouNoir) lgp.getRole();
+                RBlackWerewolf role = (RBlackWerewolf) lgp.getRole();
 
                 role.closeInventory(lgp);
                 lgp.sendMessage(GOLD+"Tu n'as rien fait cette nuit.");
@@ -62,10 +61,10 @@ public class RLoupGarouNoir extends Role{
 
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                if(!(lgp.getRole() instanceof RLoupGarouNoir))
+                if(!(lgp.getRole() instanceof RBlackWerewolf))
                     return;
 
-                RLoupGarouNoir role = (RLoupGarouNoir) lgp.getRole();
+                RBlackWerewolf role = (RBlackWerewolf) lgp.getRole();
 
                 role.closeInventory(lgp);
                 lgp.stopChoosing();
@@ -105,7 +104,7 @@ public class RLoupGarouNoir extends Role{
         }
     };
 
-	public RLoupGarouNoir(LGGame game) {
+	public RBlackWerewolf(LGGame game) {
 		super(game);
 	}
 
@@ -118,7 +117,7 @@ public class RLoupGarouNoir extends Role{
 	}
 
 	public static String _getShortDescription() {
-		return RLoupGarou._getShortDescription();
+		return RWereWolf._getShortDescription();
 	}
 
 	public static String _getDescription() {
@@ -192,34 +191,36 @@ public class RLoupGarouNoir extends Role{
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDayStart(LGNightEndEvent e) {
-		if(e.getGame() == getGame())
-			for(LGPlayer player : getGame().getAlive()) {
-				if(player.getCache().getBoolean("just_infected")) {
-					player.getCache().remove("just_infected");
-					player.sendMessage(GOLD+"Tu as été infecté pendant la nuit.");
-					player.sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+RED+""+BOLD+""+ITALIC+"Loups-Garous"+GOLD+""+ITALIC+".");
+		if(e.getGame() != getGame())
+            return;
+
+        getGame().getAlive().stream()
+                .filter(player -> player.getCache().getBoolean("just_infected"))
+                .forEach(player -> {
+                    player.getCache().remove("just_infected");
+                    player.sendMessage(GOLD+"Tu as été infecté pendant la nuit.");
+                    player.sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+RED+""+BOLD+""+ITALIC+"Loups-Garous"+GOLD+""+ITALIC+".");
                     if(!player.isDead()) {//Si il n'a pas été tué je ne sais comment
-                        RLoupGarou.forceJoin(player);
-                        player.getPlayer().getInventory().setItemInOffHand(new ItemStack(LGCustomItems.getItem(player)));
+                        RWereWolf.forceJoin(player);
+                        LGCustomItems.updateItem(player);
                     }
-					
-					for(LGPlayer lgp : getGame().getInGame()) {
-						if(lgp.getRoleType() == RoleType.LOUP_GAROU)
-							lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est fait infecter pendant la nuit.");
-						else
-							lgp.sendMessage(GOLD+"Un joueur a été "+RED+""+BOLD+"infecté"+GOLD+" pendant la nuit.");
-					}
-					
-					if(getGame().checkEndGame())
-						e.setCancelled(true);
-				}
-			}
+
+                    for(LGPlayer lgp : getGame().getInGame()) {
+                        if(lgp.getRoleType() == RoleType.LOUP_GAROU)
+                            lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est fait infecter pendant la nuit.");
+                        else
+                            lgp.sendMessage(GOLD+"Un joueur a été "+RED+""+BOLD+"infecté"+GOLD+" pendant la nuit.");
+                    }
+
+                    if(getGame().checkEndGame())
+                        e.setCancelled(true);
+                });
 	}
 	
 	@Override
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
-        RLoupGarou.forceJoin(player);
+        RWereWolf.forceJoin(player);
 	}
 
     @EventHandler
@@ -242,7 +243,7 @@ public class RLoupGarouNoir extends Role{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == getGame())
 			if(e.getPlayer().getCache().getBoolean("infected"))
-				e.getConstraints().add(LGCustomItemsConstraints.INFECTED.getName());
+				e.getConstraints().add(Constraints.INFECTED);
 	}
 
     public static class InfectAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable, AbilityConsume

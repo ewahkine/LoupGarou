@@ -11,8 +11,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGDayStartEvent;
 
-public class RMontreurDOurs extends Role{
-	public RMontreurDOurs(LGGame game) {
+public class RBearShowman extends Role{
+	public RBearShowman(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -28,7 +28,7 @@ public class RMontreurDOurs extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque matin, ton Ours va renifler tes voisins et grognera si l'un d'eux est hostile aux Villageois.";

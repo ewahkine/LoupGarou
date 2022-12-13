@@ -100,15 +100,15 @@ public class RAssassin extends Role{
 
         if(e.getReason() == Reason.LOUP_GAROU)
         {
-            RLoupGarou lgs;
-            if((lgs = getGame().getRole(RLoupGarou.class)) != null)
+            RWereWolf lgs;
+            if((lgs = getGame().getRole(RWereWolf.class)) != null)
                 for(LGPlayer lg : lgs.getPlayers())
                     lg.sendMessage(RED+"Votre cible est immunisée.");
         }
         else if(e.getReason() == Reason.GM_LOUP_GAROU)
         {
-            RGrandMechantLoup lgs;
-            if((lgs = getGame().getRole(RGrandMechantLoup.class)) != null)
+            RBigBadWolf lgs;
+            if((lgs = getGame().getRole(RBigBadWolf.class)) != null)
                 for(LGPlayer lg : lgs.getPlayers())
                     lg.sendMessage(RED+"Votre cible est immunisée.");
         }
@@ -118,9 +118,9 @@ public class RAssassin extends Role{
 	public void onTarget(LGRoleActionEvent e) {
         if(e.getGame() != getGame())
             return;
-		if(e.isAction(RPyromane.GasoilAction.class))
+		if(e.isAction(RPyromaniac.GasoilAction.class))
         {
-            RPyromane.GasoilAction action = (RPyromane.GasoilAction) e.getAction();
+            RPyromaniac.GasoilAction action = (RPyromaniac.GasoilAction) e.getAction();
             if(action.getTarget().getRole() == this && action.getTarget().isRoleActive())
                 action.setCancelled(true);
         }

@@ -107,7 +107,7 @@ public class RPirate extends Role
 	}
 
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 
 	public static String _getDescription() {

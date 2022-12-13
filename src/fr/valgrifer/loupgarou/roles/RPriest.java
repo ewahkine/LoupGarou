@@ -46,12 +46,12 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
 
-public class RPretre extends Role{
+public class RPriest extends Role{
     private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
-    private static final Map<LGPlayer, RPretre> playerToRole = new HashMap<>();
+    private static final Map<LGPlayer, RPriest> playerToRole = new HashMap<>();
     private static final LGInventoryHolder invHolder;
 	static {
         invHolder = new LGInventoryHolder(1, BLACK+"Veux-tu réssusciter quelqu'un ?");
@@ -61,7 +61,7 @@ public class RPretre extends Role{
                 setSlot(3, new Slot(itemNoAction),
                         ((holder, event) -> {
                             LGPlayer lgp = LGPlayer.thePlayer((Player)event.getWhoClicked());
-                            RPretre role = playerToRole.get(lgp);
+                            RPriest role = playerToRole.get(lgp);
 
                             if(role == null)
                                 return;
@@ -80,7 +80,7 @@ public class RPretre extends Role{
                         ((holder, event) -> {
                             Player player = (Player)event.getWhoClicked();
                             LGPlayer lgp = LGPlayer.thePlayer(player);
-                            RPretre role = playerToRole.get(lgp);
+                            RPriest role = playerToRole.get(lgp);
 
                             if(role == null)
                                 return;
@@ -148,7 +148,7 @@ public class RPretre extends Role{
         });
 	}
 
-	public RPretre(LGGame game) {
+	public RPriest(LGGame game) {
 		super(game);
 	}
 
@@ -161,7 +161,7 @@ public class RPretre extends Role{
 	}
 
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 
 	public static String _getDescription() {
@@ -349,9 +349,9 @@ public class RPretre extends Role{
                 catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex)
                 {
                     ex.printStackTrace();
-                    role = getGame().getRole(RVillageois.class);
+                    role = getGame().getRole(RVillager.class);
                     if(role == null)
-                        getGame().getRoles().add(role = new RVillageois(getGame()));
+                        getGame().getRoles().add(role = new RVillager(getGame()));
                 }
             }
             role.join(lgp, false);
@@ -400,7 +400,7 @@ public class RPretre extends Role{
 
         @Getter @Setter private boolean cancelled;
         @Getter @Setter private LGPlayer target;
-        @Getter @Setter private Class<? extends Role> newRole = RVillageois.class;
+        @Getter @Setter private Class<? extends Role> newRole = RVillager.class;
         @Getter @Setter private boolean forceMessage;
     }
 }

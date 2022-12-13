@@ -16,8 +16,8 @@ import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 @SuppressWarnings("unused")
-public class RBouffon extends Role{
-	public RBouffon(LGGame game) {
+public class RJester extends Role {
+	public RJester(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -60,7 +60,8 @@ public class RBouffon extends Role{
 					return;
 				}
 				LGPlayer player = players.remove(0);
-				getGame().wait(getTimeout(), ()->{RBouffon.this.onNightTurnTimeout(player);this.run();}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+""+BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")");
+				getGame().wait(getTimeout(), ()->{
+                    RJester.this.onNightTurnTimeout(player);this.run();}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+""+BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")");
 				player.sendMessage(GOLD+""+getTask());
 				//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
 				onNightTurn(player, this);

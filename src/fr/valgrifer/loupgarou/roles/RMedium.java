@@ -27,7 +27,7 @@ public class RMedium extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux communiquer avec les morts pour tenter de récupérer des informations cruciales.";
@@ -71,7 +71,7 @@ public class RMedium extends Role{
 	@EventHandler
 	public void onRoleTurn(LGRoleTurnEndEvent e) {
 		if(e.getGame() == getGame())
-			if(e.getPreviousRole() instanceof RLoupGarou)
+			if(e.getPreviousRole() instanceof RWereWolf)
 				for(LGPlayer lgp : getPlayers())
 					if(lgp.getChat() != getGame().getSpectatorChat() && lgp.isRoleActive()) {
 						lgp.sendMessage(GOLD+""+ITALIC+"Tu peux de nouveau parler aux morts...");

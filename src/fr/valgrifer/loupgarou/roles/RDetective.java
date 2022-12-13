@@ -27,7 +27,7 @@ public class RDetective extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu mènes l'enquête sur deux joueurs pour découvrir s'ils font partie du même camp.";
@@ -58,7 +58,7 @@ public class RDetective extends Role{
                 player.sendMessage(RED+"Vous ne pouvez pas vous sélectionner !");
                 return;
             }
-            if(player.getCache().has("detective_first")) {
+            if(first != null) {
                 first = player.getCache().remove("detective_first");
                 if(first == choosen) {
                     player.sendMessage(RED+"Vous ne pouvez pas comparer "+GRAY+""+BOLD+""+first.getName()+""+RED+" avec lui même !");
@@ -79,7 +79,7 @@ public class RDetective extends Role{
                     callback.run();
                 }
             } else {
-                player.getCache().set("detective_first", choosen);
+                first = choosen;
                 player.sendMessage(BLUE+"Choisis un joueur avec qui tu souhaites comparer le rôle de "+GRAY+""+BOLD+""+choosen.getName());
             }
         });

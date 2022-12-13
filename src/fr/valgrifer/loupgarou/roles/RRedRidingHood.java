@@ -10,11 +10,10 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
-import fr.valgrifer.loupgarou.events.LGRoleTurnEndEvent;
 
 @SuppressWarnings("unused")
-public class RChaperonRouge extends Role{
-	public RChaperonRouge(LGGame game) {
+public class RRedRidingHood extends Role{
+	public RRedRidingHood(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -30,7 +29,7 @@ public class RChaperonRouge extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Tant que le "+GREEN+""+BOLD+"Chasseur"+WHITE+" est en vie, tu ne peux pas te faire tuer par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pendant la nuit.";
@@ -51,7 +50,7 @@ public class RChaperonRouge extends Role{
         if(e.getKilled().getRole() != this || (e.getReason() != Reason.LOUP_GAROU && e.getReason() != Reason.GM_LOUP_GAROU) || !e.getKilled().isRoleActive())
             return;
 
-        RChasseur role = getGame().getRole(RChasseur.class);
+        RHunter role = getGame().getRole(RHunter.class);
 
         if(role == null || role.getPlayers().size() == 0)
             return;
@@ -61,15 +60,15 @@ public class RChaperonRouge extends Role{
 
         if(e.getReason() == Reason.LOUP_GAROU)
         {
-            RLoupGarou lgs;
-            if((lgs = getGame().getRole(RLoupGarou.class)) != null)
+            RWereWolf lgs;
+            if((lgs = getGame().getRole(RWereWolf.class)) != null)
                 for(LGPlayer lg : lgs.getPlayers())
                     lg.sendMessage(RED+"Votre cible est immunisée.");
         }
         else if(e.getReason() == Reason.GM_LOUP_GAROU)
         {
-            RGrandMechantLoup lgs;
-            if((lgs = getGame().getRole(RGrandMechantLoup.class)) != null)
+            RBigBadWolf lgs;
+            if((lgs = getGame().getRole(RBigBadWolf.class)) != null)
                 for(LGPlayer lg : lgs.getPlayers())
                     lg.sendMessage(RED+"Votre cible est immunisée.");
         }

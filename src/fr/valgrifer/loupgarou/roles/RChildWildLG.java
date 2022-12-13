@@ -1,15 +1,13 @@
 package fr.valgrifer.loupgarou.roles;
 
-import java.util.Comparator;
-
 import static org.bukkit.ChatColor.*;
 
 import fr.valgrifer.loupgarou.classes.LGCustomItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 
-public class REnfantSauvageLG extends Role{
-	public REnfantSauvageLG(LGGame game) {
+public class RChildWildLG extends Role{
+	public RChildWildLG(LGGame game) {
 		super(game);
 	}
 	public static String _getName() {
@@ -22,23 +20,23 @@ public class REnfantSauvageLG extends Role{
 
     public static String _getScoreBoardName()
     {
-        return REnfantSauvage._getScoreBoardName();
+        return RChildWild._getScoreBoardName();
     }
 
 	public static String _getShortDescription() {
-        return REnfantSauvage._getShortDescription();
+        return RChildWild._getShortDescription();
     }
 
 	public static String _getDescription() {
-        return REnfantSauvage._getDescription();
+        return RChildWild._getDescription();
     }
 
 	public static String _getTask() {
-        return REnfantSauvage._getTask();
+        return RChildWild._getTask();
     }
 
 	public static String _getBroadcastedTask() {
-        return REnfantSauvage._getBroadcastedTask();
+        return RChildWild._getBroadcastedTask();
     }
 	public static RoleType _getType() {
 		return RoleType.LOUP_GAROU;
@@ -56,7 +54,7 @@ public class REnfantSauvageLG extends Role{
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
 		player.setRole(this);
-        RLoupGarou lgs = RLoupGarou.forceJoin(player);
+        RWereWolf lgs = RWereWolf.forceJoin(player);
         LGCustomItems.updateItem(player);
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())

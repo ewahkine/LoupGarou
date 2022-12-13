@@ -40,7 +40,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateHealth;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateTime;
-import fr.valgrifer.loupgarou.classes.LGCustomItems.LGCustomItemsConstraints;
+import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGCustomItemChangeEvent;
 import fr.valgrifer.loupgarou.events.LGDayEndEvent;
@@ -806,9 +806,9 @@ public class LGGame implements Listener{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == this) {
 			if(getMayor() == e.getPlayer())
-				e.getConstraints().add(LGCustomItemsConstraints.MAYOR.getName());
+				e.getConstraints().add(Constraints.MAYOR);
 			if(e.getPlayer().isDead())
-				e.getConstraints().add(LGCustomItemsConstraints.DEAD.getName());
+				e.getConstraints().add(Constraints.DEAD);
 		}
 	}
 	@EventHandler(priority = EventPriority.LOWEST)

@@ -36,8 +36,8 @@ import fr.valgrifer.loupgarou.events.LGPlayerGotKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RCupidon extends Role{
-	public RCupidon(LGGame game) {
+public class RCupid extends Role{
+	public RCupid(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -247,7 +247,7 @@ public class RCupidon extends Role{
         int manyCoupleAlive = 0;
 
         for(LGPlayer lgp : getGame().getAlive())
-            if (lgp.getRole() instanceof RCupidon)
+            if (lgp.getRole() instanceof RCupid)
                 cupidonAlive = true;
             else if(lgp.getCache().has("inlove"))
                 manyCoupleAlive++;

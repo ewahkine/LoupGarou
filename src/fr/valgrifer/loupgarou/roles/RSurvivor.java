@@ -23,7 +23,7 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RSurvivant extends Role{
+public class RSurvivor extends Role{
     private static final MenuPreset preset = new MenuPreset(1) {
         @Override
         protected void preset() {
@@ -37,10 +37,10 @@ public class RSurvivant extends Role{
 
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                if(!(lgp.getRole() instanceof RSurvivant))
+                if(!(lgp.getRole() instanceof RSurvivor))
                     return;
 
-                RSurvivant role = (RSurvivant) lgp.getRole();
+                RSurvivor role = (RSurvivor) lgp.getRole();
 
                 role.closeInventory(lgp);
                 lgp.sendMessage(DARK_RED+""+ITALIC+"Tu es sans défense...");
@@ -70,10 +70,10 @@ public class RSurvivant extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RSurvivant))
+                        if(!(lgp.getRole() instanceof RSurvivor))
                             return;
 
-                        RSurvivant role = (RSurvivant) lgp.getRole();
+                        RSurvivor role = (RSurvivor) lgp.getRole();
 
                         role.closeInventory(lgp);
                         lgp.hideView();
@@ -104,7 +104,7 @@ public class RSurvivant extends Role{
         }
     };
 
-	public RSurvivant(LGGame game) {
+	public RSurvivor(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {

@@ -12,8 +12,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGRoleTurnEndEvent;
 
-public class RPetiteFille extends Role{
-	public RPetiteFille(LGGame game) {
+public class RLittleGirl extends Role{
+	public RLittleGirl(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -29,7 +29,7 @@ public class RPetiteFille extends Role{
 		return "de la "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux espionner les "+RED+""+BOLD+"Loups"+WHITE+".";
@@ -59,16 +59,16 @@ public class RPetiteFille extends Role{
 		if(e.getGame() != getGame())
             return;
 
-        if(e.getNewRole() instanceof RLoupGarou)
+        if(e.getNewRole() instanceof RWereWolf)
             getGame().getAlive()
                     .stream()
                     .filter(player -> player.getRole() == this &&
                             !player.getCache().getBoolean("infected") &&
                             player.isRoleActive())
-                    .forEach(player -> player.joinChat(((RLoupGarou) e.getNewRole()).getChat(), (sender, message)->
+                    .forEach(player -> player.joinChat(((RWereWolf) e.getNewRole()).getChat(), (sender, message)->
                                     RED+""+getCustomName(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message,
                             true));
-        if(e.getPreviousRole() instanceof RLoupGarou)
+        if(e.getPreviousRole() instanceof RWereWolf)
             getGame().getAlive()
                     .stream()
                     .filter(player -> player.getRole() == this &&

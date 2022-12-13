@@ -16,8 +16,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RGarde extends Role{
-	public RGarde(LGGame game) {
+public class RGardien extends Role{
+	public RGardien(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -33,7 +33,7 @@ public class RGarde extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux te protéger toi ou quelqu'un d'autre des attaques "+RED+""+BOLD+"hostiles"+WHITE+". Tu ne peux pas protéger deux fois d’affilé la même personne.";

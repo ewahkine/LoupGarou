@@ -16,9 +16,9 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RGrandMechantLoup extends Role{
+public class RBigBadWolf extends Role{
 
-	public RGrandMechantLoup(LGGame game) {
+	public RBigBadWolf(LGGame game) {
 		super(game);
 	}
 
@@ -31,7 +31,7 @@ public class RGrandMechantLoup extends Role{
 	}
 
 	public static String _getShortDescription() {
-		return RLoupGarou._getShortDescription();
+		return RWereWolf._getShortDescription();
 	}
 
 	public static String _getDescription() {
@@ -125,7 +125,7 @@ public class RGrandMechantLoup extends Role{
 	@Override
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
-        RLoupGarou.forceJoin(player);
+        RWereWolf.forceJoin(player);
 	}
 
     public static class KillAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable

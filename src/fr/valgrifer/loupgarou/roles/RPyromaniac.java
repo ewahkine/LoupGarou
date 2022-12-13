@@ -28,7 +28,7 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RPyromane extends Role{
+public class RPyromaniac extends Role{
     private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
@@ -44,10 +44,10 @@ public class RPyromane extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RPyromane))
+                        if(!(lgp.getRole() instanceof RPyromaniac))
                             return;
 
-                        RPyromane role = (RPyromane) lgp.getRole();
+                        RPyromaniac role = (RPyromaniac) lgp.getRole();
 
                         role.onNightTurnTimeout(lgp);
                         role.callback.run();
@@ -76,10 +76,10 @@ public class RPyromane extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RPyromane))
+                        if(!(lgp.getRole() instanceof RPyromaniac))
                             return;
 
-                        RPyromane role = (RPyromane) lgp.getRole();
+                        RPyromaniac role = (RPyromaniac) lgp.getRole();
 
                         role.closeInventory(lgp);
                         if(lgp.getCache().<List<LGPlayer>>get("pyromane_essence").size() != 0) {
@@ -109,10 +109,10 @@ public class RPyromane extends Role{
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
                         Player player = lgp.getPlayer();
 
-                        if(!(lgp.getRole() instanceof RPyromane))
+                        if(!(lgp.getRole() instanceof RPyromaniac))
                             return;
 
-                        RPyromane role = (RPyromane) lgp.getRole();
+                        RPyromaniac role = (RPyromaniac) lgp.getRole();
 
                         role.closeInventory(lgp);
 
@@ -159,7 +159,7 @@ public class RPyromane extends Role{
         }
     };
 
-	public RPyromane(LGGame game) {
+	public RPyromaniac(LGGame game) {
 		super(game);
 	}
 

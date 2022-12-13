@@ -16,8 +16,8 @@ import org.bukkit.event.Cancellable;
 import static org.bukkit.ChatColor.*;
 
 @SuppressWarnings("unused")
-public class RChasseurDeVampire extends Role{
-	public RChasseurDeVampire(LGGame game) {
+public class RVampireHunter extends Role{
+	public RVampireHunter(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -33,7 +33,7 @@ public class RChasseurDeVampire extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux traquer un joueur pour découvrir s'il s'agit d'un Vampire. Si c'est le cas, tu le tueras dans son sommeil. Si les "+RoleWinType.VAMPIRE.getColoredName(BOLD)+WHITE+" te prennent pour cible, tu seras immunisé contre leur attaque, et tu tueras le plus jeune d'entre eux.";

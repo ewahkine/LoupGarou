@@ -15,8 +15,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 
 @SuppressWarnings("unused")
-public class RCorbeau extends Role{
-	public RCorbeau(LGGame game) {
+public class RRaven extends Role{
+	public RRaven(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -32,7 +32,7 @@ public class RCorbeau extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+". Chaque nuit, tu peux désigner un joueur qui se retrouvera le lendemain avec deux voix contre lui au vote.";

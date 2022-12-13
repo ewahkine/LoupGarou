@@ -4,8 +4,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import static org.bukkit.ChatColor.*;
 
-public class RPronostiqueur extends Role{
-	public RPronostiqueur(LGGame game) {
+public class RTipster extends Role{
+	public RTipster(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -21,7 +21,7 @@ public class RPronostiqueur extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux espionner un joueur et découvrir s'il est gentil ou non. Cependant, dans certaines parties, vos pronostiques ne sont pas exacts...";

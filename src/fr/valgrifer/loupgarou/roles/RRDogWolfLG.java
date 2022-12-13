@@ -6,8 +6,8 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import static org.bukkit.ChatColor.*;
 
 @SuppressWarnings("unused")
-public class RChienLoupLG extends Role{
-	public RChienLoupLG(LGGame game) {
+public class RRDogWolfLG extends Role{
+	public RRDogWolfLG(LGGame game) {
 		super(game);
 	}
 	public static String _getName() {
@@ -20,23 +20,23 @@ public class RChienLoupLG extends Role{
 
     public static String _getScoreBoardName()
     {
-        return RChienLoup._getScoreBoardName();
+        return RDogWolf._getScoreBoardName();
     }
 
 	public static String _getShortDescription() {
-		return RChienLoup._getShortDescription();
+		return RDogWolf._getShortDescription();
 	}
 
 	public static String _getDescription() {
-		return RChienLoup._getDescription();
+		return RDogWolf._getDescription();
     }
 
 	public static String _getTask() {
-		return RChienLoup._getTask();
+		return RDogWolf._getTask();
 	}
 
 	public static String _getBroadcastedTask() {
-		return RChienLoup._getBroadcastedTask();
+		return RDogWolf._getBroadcastedTask();
 	}
 	public static RoleType _getType() {
 		return RoleType.LOUP_GAROU;
@@ -54,7 +54,7 @@ public class RChienLoupLG extends Role{
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
 		player.setRole(this);
-        RLoupGarou lgs = RLoupGarou.forceJoin(player);
+        RWereWolf lgs = RWereWolf.forceJoin(player);
 		LGCustomItems.updateItem(player);
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())

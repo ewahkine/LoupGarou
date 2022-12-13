@@ -16,8 +16,8 @@ import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 @SuppressWarnings("unused")
-public class RChasseur extends Role{
-	public RChasseur(LGGame game) {
+public class RHunter extends Role{
+	public RHunter(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -33,7 +33,7 @@ public class RChasseur extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
     public static String _getDescription() {
 		return _getShortDescription()+WHITE+". À ta mort, tu dois éliminer un joueur en utilisant ta dernière balle.";

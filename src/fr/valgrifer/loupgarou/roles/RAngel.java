@@ -17,8 +17,8 @@ import fr.valgrifer.loupgarou.events.LGVoteEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 @SuppressWarnings("unused")
-public class RAnge extends Role{
-	public RAnge(LGGame game) {
+public class RAngel extends Role {
+	public RAngel(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -60,10 +60,10 @@ public class RAnge extends Role{
 	public void onDayEnd(LGDayEndEvent e) {
 		if(e.getGame() == getGame()) {
 			if(getPlayers().size() > 0 && getGame().getNight() == night+1 && vote) {
-				Role villageois = getGame().getRole(RVillageois.class);
+				Role villageois = getGame().getRole(RVillager.class);
 				
 				if(villageois == null)
-					getGame().getRoles().add(villageois = new RVillageois(getGame()));
+					getGame().getRoles().add(villageois = new RVillager(getGame()));
 				
 				for(LGPlayer lgp : getPlayers()) {
 					if(lgp.isRoleActive())

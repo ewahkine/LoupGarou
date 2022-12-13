@@ -16,9 +16,9 @@ import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import lombok.Getter;
 
-public class RLoupGarou extends Role{
+public class RWereWolf extends Role{
 
-	public RLoupGarou(LGGame game) {
+	public RWereWolf(LGGame game) {
 		super(game);
 	}
 
@@ -68,17 +68,17 @@ public class RLoupGarou extends Role{
 		for(LGPlayer p : getPlayers())
 			p.updatePrefix();
 	}
-    public static RLoupGarou forceJoin(LGPlayer player)
+    public static RWereWolf forceJoin(LGPlayer player)
     {
         LGGame game = player.getGame();
 
         if(game == null)
             return null;
 
-        RLoupGarou lg = game.getRole(RLoupGarou.class);
+        RWereWolf lg = game.getRole(RWereWolf.class);
 
         if(lg == null)
-            game.getRoles().add(lg = new RLoupGarou(game));
+            game.getRoles().add(lg = new RWereWolf(game));
 
         lg.join(player, false);
         return lg;

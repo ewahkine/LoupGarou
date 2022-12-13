@@ -45,7 +45,7 @@ public class MainLg extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         instance = this;
         loadRoles();
         if (!new File(getDataFolder(), "config.yml").exists()) {//Créer la config
@@ -56,8 +56,11 @@ public class MainLg extends JavaPlugin {
                 config.set("role." + role, 0);
             saveConfig();
         }
-        loadConfig();
+        loadMaxPlayers();
+    }
 
+    @Override
+    public void onEnable() {
         getLogger().info("ResourcePack Url Used: " + VariousUtils.resourcePackAdress());
 
         makeNewGame();
@@ -75,11 +78,14 @@ public class MainLg extends JavaPlugin {
 
         if (pm.getPlugin("ProtocolLib") != null)
             ProtocolLibHook.hook(this);
+        else
+            pm.disablePlugin(this);
     }
 
     @Override
     public void onDisable() {
-        ProtocolLibrary.getProtocolManager().removePacketListeners(this);
+        if (Bukkit.getPluginManager().getPlugin("ProtocolLib") != null)
+            ProtocolLibrary.getProtocolManager().removePacketListeners(this);
     }
 
     @SuppressWarnings("NullableProblems")
@@ -95,23 +101,21 @@ public class MainLg extends JavaPlugin {
                 sender.sendMessage("Erreur: Vous n'êtes pas un joueur");
                 return true;
             }
-            if (args.length >= 1) {
-                if (args[0].equalsIgnoreCase("addspawn")) {
-                    Player player = (Player) sender;
-                    Location loc = player.getLocation();
-                    List<Object> list = (List<Object>) getConfig().getList("spawns");
-                    assert list != null;
-                    list.add(Arrays.asList((double) loc.getBlockX(), loc.getY(), (double) loc.getBlockZ(), (double) loc.getYaw(), (double) loc.getPitch()));
-                    saveConfig();
-                    loadConfig();
-                    sender.sendMessage(GREEN + "La position a bien été ajoutée !");
-                    return true;
-                }
+            if (args.length >= 1 && args[0].equalsIgnoreCase("addspawn")) {
+                Player player = (Player) sender;
+                Location loc = player.getLocation();
+                List<Object> list = (List<Object>) getConfig().getList("spawns");
+                assert list != null;
+                list.add(Arrays.asList((double) loc.getBlockX(), loc.getY(), (double) loc.getBlockZ(), (double) loc.getYaw(), (double) loc.getPitch()));
+                saveConfig();
+                loadMaxPlayers();
+                sender.sendMessage(GREEN + "La position a bien été ajoutée !");
+                return true;
             }
             ((Player) sender).openInventory(ConfigManager.getMainConfigManager().getInventory());
             return true;
         }
-        if (command.getName().equalsIgnoreCase("spec")) {
+        else if (command.getName().equalsIgnoreCase("spec")) {
             if(!(sender instanceof Player))
             {
                 sender.sendMessage(DARK_RED + "Erreur: " + RED + "Vous n'êtes pas un joueur");
@@ -141,7 +145,9 @@ public class MainLg extends JavaPlugin {
     @SuppressWarnings("NullableProblems")
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        if (sender.hasPermission("loupgarou.admin") && args.length == 1)
+        if (command.getName().equalsIgnoreCase("lg") &&
+                sender.hasPermission("loupgarou.admin") &&
+                args.length == 1)
             return getStartingList(args[0], "addSpawn");
         return new ArrayList<>(0);
     }
@@ -157,7 +163,7 @@ public class MainLg extends JavaPlugin {
         return returnlist;
     }
 
-    public void loadConfig() {
+    public void loadMaxPlayers() {
         int players = 0;
         for (String role : roles.keySet())
             players += getConfig().getInt("role." + role);
@@ -179,38 +185,38 @@ public class MainLg extends JavaPlugin {
 
     private void loadRoles() {
         try {
-            addRole(RLoupGarou.class);
-            addRole(RLoupGarouNoir.class);
-            addRole(RGarde.class);
-            addRole(RSorciere.class);
-            addRole(RVoyante.class);
-            addRole(RChasseur.class);
-            addRole(RVillageois.class);
+            addRole(RWereWolf.class);
+            addRole(RBlackWerewolf.class);
+            addRole(RGardien.class);
+            addRole(RWitch.class);
+            addRole(RClairvoyant.class);
+            addRole(RHunter.class);
+            addRole(RVillager.class);
             addRole(RMedium.class);
-            addRole(RDictateur.class);
-            addRole(RCupidon.class);
-            addRole(RPetiteFille.class);
-            addRole(RChaperonRouge.class);
-            addRole(RLoupGarouBlanc.class);
-            addRole(RBouffon.class);
-            addRole(RAnge.class);
-            addRole(RSurvivant.class);
+            addRole(RDictator.class);
+            addRole(RCupid.class);
+            addRole(RLittleGirl.class);
+            addRole(RRedRidingHood.class);
+            addRole(RWhiteWerewolf.class);
+            addRole(RJester.class);
+            addRole(RAngel.class);
+            addRole(RSurvivor.class);
             addRole(RAssassin.class);
-            addRole(RGrandMechantLoup.class);
-            addRole(RCorbeau.class);
+            addRole(RBigBadWolf.class);
+            addRole(RRaven.class);
             addRole(RDetective.class);
-            addRole(RChienLoup.class);
+            addRole(RDogWolf.class);
             addRole(RPirate.class);
-            addRole(RPyromane.class);
+            addRole(RPyromaniac.class);
 //            addRole(RPretre.class);
-            addRole(RFaucheur.class);
-            addRole(REnfantSauvage.class);
-            addRole(RMontreurDOurs.class);
+            addRole(RReaper.class);
+            addRole(RChildWild.class);
+            addRole(RBearShowman.class);
             addRole(RVampire.class);
-            addRole(RChasseurDeVampire.class);
+            addRole(RVampireHunter.class);
 
             addBlackListSpecRole(RMedium.class);
-            addBlackListSpecRole(RPretre.class);
+            addBlackListSpecRole(RPriest.class);
         } catch (Exception e) {
             e.printStackTrace();
         }

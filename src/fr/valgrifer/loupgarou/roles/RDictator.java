@@ -24,7 +24,7 @@ import fr.valgrifer.loupgarou.events.LGDayEndEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RDictateur extends Role{
+public class RDictator extends Role{
     private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
@@ -40,10 +40,10 @@ public class RDictateur extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RDictateur))
+                        if(!(lgp.getRole() instanceof RDictator))
                             return;
 
-                        RDictateur role = (RDictateur) lgp.getRole();
+                        RDictator role = (RDictator) lgp.getRole();
 
                         role.closeInventory(lgp);
                         lgp.sendMessage(RED+"Vous ne faites pas votre coup d'état.");
@@ -65,10 +65,10 @@ public class RDictateur extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RDictateur))
+                        if(!(lgp.getRole() instanceof RDictator))
                             return;
 
-                        RDictateur role = (RDictateur) lgp.getRole();
+                        RDictator role = (RDictator) lgp.getRole();
 
                         role.closeInventory(lgp);
                         lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu effectueras un coup d'état");
@@ -81,7 +81,7 @@ public class RDictateur extends Role{
         }
     };
 
-	public RDictateur(LGGame game) {
+	public RDictator(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -97,7 +97,7 @@ public class RDictateur extends Role{
 		return "du "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Une fois dans la partie, tu peux choisir d'effectuer un "+YELLOW+""+ITALIC+""+BOLD+"coup d'état"+WHITE+", tu choisiras alors seul qui mourra au jour suivant. Si tu fais le bon choix, tu deviendras "+DARK_PURPLE+""+BOLD+"Capitaine"+WHITE+" mais si tu tues un "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+", tu te suicideras la nuit qui suit.";

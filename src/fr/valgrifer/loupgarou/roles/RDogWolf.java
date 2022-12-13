@@ -15,7 +15,7 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 
 @SuppressWarnings("unused")
-public class RChienLoup extends Role {
+public class RDogWolf extends Role {
     private static final MenuPreset preset = new MenuPreset(1) {
         @Override
         protected void preset() {
@@ -30,10 +30,10 @@ public class RChienLoup extends Role {
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RChienLoup))
+                        if(!(lgp.getRole() instanceof RDogWolf))
                             return;
 
-                        RChienLoup role = (RChienLoup) lgp.getRole();
+                        RDogWolf role = (RDogWolf) lgp.getRole();
 
                         role.closeInventory(lgp);
                         lgp.sendActionBarMessage(GOLD+"Tu resteras fidèle au "+GREEN+""+BOLD+"Village"+GOLD+".");
@@ -52,10 +52,10 @@ public class RChienLoup extends Role {
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                        if(!(lgp.getRole() instanceof RChienLoup))
+                        if(!(lgp.getRole() instanceof RDogWolf))
                             return;
 
-                        RChienLoup role = (RChienLoup) lgp.getRole();
+                        RDogWolf role = (RDogWolf) lgp.getRole();
 
                         role.closeInventory(lgp);
 
@@ -63,10 +63,10 @@ public class RChienLoup extends Role {
                         lgp.sendMessage(GOLD+"Tu as changé de camp.");
 
                         //On le fait aussi rejoindre le camp des loups pour le tour pendant la nuit.
-                        RChienLoupLG lgChienLoup = role.getGame().getRole(RChienLoupLG.class);
+                        RRDogWolfLG lgChienLoup = role.getGame().getRole(RRDogWolfLG.class);
 
                         if(lgChienLoup == null)
-                            role.getGame().getRoles().add(lgChienLoup = new RChienLoupLG(role.getGame()));
+                            role.getGame().getRoles().add(lgChienLoup = new RRDogWolfLG(role.getGame()));
 
                         lgChienLoup.join(lgp, false);
                         lgp.updateOwnSkin();
@@ -77,7 +77,7 @@ public class RChienLoup extends Role {
         }
     };
 
-	public RChienLoup(LGGame game) {
+	public RDogWolf(LGGame game) {
 		super(game);
 	}
 
@@ -93,7 +93,7 @@ public class RChienLoup extends Role {
 	}
 
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 
 	public static String _getDescription() {

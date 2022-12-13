@@ -10,8 +10,8 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 
-public class REnfantSauvage extends Role{
-	public REnfantSauvage(LGGame game) {
+public class RChildWild extends Role{
+	public RChildWild(LGGame game) {
 		super(game);
 	}
 
@@ -27,7 +27,7 @@ public class REnfantSauvage extends Role{
 	}
 
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 
 	public static String _getDescription() {
@@ -92,10 +92,10 @@ public class REnfantSauvage extends Role{
 				LGPlayer enfant = e.getKilled().getCache().remove("enfant_svg_d");
 				if(!enfant.isDead() && enfant.getCache().remove("enfant_svg") == e.getKilled() && enfant.isRoleActive()) {
 					enfant.sendMessage(GRAY+""+BOLD+""+e.getKilled().getName()+""+GOLD+" est mort, tu deviens un "+RED+""+BOLD+"Loup-Garou"+GOLD+".");
-					REnfantSauvageLG lgEnfantSvg = getGame().getRole(REnfantSauvageLG.class);
+					RChildWildLG lgEnfantSvg = getGame().getRole(RChildWildLG.class);
 					
 					if(lgEnfantSvg == null)
-						getGame().getRoles().add(lgEnfantSvg = new REnfantSauvageLG(getGame()));
+						getGame().getRoles().add(lgEnfantSvg = new RChildWildLG(getGame()));
 					
 					lgEnfantSvg.join(enfant, false);
 				}

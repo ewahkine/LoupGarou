@@ -12,7 +12,7 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-import fr.valgrifer.loupgarou.classes.LGCustomItems.LGCustomItemsConstraints;
+import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import lombok.Getter;
@@ -130,7 +130,7 @@ public class RVampire extends Role{
 				for(LGPlayer player : getPlayers())
 					player.sendMessage(RED+"Votre cible est immunisée.");
 				return;
-			}else if(choosen.getRole() instanceof RChasseurDeVampire) {
+			}else if(choosen.getRole() instanceof RVampireHunter) {
 				for(LGPlayer player : getPlayers())
 					player.sendMessage(RED+"Votre cible est immunisée.");
 				getGame().kill(getPlayers().get(getPlayers().size()-1), Reason.CHASSEUR_DE_VAMPIRE);
@@ -178,21 +178,23 @@ public class RVampire extends Role{
 	}
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDayStart(LGNightEndEvent e) {
-		if(e.getGame() == getGame())
-			for(LGPlayer player : getGame().getAlive()) {
-				if(player.getCache().getBoolean("just_vampire")) {
-					player.getCache().remove("just_vampire");
-					for(LGPlayer lgp : getGame().getInGame()) {
-						if(lgp.getRoleType() == RoleType.VAMPIRE)
-							lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
-						else
-							lgp.sendMessage(GOLD+"Quelqu'un s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
-					}
-					
-					if(getGame().checkEndGame())
-						e.setCancelled(true);
-				}
-			}
+		if(e.getGame() != getGame())
+            return;
+
+        getGame().getAlive().stream()
+                .filter(player -> player.getCache().getBoolean("just_vampire"))
+                .forEach(player -> {
+                    player.getCache().remove("just_vampire");
+                    for(LGPlayer lgp : getGame().getInGame()) {
+                        if(lgp.getRoleType() == RoleType.VAMPIRE)
+                            lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
+                        else
+                            lgp.sendMessage(GOLD+"Quelqu'un s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
+                    }
+
+                    if(getGame().checkEndGame())
+                        e.setCancelled(true);
+                });
 	}
 	
 /*	@EventHandler(priority = EventPriority.HIGHEST)
@@ -222,7 +224,7 @@ public class RVampire extends Role{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == getGame())
 			if(e.getPlayer().getCache().getBoolean("vampire"))
-				e.getConstraints().add(LGCustomItemsConstraints.VAMPIRE_INFECTE.getName());
+				e.getConstraints().add(Constraints.VAMPIRE_INFECTE);
 	}
 
     public static class VampiredAction implements LGRoleActionEvent.RoleAction, TakeTarget, MessageForcable

@@ -21,14 +21,14 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RLoupGarouBlanc extends Role{
+public class RWhiteWerewolf extends Role{
 	private static final ItemBuilder itemNoAction = ItemBuilder
             .make(Material.IRON_NUGGET)
             .setCustomId("ac_skip")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
 
-	public RLoupGarouBlanc(LGGame game) {
+	public RWhiteWerewolf(LGGame game) {
 		super(game);
 	}
 
@@ -76,10 +76,10 @@ public class RLoupGarouBlanc extends Role{
 	protected void onNightTurn(LGPlayer player, Runnable callback) {
 		this.callback = callback;
         List<LGPlayer> targetable;
-		RLoupGarou lg;
-		if((lg = getGame().getRole(RLoupGarou.class)) != null &&
-                (lg.getPlayers().stream().anyMatch(lgp -> !(lgp.getRole() instanceof RLoupGarouBlanc)) ||
-                        lg.getPlayers().stream().filter(lgp -> (lgp.getRole() instanceof RLoupGarouBlanc)).count() > 1))
+		RWereWolf lg;
+		if((lg = getGame().getRole(RWereWolf.class)) != null &&
+                (lg.getPlayers().stream().anyMatch(lgp -> !(lgp.getRole() instanceof RWhiteWerewolf)) ||
+                        lg.getPlayers().stream().filter(lgp -> (lgp.getRole() instanceof RWhiteWerewolf)).count() > 1))
             targetable = lg.getPlayers();
         else
             targetable = getGame().getAlive();
@@ -156,7 +156,7 @@ public class RLoupGarouBlanc extends Role{
 	@Override
 	public void join(LGPlayer player, boolean sendMessage) {
 		super.join(player, sendMessage);
-        RLoupGarou.forceJoin(player);
+        RWereWolf.forceJoin(player);
 	}
 	
 	@EventHandler

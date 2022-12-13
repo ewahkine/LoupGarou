@@ -11,8 +11,8 @@ import org.bukkit.event.Cancellable;
 
 import static org.bukkit.ChatColor.*;
 
-public class RVoyante extends Role{
-	public RVoyante(LGGame game) {
+public class RClairvoyant extends Role{
+	public RClairvoyant(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -28,7 +28,7 @@ public class RVoyante extends Role{
 		return "de la "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	
 	public static String _getDescription() {

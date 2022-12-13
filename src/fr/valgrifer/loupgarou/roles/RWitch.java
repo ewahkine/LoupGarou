@@ -26,7 +26,7 @@ import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
-public class RSorciere extends Role{
+public class RWitch extends Role{
     public static final ItemBuilder itemBack = ItemBuilder
             .make(Material.IRON_NUGGET)
             .setCustomId("ac_back")
@@ -47,7 +47,7 @@ public class RSorciere extends Role{
 
                     LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                    if(((RSorciere) lgp.getRole()).sauver == null || lgp.getCache().getBoolean("witch_used_life"))
+                    if(((RWitch) lgp.getRole()).sauver == null || lgp.getCache().getBoolean("witch_used_life"))
                         return getDefaultItem().setType(Material.AIR);
 
                     return getDefaultItem();
@@ -58,10 +58,10 @@ public class RSorciere extends Role{
 
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                if(!(lgp.getRole() instanceof RSorciere))
+                if(!(lgp.getRole() instanceof RWitch))
                     return;
 
-                RSorciere role = (RSorciere) lgp.getRole();
+                RWitch role = (RWitch) lgp.getRole();
 
                 role.closeInventory(lgp);
                 role.saveLife(lgp);
@@ -77,10 +77,10 @@ public class RSorciere extends Role{
 
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                if(!(lgp.getRole() instanceof RSorciere))
+                if(!(lgp.getRole() instanceof RWitch))
                     return;
 
-                RSorciere role = (RSorciere) lgp.getRole();
+                RWitch role = (RWitch) lgp.getRole();
 
                 role.closeInventory(lgp);
                 lgp.sendMessage(GOLD+"Tu n'as rien fait cette nuit.");
@@ -112,10 +112,10 @@ public class RSorciere extends Role{
                 LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
                 Player player = lgp.getPlayer();
 
-                if(!(lgp.getRole() instanceof RSorciere))
+                if(!(lgp.getRole() instanceof RWitch))
                     return;
 
-                RSorciere role = (RSorciere) lgp.getRole();
+                RWitch role = (RWitch) lgp.getRole();
 
                 //On le met sur le slot 0 pour éviter un missclick sur la croix
                 WrapperPlayServerHeldItemSlot hold = new WrapperPlayServerHeldItemSlot();
@@ -143,18 +143,18 @@ public class RSorciere extends Role{
 
                     LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
-                    if(((RSorciere) lgp.getRole()).sauver == null)
+                    if(((RWitch) lgp.getRole()).sauver == null)
                         return getDefaultItem().setType(Material.AIR);
 
                     return getDefaultItem()
-                            .setDisplayName(GRAY+""+BOLD+""+((RSorciere) lgp.getRole()).sauver.getName()+""+RED+" est ciblé");
+                            .setDisplayName(GRAY+""+BOLD+""+((RWitch) lgp.getRole()).sauver.getName()+""+RED+" est ciblé");
                 }
             });
         }
     };
 	
 	
-	public RSorciere(LGGame game) {
+	public RWitch(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -170,7 +170,7 @@ public class RSorciere extends Role{
 		return "de la "+_getName();
 	}
 	public static String _getShortDescription() {
-		return RVillageois._getShortDescription();
+		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
 		return _getShortDescription()+WHITE+". Tu disposes de deux potions : une "+YELLOW+""+ITALIC+""+BOLD+"potion de vie"+WHITE+" pour sauver la victime des "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", et une "+YELLOW+""+ITALIC+""+BOLD+"potion de mort"+WHITE+" pour assassiner quelqu'un.";

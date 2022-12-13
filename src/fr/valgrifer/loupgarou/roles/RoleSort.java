@@ -66,27 +66,27 @@ public class RoleSort {
     }
     
     
-    public static final RoleSort ChienLoup = register(RChienLoup.class);
-    public static final RoleSort EnfantSauvage = register(REnfantSauvage.class);
-    public static final RoleSort Cupidon = register(RCupidon.class);
-    public static final RoleSort Garde = register(RGarde.class);
-    public static final RoleSort Survivant = register(RSurvivant.class);
-    public static final RoleSort Voyante = register(RVoyante.class);
+    public static final RoleSort ChienLoup = register(RDogWolf.class);
+    public static final RoleSort EnfantSauvage = register(RChildWild.class);
+    public static final RoleSort Cupidon = register(RCupid.class);
+    public static final RoleSort Garde = register(RGardien.class);
+    public static final RoleSort Survivant = register(RSurvivor.class);
+    public static final RoleSort Voyante = register(RClairvoyant.class);
     public static final RoleSort Detective = register(RDetective.class);
-    public static final RoleSort Dictateur = register(RDictateur.class);
-    public static final RoleSort Pretre = register(RPretre.class);
-    public static final RoleSort LoupGarou = register(RLoupGarou.class);
-    public static final RoleSort LoupGarouNoir = register(RLoupGarouNoir.class);
-    public static final RoleSort GrandMechantLoup = register(RGrandMechantLoup.class);
-    public static final RoleSort LoupGarouBlanc = register(RLoupGarouBlanc.class);
+    public static final RoleSort Dictateur = register(RDictator.class);
+    public static final RoleSort Pretre = register(RPriest.class);
+    public static final RoleSort LoupGarou = register(RWereWolf.class);
+    public static final RoleSort LoupGarouNoir = register(RBlackWerewolf.class);
+    public static final RoleSort GrandMechantLoup = register(RBigBadWolf.class);
+    public static final RoleSort LoupGarouBlanc = register(RWhiteWerewolf.class);
     public static final RoleSort Assassin = register(RAssassin.class);
-    public static final RoleSort Pyromane = register(RPyromane.class);
-    public static final RoleSort ChasseurDeVampire = register(RChasseurDeVampire.class);
+    public static final RoleSort Pyromane = register(RPyromaniac.class);
+    public static final RoleSort ChasseurDeVampire = register(RVampireHunter.class);
     public static final RoleSort Vampire = register(RVampire.class);
     public static final RoleSort Pirate = register(RPirate.class);
-    public static final RoleSort Bouffon = register(RBouffon.class);
-    public static final RoleSort Sorciere = register(RSorciere.class);
-    public static final RoleSort Corbeau = register(RCorbeau.class);
+    public static final RoleSort Bouffon = register(RJester.class);
+    public static final RoleSort Sorciere = register(RWitch.class);
+    public static final RoleSort Corbeau = register(RRaven.class);
     
 
     @Getter
