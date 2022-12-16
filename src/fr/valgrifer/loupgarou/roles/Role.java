@@ -52,6 +52,12 @@ public abstract class Role implements Listener{
                 throw e;
         }
     }
+
+    @SneakyThrows
+    public static <T extends Role> T makeNew(Class<T> r, LGGame game)
+    {
+        return r.getConstructor(LGGame.class).newInstance(game);
+    }
 	
 
     public String getName()

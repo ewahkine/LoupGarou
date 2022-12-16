@@ -92,10 +92,10 @@ public class RChildWild extends Role{
 				LGPlayer enfant = e.getKilled().getCache().remove("enfant_svg_d");
 				if(!enfant.isDead() && enfant.getCache().remove("enfant_svg") == e.getKilled() && enfant.isRoleActive()) {
 					enfant.sendMessage(GRAY+""+BOLD+""+e.getKilled().getName()+""+GOLD+" est mort, tu deviens un "+RED+""+BOLD+"Loup-Garou"+GOLD+".");
-					RChildWildLG lgEnfantSvg = getGame().getRole(RChildWildLG.class);
+					RChildWildWW lgEnfantSvg = getGame().getRole(RChildWildWW.class);
 					
 					if(lgEnfantSvg == null)
-						getGame().getRoles().add(lgEnfantSvg = new RChildWildLG(getGame()));
+						getGame().getRoles().add(lgEnfantSvg = new RChildWildWW(getGame()));
 					
 					lgEnfantSvg.join(enfant, false);
 				}

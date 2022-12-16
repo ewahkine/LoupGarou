@@ -6,8 +6,8 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import static org.bukkit.ChatColor.*;
 
 @SuppressWarnings("unused")
-public class RRDogWolfLG extends Role{
-	public RRDogWolfLG(LGGame game) {
+public class RDogWolfLGWW extends Role{
+	public RDogWolfLGWW(LGGame game) {
 		super(game);
 	}
 	public static String _getName() {

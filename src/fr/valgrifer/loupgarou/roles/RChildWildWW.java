@@ -6,8 +6,8 @@ import fr.valgrifer.loupgarou.classes.LGCustomItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 
-public class RChildWildLG extends Role{
-	public RChildWildLG(LGGame game) {
+public class RChildWildWW extends Role{
+	public RChildWildWW(LGGame game) {
 		super(game);
 	}
 	public static String _getName() {
