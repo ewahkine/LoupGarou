@@ -1,13 +1,13 @@
 package fr.valgrifer.loupgarou.roles;
 
-import fr.valgrifer.loupgarou.classes.LGCustomItems;
+import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import static org.bukkit.ChatColor.*;
 
 @SuppressWarnings("unused")
-public class RDogWolfLGWW extends Role{
-	public RDogWolfLGWW(LGGame game) {
+public class RDogWolfWW extends Role{
+	public RDogWolfWW(LGGame game) {
 		super(game);
 	}
 	public static String _getName() {
@@ -55,7 +55,7 @@ public class RDogWolfLGWW extends Role{
 		super.join(player, sendMessage);
 		player.setRole(this);
         RWereWolf lgs = RWereWolf.forceJoin(player);
-		LGCustomItems.updateItem(player);
+		LGCardItems.updateItem(player);
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())
                 if(lgp != player)
