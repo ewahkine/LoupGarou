@@ -15,6 +15,9 @@ import java.util.Map;
 @SuppressWarnings("unused")
 public abstract class MenuPreset
 {
+    private static final ItemBuilder baseBackButton = ItemBuilder.make(Material.ARROW).setCustomId("ac_back");
+    public static ItemBuilder baseBackButton() { return baseBackButton.clone(); }
+
     public static final Slot lockSlot = new Slot(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setDisplayName(" "));
 
     @Getter
@@ -76,6 +79,11 @@ public abstract class MenuPreset
         return nmp;
     }
 
+    protected void putAction(String id, ClickAction action)
+    {
+        itemActions.put(id, action);
+    }
+
     public void setSlot(int indexX, int indexY, Slot item)
     {
         setSlot(indexX, indexY, item, null);
@@ -101,7 +109,7 @@ public abstract class MenuPreset
 
         String customId = item.getDefaultItem().getCustomId();
         if(customId != null && action != null)
-            itemActions.put(customId, action);
+            putAction(customId, action);
     }
 
     public Slot getSlot(int indexX, int indexY)

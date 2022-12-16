@@ -3,11 +3,8 @@ package fr.valgrifer.loupgarou;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
-import fr.valgrifer.loupgarou.inventory.ItemBuilder;
-import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
-import fr.valgrifer.loupgarou.inventory.MenuPreset;
+import fr.valgrifer.loupgarou.inventory.*;
 import fr.valgrifer.loupgarou.roles.Role;
-import fr.valgrifer.loupgarou.utils.VariousUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -16,10 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static org.bukkit.ChatColor.*;
 
@@ -31,10 +25,16 @@ public class ConfigManager extends LGInventoryHolder
     {
         return mainConfigManager == null ? (mainConfigManager = new ConfigManager()) : mainConfigManager;
     }
+
+    private final List<String> roles;
     @SuppressWarnings("SpellCheckingInspection")
     public ConfigManager()
     {
         super(6, BLACK + "Lg Config");
+
+        List<String> tempsRoles = new ArrayList<>(MainLg.getInstance().getRoles().keySet());
+        tempsRoles.sort(Comparator.comparing(role -> Role.getName(MainLg.getInstance().getRoles().get(role))));
+        roles = Collections.unmodifiableList(tempsRoles);
 
         setDefaultPreset(new MenuPreset(this) {
             @Override
@@ -45,12 +45,12 @@ public class ConfigManager extends LGInventoryHolder
                                 .setDisplayName(GOLD + "Composition")) {
                             @Override
                             protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                return getDefaultItem().setLore(MainLg.getInstance().getRoles().keySet().parallelStream()
+                                return getDefaultItem().setLore(roles.parallelStream()
                                         .filter(role ->
                                                 MainLg.getInstance().getConfig().getInt("role." + role, 0) > 0)
                                         .map(role -> {
                                             int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
-                                            return (count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(MainLg.getInstance().getRoles().get(role).getDeclaringClass());
+                                            return (count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(MainLg.getInstance().getRoles().get(role));
                                         })
                                         .sorted()
                                         .toArray(String[]::new));
@@ -166,27 +166,31 @@ public class ConfigManager extends LGInventoryHolder
                 return true;
             }
         });
-        savePreset("editCompo", new MenuPreset(this) {
+        savePreset("editCompo", new PaginationPreset(this) {
+            @Override
+            protected Slot makeInfoButtonIcon() {
+                return new Slot(ItemBuilder.make(Material.BOOK))
+                {
+                    @Override
+                    protected ItemBuilder getItem(LGInventoryHolder h) {
+                        int roleAmount = roles.stream()
+                                .reduce(0, (total, role) -> total + MainLg.getInstance().getConfig().getInt("role." + role, 0), Integer::sum);
+                        return getDefaultItem()
+                                .setDisplayName(GRAY + "Page " + GOLD + (getPageIndex() + 1))
+                                .setLore(AQUA + "" + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
+                                        AQUA + "" + BOLD + "Click Droit   " + RESET + ":" + GRAY + " Retire le rôle",
+                                        " ",
+                                        RESET +""+ GRAY + "Il y a " + GOLD + roleAmount + GRAY + " rôle" + (roleAmount > 1 ? "s" : ""));
+                    }
+                };
+            }
+
             @Override
             protected void preset() {
-                int pageIndex = getCache().get("pageIndex", 0);
-
-                List<String> roles = new ArrayList<>(MainLg.getInstance().getRoles().keySet());
-                roles.sort(Comparator.comparing(role -> Role.getName(MainLg.getInstance().getRoles().get(role).getDeclaringClass())));
-
-                int maxPerPage = (getMaxLine()-2)*9;
-                int maxPage = (int) Math.ceil((double) roles.size() / ((getMaxLine()-2)*9));
-
-                Arrays.fill(content, 0, maxPerPage, null);
-
-                pageIndex = VariousUtils.MinMax(pageIndex, 0, maxPage);
-
-                setSlot(0, getMaxLine()-1,
-                        new Slot(ItemBuilder.make(Material.ARROW)
-                                .setCustomId("ac_back")
-                                .setDisplayName(RED + "Retour")
-                                .setLore(WHITE + "Si les rôles on étais changé ou simaintient " + GRAY + "Shift",
-                                        WHITE + "pour faire " + GRAY + "" + UNDERLINE + "joinall" + WHITE + " en même temps que revenir à la page d'accueil")),
+                setSlot(0, getMaxLine()-1, new Slot(baseBackButton()
+                        .setDisplayName(RED + "Retour")
+                        .setLore(WHITE + "Si les rôles on étais changé ou simaintient " + GRAY + "Shift",
+                                WHITE + "pour faire " + GRAY + "" + UNDERLINE + "joinall" + WHITE + " en même temps que revenir à la page d'accueil")),
                         (holder, event) -> {
                             getCache().remove("pageIndex");
                             loadPreset("default");
@@ -200,10 +204,8 @@ public class ConfigManager extends LGInventoryHolder
                             }
                         });
 
-                for(int i = maxPerPage * pageIndex; i < Math.min((pageIndex + 1) * maxPerPage, roles.size()); i++)
-                {
-                    String role = roles.get(i);
-                    Class<? extends Role> clazz = MainLg.getInstance().getRoles().get(role).getDeclaringClass();
+                roles.forEach(role -> {
+                    Class<? extends Role> clazz = MainLg.getInstance().getRoles().get(role);
 
                     List<String> description = new ArrayList<>();
                     String[] words = Role.getDescription(clazz).split(" ");
@@ -223,20 +225,19 @@ public class ConfigManager extends LGInventoryHolder
                         }
                     }
 
-                    setSlot(i - (maxPerPage * pageIndex),
-                            new Slot(new ItemBuilder()
-                                    .setCustomId("ac_role_" + role)
-                                    .setLore(description.toArray(new String[0])))
-                            {
-                                @Override
-                                protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                    int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
-                                    return getDefaultItem()
-                                            .setType(count > 0 ? Material.LIME_STAINED_GLASS : Material.REDSTONE_BLOCK)
-                                            .setDisplayName((count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(clazz))
-                                            .setAmount(count);
-                                }
-                            },
+                    registerItem(new Slot(new ItemBuilder()
+                                         .setCustomId("ac_role_" + role)
+                                         .setLore(description.toArray(new String[0])))
+                                 {
+                                     @Override
+                                     protected ItemBuilder getItem(LGInventoryHolder holder) {
+                                         int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
+                                         return getDefaultItem()
+                                                 .setType(count > 0 ? Material.LIME_STAINED_GLASS : Material.REDSTONE_BLOCK)
+                                                 .setDisplayName((count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(clazz))
+                                                 .setAmount(count);
+                                     }
+                                 },
                             (holder, event) -> {
                                 int newCount = MainLg.getInstance().getConfig().getInt("role." + role, 0);
 
@@ -252,56 +253,7 @@ public class ConfigManager extends LGInventoryHolder
                                 MainLg.makeNewGame();
                                 apply();
                             });
-                }
-
-                if(pageIndex != 0)
-                    setSlot(3, getMaxLine()-1,
-                            new Slot(ItemBuilder.make(Material.ARROW)
-                                    .setCustomId("ac_page_previous"))
-                            {
-                                @Override
-                                protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                    return getDefaultItem()
-                                            .setDisplayName(GRAY + "Page " + GOLD + getCache().get("pageIndex", 0));
-                                }
-                            },
-                            (holder, event) -> {
-                                getCache().set("pageIndex", getCache().get("pageIndex", 0) - 1);
-                                apply();
-                            });
-
-                setSlot(4, getMaxLine()-1,
-                        new Slot(ItemBuilder.make(Material.BOOK))
-                        {
-                            @Override
-                            protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                int roleAmount = roles.stream()
-                                        .reduce(0, (total, role) -> total + MainLg.getInstance().getConfig().getInt("role." + role, 0), Integer::sum);
-                                return getDefaultItem()
-                                        .setDisplayName(GRAY + "Page " + GOLD + (getCache().get("pageIndex", 0) + 1))
-                                        .setLore(AQUA + "" + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
-                                                AQUA + "" + BOLD + "Click Droit   " + RESET + ":" + GRAY + " Retire le rôle",
-                                                " ",
-                                                RESET +""+ GRAY + "Il y a " + GOLD + roleAmount + GRAY + " rôle" + (roleAmount > 1 ? "s" : ""));
-                            }
-                        },
-                        (holder, event) -> apply());
-
-                if(pageIndex != maxPage-1)
-                    setSlot(5, getMaxLine()-1,
-                            new Slot(ItemBuilder.make(Material.ARROW)
-                                    .setCustomId("ac_page_previous"))
-                            {
-                                @Override
-                                protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                    return getDefaultItem()
-                                            .setDisplayName(GRAY + "Page " + GOLD + (getCache().get("pageIndex", 0) + 2));
-                                }
-                            },
-                            (holder, event) -> {
-                                getCache().set("pageIndex", getCache().get("pageIndex", 0) + 1);
-                                apply();
-                            });
+                });
             }
         });
     }
