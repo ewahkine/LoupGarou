@@ -27,7 +27,7 @@ import static org.bukkit.ChatColor.*;
 public class MainLg extends JavaPlugin {
     private static MainLg instance;
     @Getter
-    private final Map<String, Constructor<? extends Role>> roles = new HashMap<>();
+    private Map<String, Class<? extends Role>> roles = new HashMap<>();
     @Getter
     private static int maxPlayers = 0;
 
@@ -170,12 +170,8 @@ public class MainLg extends JavaPlugin {
         maxPlayers = players;
     }
 
-    public void addRole(Class<? extends Role> clazz) {
-        try {
-            this.roles.put(clazz.getSimpleName().substring(1), clazz.getConstructor(LGGame.class));
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        }
+    public void addRole(Class<? extends Role> clazz, InputStream image) {
+        this.roles.put(clazz.getSimpleName().substring(1), clazz);
     }
 
     public void addBlackListSpecRole(Class<? extends Role> clazz) {

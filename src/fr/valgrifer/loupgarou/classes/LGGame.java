@@ -321,9 +321,9 @@ public class LGGame implements Listener{
 		}
 		
 		try {
-			for(Entry<String, Constructor<? extends Role>> role : main.getRoles().entrySet())
+			for(Entry<String, Class<? extends Role>> role : main.getRoles().entrySet())
 				if(main.getConfig().getInt("role."+role.getKey()) > 0)
-					roles.add(role.getValue().newInstance(this));
+					roles.add(Role.makeNew(role.getValue(), this));
 		}catch(Exception err) {
 			Bukkit.broadcastMessage(DARK_RED+""+BOLD+"Une erreur est survenue lors de la création des roles... Regardez la console !");
 			err.printStackTrace();
