@@ -282,7 +282,7 @@ public class RWitch extends Role{
 		player.getPlayer().getInventory().setItem(8, null);
 		player.getPlayer().updateInventory();
 
-        LGRoleActionEvent e = new LGRoleActionEvent(getGame(), new KillAction(sauver), player);
+        LGRoleActionEvent e = new LGRoleActionEvent(getGame(), new KillAction(choosen), player);
         Bukkit.getPluginManager().callEvent(e);
         KillAction action = (KillAction) e.getAction();
         if(!action.isCancelled() || action.isForceMessage())
