@@ -98,7 +98,7 @@ public class ResourcePack
     }
     public static void addFile(String path, InputStream file, boolean force)
     {
-        if(!force && (generated || fileMap.containsKey(path)))
+        if(generated || (!force && fileMap.containsKey(path)))
             return;
 
         fileMap.put(path, file);
