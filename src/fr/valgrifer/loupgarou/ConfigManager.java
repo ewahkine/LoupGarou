@@ -52,7 +52,7 @@ public class ConfigManager extends LGInventoryHolder
                         (holder, event) -> loadPreset("editCompo"));
 
                 setSlot(4, 2,
-                        new Slot(ItemBuilder.make(Material.BIRCH_DOOR)
+                        new Slot(ItemBuilder.make(Material.DARK_OAK_DOOR)
                                 .setCustomId("ac_joinall")
                                 .setDisplayName(GREEN + "/lg joinall")
                                 .setLore(GRAY + "A faire après chaque édition de composition")),
