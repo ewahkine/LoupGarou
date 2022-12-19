@@ -347,11 +347,11 @@ public class LGPlayer {
 	
 	public void playAudio(LGSound sound, double volume) {
 		if(player != null)
-			getPlayer().playSound(getPlayer().getLocation(), sound.getSound(), sound.getCategory(), (float)volume, 1);
+            sound.play(getPlayer(), (float) volume, 1);
 	}
 	public void stopAudio(LGSound sound) {
 		if(player != null)
-			getPlayer().stopSound(sound.getSound(), sound.getCategory());
+            sound.stop(getPlayer());
 	}
 	
 	long lastChoose;

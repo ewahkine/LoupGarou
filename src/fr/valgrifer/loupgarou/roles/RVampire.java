@@ -12,7 +12,7 @@ import static org.bukkit.ChatColor.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
+import fr.valgrifer.loupgarou.classes.LGCardItems.Constraint;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import lombok.Getter;
@@ -168,7 +168,7 @@ public class RVampire extends Role{
                 action.getTarget().getCache().set("just_vampire", true);
                 action.getTarget().addEndGameReaveal(DARK_PURPLE+"Vampire");
                 join(action.getTarget(), false);
-                LGCustomItems.updateItem(action.getTarget());
+                LGCardItems.updateItem(action.getTarget());
             }
             nextCanInfect = getGame().getNight()+1;
 		}
@@ -224,7 +224,7 @@ public class RVampire extends Role{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == getGame())
 			if(e.getPlayer().getCache().getBoolean("vampire"))
-				e.getConstraints().add(Constraints.VAMPIRE_INFECTE);
+				e.getConstraints().add(Constraint.VAMPIRED);
 	}
 
     public static class VampiredAction implements LGRoleActionEvent.RoleAction, TakeTarget, MessageForcable

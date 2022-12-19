@@ -1,6 +1,5 @@
 package fr.valgrifer.loupgarou.classes;
 
-import java.lang.reflect.Constructor;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
@@ -40,7 +39,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateHealth;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateTime;
-import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
+import fr.valgrifer.loupgarou.classes.LGCardItems.Constraint;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGCustomItemChangeEvent;
 import fr.valgrifer.loupgarou.events.LGDayEndEvent;
@@ -321,9 +320,9 @@ public class LGGame implements Listener{
 		}
 		
 		try {
-			for(Entry<String, Class<? extends Role>> role : main.getRoles().entrySet())
-				if(main.getConfig().getInt("role."+role.getKey()) > 0)
-					roles.add(Role.makeNew(role.getValue(), this));
+			for(Class<? extends Role> role : main.getRoles())
+				if(main.getConfig().getInt("role." + Role.getId(role)) > 0)
+					roles.add(Role.makeNew(role, this));
 		}catch(Exception err) {
 			Bukkit.broadcastMessage(DARK_RED+""+BOLD+"Une erreur est survenue lors de la création des roles... Regardez la console !");
 			err.printStackTrace();
@@ -352,7 +351,7 @@ public class LGGame implements Listener{
 				if(--actualRole < 0)
 					actualRole = getRoles().size()-1;
 				
-				ItemStack stack = new ItemStack(LGCustomItems.getItem(getRoles().get(actualRole)));
+				ItemStack stack = LGCardItems.getItem(getRoles().get(actualRole));
 				for(LGPlayer lgp : getInGame()) {
 					lgp.getPlayer().getInventory().setItemInOffHand(stack);
 					lgp.getPlayer().updateInventory();
@@ -365,9 +364,9 @@ public class LGGame implements Listener{
 		//Give roles...
 		ArrayList<LGPlayer> toGive = (ArrayList<LGPlayer>) inGame.clone();
 		started = false;
-		for(int i = 0; i < getRoles().size(); i++)
+
+		for(Role role : getRoles())
         {
-            Role role = getRoles().get(i);
             while (role.getWaitedPlayers() > 0) {
                 int randomized = random.nextInt(toGive.size());
                 LGPlayer player = toGive.remove(randomized);
@@ -393,24 +392,26 @@ public class LGGame implements Listener{
 	public void updateRoleScoreboard() {
 		HashMap<Role, Integer> rolesAlive = new HashMap<>();
 		for(LGPlayer lgp : getAlive())
-			if(rolesAlive.containsKey(lgp.getRole()))
-                rolesAlive.put(lgp.getRole(), rolesAlive.get(lgp.getRole())+1);
-			else
-				rolesAlive.put(lgp.getRole(), 1);
+            if(lgp.getRole() != null)
+                if(rolesAlive.containsKey(lgp.getRole()))
+                    rolesAlive.put(lgp.getRole(), rolesAlive.get(lgp.getRole())+1);
+                else
+                    rolesAlive.put(lgp.getRole(), 1);
 
 		List<Role> roles = new ArrayList<>(rolesAlive.keySet());
 
         for(int i = 0; i < roles.size(); i++)
-            if(!roles.get(i).getScoreBoardName().equals(roles.get(i).getName()))
-                for(int x = 0; x < roles.size(); x++)
-                    if(i != x && roles.get(i).getScoreBoardName().equals(roles.get(x).getScoreBoardName()))
+            if (!roles.get(i).hasScoreBoardName())
+                for (int x = 0; x < roles.size(); x++)
+                    if (i != x && roles.get(i).getScoreBoardName().equals(roles.get(x).getScoreBoardName()))
                     {
-                        rolesAlive.put(roles.get(x), rolesAlive.get(roles.get(x))+1);
+                        rolesAlive.put(roles.get(x), rolesAlive.get(roles.get(x)) + 1);
                         roles.remove(i);
                         i--;
+                        break;
                     }
 
-		roles.sort(Comparator.comparing(Role::getName));
+		roles.sort(Comparator.comparing(Role::getScoreBoardName));
 
         for(LGPlayer lgp : getInGame())
             lgp.getScoreboard().setLines(roles
@@ -482,9 +483,9 @@ public class LGGame implements Listener{
 		for(LGPlayer player : getAlive())
 			player.leaveChat();
 		for(LGPlayer player : getInGame()) {
-			player.stopAudio(LGSound.AMBIANT_DAY);
+			player.stopAudio(LGSound.AMBIENT_DAY);
 			player.playAudio(LGSound.START_NIGHT, 0.5);
-			player.playAudio(LGSound.AMBIANT_NIGHT, 0.07);
+			player.playAudio(LGSound.AMBIENT_NIGHT, 0.07);
 		}
 		day = false;
 		Bukkit.getPluginManager().callEvent(new LGDayEndEvent(this));
@@ -560,7 +561,7 @@ public class LGGame implements Listener{
 			
 			killed.getPlayer().getInventory().setHelmet(new ItemStack(Material.CARVED_PUMPKIN));
 			
-			LGCustomItems.updateItem(killed);
+			LGCardItems.updateItem(killed);
 			
 			//killed.leaveChat();
 			killed.joinChat(spectatorChat);
@@ -680,9 +681,9 @@ public class LGGame implements Listener{
 		broadcastMessage(DARK_GRAY+""+ITALIC+"Le jour se lève sur le village...");
 		
 		for(LGPlayer p : getInGame()) {
-			p.stopAudio(LGSound.AMBIANT_NIGHT);
+			p.stopAudio(LGSound.AMBIENT_NIGHT);
 			p.playAudio(LGSound.START_DAY, 0.5);
-			p.playAudio(LGSound.AMBIANT_DAY, 0.07);
+			p.playAudio(LGSound.AMBIENT_DAY, 0.07);
 		}
 		
 		LGNightEndEvent eventNightEnd = new LGNightEndEvent(this);
@@ -791,12 +792,12 @@ public class LGGame implements Listener{
 		LGPlayer latestMayor = this.mayor;
 		this.mayor = mayor;
 		if(mayor != null && mayor.getPlayer().isOnline()) {
-			LGCustomItems.updateItem(mayor);
+			LGCardItems.updateItem(mayor);
 			mayor.updateSkin();
 			mayor.updateOwnSkin();
 		}
 		if(latestMayor != null && latestMayor.getPlayer() != null && latestMayor.getPlayer().isOnline()) {
-			LGCustomItems.updateItem(latestMayor);
+			LGCardItems.updateItem(latestMayor);
 			latestMayor.updateSkin();
 			latestMayor.updateOwnSkin();
 		}
@@ -806,9 +807,9 @@ public class LGGame implements Listener{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == this) {
 			if(getMayor() == e.getPlayer())
-				e.getConstraints().add(Constraints.MAYOR);
+				e.getConstraints().add(Constraint.MAYOR);
 			if(e.getPlayer().isDead())
-				e.getConstraints().add(Constraints.DEAD);
+				e.getConstraints().add(Constraint.DEAD);
 		}
 	}
 	@EventHandler(priority = EventPriority.LOWEST)

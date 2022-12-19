@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.*;
@@ -183,7 +184,7 @@ public class RCupid extends Role{
 			public void run() {
 				WrapperPlayServerEntityEquipment equip = new WrapperPlayServerEntityEquipment();
 				equip.setEntityID(entityId);
-				equip.setItem(ItemSlot.HEAD, new ItemStack(Material.SUGAR));
+				equip.setItem(ItemSlot.HEAD, ResourcePack.getItem("ui_heart").build());
 				equip.sendPacket(to.getPlayer());
 			}
 		}.runTaskLater(MainLg.getInstance(), 2);

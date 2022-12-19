@@ -1,15 +1,17 @@
 package fr.valgrifer.loupgarou;
 
 import com.comphenix.protocol.ProtocolLibrary;
-import fr.valgrifer.loupgarou.classes.LGGame;
-import fr.valgrifer.loupgarou.classes.LGPlayer;
+import fr.valgrifer.loupgarou.classes.*;
+import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.listeners.*;
 import fr.valgrifer.loupgarou.roles.*;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,9 +19,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
+import java.io.InputStream;
 import java.util.*;
 
 import static org.bukkit.ChatColor.*;
@@ -27,7 +31,7 @@ import static org.bukkit.ChatColor.*;
 public class MainLg extends JavaPlugin {
     private static MainLg instance;
     @Getter
-    private Map<String, Class<? extends Role>> roles = new HashMap<>();
+    private List<Class<? extends Role>> roles = new ArrayList<>();
     @Getter
     private static int maxPlayers = 0;
 
@@ -52,16 +56,27 @@ public class MainLg extends JavaPlugin {
             saveDefaultConfig();
             FileConfiguration config = getConfig();
             config.set("spawns", new ArrayList<List<Double>>());
-            for (String role : roles.keySet())//Nombre de participants pour chaque rôle
-                config.set("role." + role, 0);
+            for (Class<? extends Role> role : roles)//Nombre de participants pour chaque rôle
+                config.set("role." + Role.getId(role), 0);
             saveConfig();
         }
-        loadMaxPlayers();
+
+        registerResources();
     }
 
     @Override
     public void onEnable() {
-        getLogger().info("ResourcePack Url Used: " + VariousUtils.resourcePackAdress());
+        roles.sort(Comparator.comparing(Role::getName));
+        roles = Collections.unmodifiableList(roles);
+
+        loadMaxPlayers();
+
+        LGCardItems.registerResources(this);
+
+        if(getConfig().getBoolean("resourcepack.generateResourcePack", false))
+            ResourcePack.generate(this, getConfig().getString("resourcepack.path", "./resourcepack/loup_garou.zip"));
+
+        getLogger().info("ResourcePack Url Used: " + VariousUtils.resourcePackAddress(this));
 
         makeNewGame();
 
@@ -110,6 +125,10 @@ public class MainLg extends JavaPlugin {
                 saveConfig();
                 loadMaxPlayers();
                 sender.sendMessage(GREEN + "La position a bien été ajoutée !");
+                return true;
+            }
+            if (args.length >= 1 && args[0].equalsIgnoreCase("debug")) {
+                ((Player) sender).openInventory(DebugCard.getMainDebugCard().getInventory());
                 return true;
             }
             ((Player) sender).openInventory(ConfigManager.getMainConfigManager().getInventory());
@@ -165,13 +184,19 @@ public class MainLg extends JavaPlugin {
 
     public void loadMaxPlayers() {
         int players = 0;
-        for (String role : roles.keySet())
-            players += getConfig().getInt("role." + role);
+        for (Class<? extends Role> role : roles)
+            players += getConfig().getInt("role." + Role.getId(role));
         maxPlayers = players;
     }
 
     public void addRole(Class<? extends Role> clazz, InputStream image) {
-        this.roles.put(clazz.getSimpleName().substring(1), clazz);
+        addRole(clazz, image, true);
+    }
+    public void addRole(Class<? extends Role> clazz, InputStream image, boolean selectable) {
+        String id = Role.getId(clazz);
+        LGCardItems.registerCardTexture(id, image);
+        if(selectable)
+            this.roles.add(clazz);
     }
 
     public void addBlackListSpecRole(Class<? extends Role> clazz) {
@@ -181,35 +206,37 @@ public class MainLg extends JavaPlugin {
 
     private void loadRoles() {
         try {
-            addRole(RWereWolf.class);
-            addRole(RBlackWerewolf.class);
-            addRole(RGardien.class);
-            addRole(RWitch.class);
-            addRole(RClairvoyant.class);
-            addRole(RHunter.class);
-            addRole(RVillager.class);
-            addRole(RMedium.class);
-            addRole(RDictator.class);
-            addRole(RCupid.class);
-            addRole(RLittleGirl.class);
-            addRole(RRedRidingHood.class);
-            addRole(RWhiteWerewolf.class);
-            addRole(RJester.class);
-            addRole(RAngel.class);
-            addRole(RSurvivor.class);
-            addRole(RAssassin.class);
-            addRole(RBigBadWolf.class);
-            addRole(RRaven.class);
-            addRole(RDetective.class);
-            addRole(RDogWolf.class);
-            addRole(RPirate.class);
-            addRole(RPyromaniac.class);
-//            addRole(RPretre.class);
-            addRole(RReaper.class);
-            addRole(RChildWild.class);
-            addRole(RBearShowman.class);
-            addRole(RVampire.class);
-            addRole(RVampireHunter.class);
+            addRole(RWereWolf.class, getResource("roles/werewolf.png"));
+            addRole(RBlackWerewolf.class, getResource("roles/blackwerewolf.png"));
+            addRole(RGardien.class, getResource("roles/gardien.png"));
+            addRole(RWitch.class, getResource("roles/witch.png"));
+            addRole(RClairvoyant.class, getResource("roles/clairvoyant.png"));
+            addRole(RHunter.class, getResource("roles/hunter.png"));
+            addRole(RVillager.class, getResource("roles/villager.png"));
+            addRole(RMedium.class, getResource("roles/medium.png"));
+            addRole(RDictator.class, getResource("roles/dictator.png"));
+            addRole(RCupid.class, getResource("roles/cupid.png"));
+            addRole(RLittleGirl.class, getResource("roles/littlegirl.png"));
+            addRole(RRedRidingHood.class, getResource("roles/redridinghood.png"));
+            addRole(RWhiteWerewolf.class, getResource("roles/whitewerewolf.png"));
+            addRole(RJester.class, getResource("roles/jester.png"));
+            addRole(RAngel.class, getResource("roles/angel.png"));
+            addRole(RSurvivor.class, getResource("roles/survivor.png"));
+            addRole(RAssassin.class, getResource("roles/assassin.png"));
+            addRole(RBigBadWolf.class, getResource("roles/bigbadwolf.png"));
+            addRole(RRaven.class, getResource("roles/raven.png"));
+            addRole(RDetective.class, getResource("roles/detective.png"));
+            addRole(RDogWolf.class, getResource("roles/dogwolf.png"));
+            addRole(RDogWolfWW.class, getResource("roles/dogwolfww.png"), false);
+            addRole(RPirate.class, getResource("roles/pirate.png"));
+            addRole(RPyromaniac.class, getResource("roles/pyromaniac.png"));
+//            addRole(RPriest.class, getResource("roles/priest.png"));
+            addRole(RReaper.class, getResource("roles/reaper.png"));
+            addRole(RChildWild.class, getResource("roles/childwild.png"));
+            addRole(RChildWildWW.class, getResource("roles/childwildww.png"), false);
+            addRole(RBearShowman.class, getResource("roles/bearshowman.png"));
+            addRole(RVampire.class, getResource("roles/vampire.png"));
+            addRole(RVampireHunter.class, getResource("roles/vampirehunter.png"));
 
             addBlackListSpecRole(RMedium.class);
             addBlackListSpecRole(RPriest.class);
@@ -218,5 +245,48 @@ public class MainLg extends JavaPlugin {
         }
     }
 
+    public InputStream getResource(@NonNull String path)
+    {
+        return this.getClassLoader().getResourceAsStream("assets/" + path);
+    }
 
+    @SuppressWarnings("unchecked")
+    private void registerResources() {
+        Arrays.asList("entity/steve.png", "entity/alex.png", "misc/pumpkinblur.png").forEach(o ->
+                ResourcePack.addFile("assets/minecraft/textures/" + o, getResource(o), true));
+
+        Map<String, Material> newItem = new HashMap<>();
+        newItem.put("ui_selector", Material.EMERALD);
+        newItem.put("ui_validation", Material.GOLD_NUGGET);
+        newItem.put("ui_cancel", Material.IRON_NUGGET);
+        newItem.put("ui_potion_life", Material.PURPLE_DYE);
+        newItem.put("ui_potion_death", Material.LIGHT_BLUE_DYE);
+        newItem.put("ui_heart", Material.SUGAR);
+
+        newItem.forEach((id, mat) -> ResourcePack.addItem(ItemBuilder
+                        .make(mat)
+                        .setCustomId(id),
+                getResource(String.format("item/%s.png", id))));
+
+        JSONObject soundsJS = new JSONObject();
+
+        for(LGSound sound : LGSound.getValues())
+        {
+            if(!sound.isResourcePack())
+                continue;
+
+            JSONObject soundJS = new JSONObject();
+            soundJS.put("category", sound.getCategory().name().toLowerCase());
+            JSONArray soundJSsounds = new JSONArray();
+            soundJS.put("sounds", soundJSsounds);
+            JSONObject soundJSsound = new JSONObject();
+            soundJSsounds.add(soundJSsound);
+            soundJSsound.put("name", sound.getId());
+            soundJSsound.put("stream", true);
+
+            soundsJS.put(sound.getName().toLowerCase(), soundJS);
+        }
+
+        ResourcePack.addFile("sounds.json", VariousUtils.jsonToStream(soundsJS), true);
+    }
 }

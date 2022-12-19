@@ -11,6 +11,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.events.PacketListener;
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.events.TakeTarget;
@@ -41,13 +42,14 @@ import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityMetadata;
 import com.comphenix.packetwrapper.WrapperPlayServerHeldItemSlot;
 import fr.valgrifer.loupgarou.MainLg;
-import fr.valgrifer.loupgarou.classes.LGCustomItems;
+import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
 
 public class RPriest extends Role{
-    private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
+    private static final ItemBuilder itemNoAction = ResourcePack
+            .getItem("ui_cancel")
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
@@ -359,7 +361,7 @@ public class RPriest extends Role{
             lgp.getPlayer().removePotionEffect(PotionEffectType.INVISIBILITY);
             lgp.getPlayer().getInventory().setHelmet(null);
             lgp.getPlayer().updateInventory();
-            LGCustomItems.updateItem(lgp);
+            LGCardItems.updateItem(lgp);
 
             lgp.joinChat(getGame().getDayChat());//Pour qu'il ne parle plus dans le chat des morts (et ne le voit plus) et qu'il parle dans le chat des vivants
             VariousUtils.setWarning(lgp.getPlayer(), true);

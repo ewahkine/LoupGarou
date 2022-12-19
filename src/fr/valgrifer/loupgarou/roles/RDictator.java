@@ -3,6 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import java.util.*;
 
 import fr.valgrifer.loupgarou.classes.LGVoteCause;
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.LGVoteEvent;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
@@ -25,7 +26,8 @@ import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RDictator extends Role{
-    private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
+    private static final ItemBuilder itemNoAction = ResourcePack
+            .getItem("ui_cancel")
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
@@ -198,7 +200,7 @@ public class RDictator extends Role{
         if(!e.isCancelled())
             return;
 
-        Iterator<LGPlayer> ite = ((ArrayList<LGPlayer>)getPlayers().clone()).iterator();
+        Iterator<LGPlayer> ite = ((ArrayList<LGPlayer>) getPlayers().clone()).iterator();
         new Runnable() {
             public void run() {
                 run = this;

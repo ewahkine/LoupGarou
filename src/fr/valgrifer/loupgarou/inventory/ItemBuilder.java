@@ -19,7 +19,7 @@ public class ItemBuilder {
     private String displayName = null;
     private List<String> lore = new ArrayList<>();
     private int amount = 1;
-    private int customModelData = -1;
+    private int customModelData = 0;
     private OfflinePlayer skull;
 
     public ItemBuilder(Material mat)
@@ -55,7 +55,7 @@ public class ItemBuilder {
                 .setCustomId(customId)
                 .setType(mat)
                 .setDisplayName(displayName)
-                .setLore(lore)
+                .setLore(new ArrayList<>(lore))
                 .setAmount(amount)
                 .setCustomModelData(customModelData)
                 .setSkull(skull);
@@ -80,7 +80,7 @@ public class ItemBuilder {
             }
         }
 
-        if(customId != null || customModelData > -1)
+        if(customId != null || customModelData > 0)
         {
             NBTCompound tag = NMSUtils.getInstance().getItemTag(item);
 
@@ -88,7 +88,7 @@ public class ItemBuilder {
             {
                 if(customId != null)
                     tag.put("CustomIDLG", customId);
-                if(customModelData > -1)
+                if(customModelData > 0)
                     tag.put("CustomModelData", customModelData);
 
                 return NMSUtils.getInstance().setItemTag(item, tag);
@@ -103,7 +103,7 @@ public class ItemBuilder {
         this.mat = mat != null ? mat : Material.AIR;
         return this;
     }
-    public Material setType()
+    public Material getType()
     {
         return mat;
     }
@@ -130,7 +130,7 @@ public class ItemBuilder {
 
     public ItemBuilder setCustomId(String customId)
     {
-        this.customId = customId;
+        this.customId = customId != null ? customId.toLowerCase() : null;
         return this;
     }
     public String getCustomId()
@@ -140,7 +140,7 @@ public class ItemBuilder {
 
     public ItemBuilder setCustomModelData(int customModelData)
     {
-        this.customModelData = Math.max(customModelData, -1);
+        this.customModelData = Math.max(customModelData, 0);
         return this;
     }
     public int getCustomModelData()
@@ -148,9 +148,9 @@ public class ItemBuilder {
         return customModelData;
     }
 
-    public ItemBuilder setLore(String ...lines)
+    public ItemBuilder setLore(String... lines)
     {
-        lore = Arrays.asList(lines);
+        lore = new ArrayList<>(Arrays.asList(lines));
         return this;
     }
     public ItemBuilder setLore(List<String> lines)
@@ -162,7 +162,7 @@ public class ItemBuilder {
     {
         return lore;
     }
-    public ItemBuilder addLore(String ...lines)
+    public ItemBuilder addLore(String... lines)
     {
         lore.addAll(Arrays.asList(lines));
         return this;

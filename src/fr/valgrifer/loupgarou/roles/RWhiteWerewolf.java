@@ -4,6 +4,7 @@ import java.util.List;
 
 import static org.bukkit.ChatColor.*;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import lombok.Getter;
@@ -22,8 +23,8 @@ import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RWhiteWerewolf extends Role{
-	private static final ItemBuilder itemNoAction = ItemBuilder
-            .make(Material.IRON_NUGGET)
+	private static final ItemBuilder itemNoAction = ResourcePack
+            .getItem("ui_cancel")
             .setCustomId("ac_skip")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");

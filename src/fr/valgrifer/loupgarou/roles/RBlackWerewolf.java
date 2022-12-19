@@ -1,5 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
@@ -19,8 +20,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.valgrifer.loupgarou.MainLg;
-import fr.valgrifer.loupgarou.classes.LGCustomItems;
-import fr.valgrifer.loupgarou.classes.LGCustomItems.Constraints;
+import fr.valgrifer.loupgarou.classes.LGCardItems;
+import fr.valgrifer.loupgarou.classes.LGCardItems.Constraint;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
@@ -29,8 +30,8 @@ public class RBlackWerewolf extends Role{
     private static final MenuPreset preset = new MenuPreset(1) {
         @Override
         protected void preset() {
-            setSlot(3, new Slot(ItemBuilder
-                    .make(Material.IRON_NUGGET)
+            setSlot(3, new Slot(ResourcePack
+                    .getItem("ui_cancel")
                     .setCustomId("ac_skip")
                     .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
@@ -202,7 +203,7 @@ public class RBlackWerewolf extends Role{
                     player.sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+RED+""+BOLD+""+ITALIC+"Loups-Garous"+GOLD+""+ITALIC+".");
                     if(!player.isDead()) {//Si il n'a pas été tué je ne sais comment
                         RWereWolf.forceJoin(player);
-                        LGCustomItems.updateItem(player);
+                        LGCardItems.updateItem(player);
                     }
 
                     for(LGPlayer lgp : getGame().getInGame()) {
@@ -243,7 +244,7 @@ public class RBlackWerewolf extends Role{
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {
 		if(e.getGame() == getGame())
 			if(e.getPlayer().getCache().getBoolean("infected"))
-				e.getConstraints().add(Constraints.INFECTED);
+				e.getConstraints().add(Constraint.INFECTED);
 	}
 
     public static class InfectAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, MessageForcable, AbilityConsume

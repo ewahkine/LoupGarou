@@ -2,7 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import static org.bukkit.ChatColor.*;
 
-import fr.valgrifer.loupgarou.classes.LGCustomItems;
+import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 
@@ -55,7 +55,7 @@ public class RChildWildWW extends Role{
 		super.join(player, sendMessage);
 		player.setRole(this);
         RWereWolf lgs = RWereWolf.forceJoin(player);
-        LGCustomItems.updateItem(player);
+        LGCardItems.updateItem(player);
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())
                 if(lgp != player)

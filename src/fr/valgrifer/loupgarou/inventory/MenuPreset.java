@@ -141,8 +141,8 @@ public abstract class MenuPreset
             ClickAction action;
             if((action = itemActions.get(customId)) != null)
             {
+                getHolder().getInventory().getViewers().forEach(he -> LGSound.Button.play((Player) he, he.getUniqueId().equals(player.getUniqueId()) ? .1f : .05f, he.getUniqueId().equals(player.getUniqueId()) ? 1f : .75f));
                 action.run(getHolder(), event);
-                getHolder().getInventory().getViewers().forEach(he -> ((Player) he).playSound(he.getLocation(), LGSound.Button.getSound(), LGSound.Button.getCategory(), he.getUniqueId().equals(player.getUniqueId()) ? .1f : .05f, he.getUniqueId().equals(player.getUniqueId()) ? 1f : .75f));
             }
         }
         catch (Exception e)

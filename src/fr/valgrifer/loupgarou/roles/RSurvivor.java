@@ -1,5 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
@@ -10,7 +11,6 @@ import static org.bukkit.ChatColor.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -27,8 +27,8 @@ public class RSurvivor extends Role{
     private static final MenuPreset preset = new MenuPreset(1) {
         @Override
         protected void preset() {
-            setSlot(3, new Slot(ItemBuilder
-                    .make(Material.IRON_NUGGET)
+            setSlot(3, new Slot(ResourcePack
+                    .getItem("ui_cancel")
                     .setCustomId("ac_skip")
                     .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
@@ -48,8 +48,8 @@ public class RSurvivor extends Role{
                 role.callback.run();
             });
 
-            setSlot(5, new Slot(ItemBuilder
-                            .make(Material.GOLD_NUGGET)
+            setSlot(5, new Slot(ResourcePack
+                            .getItem("ui_validation")
                             .setCustomId("ac_protect")
                             .setLore(DARK_GRAY+"Tu ne pourras pas être tué par",
                                     DARK_GRAY+"les "+RED+""+BOLD+"Loups"+DARK_GRAY+" cette nuit.")){

@@ -52,7 +52,7 @@ public class JoinListener implements Listener {
         LGPlayer lgp = LGPlayer.thePlayer(e.getPlayer());
 
 		if(e.getJoinMessage() == null || !e.getJoinMessage().equals("joinall"))
-            Objects.requireNonNull(p.getPlayer()).setResourcePack(VariousUtils.resourcePackAdress());
+            Objects.requireNonNull(p.getPlayer()).setResourcePack(VariousUtils.resourcePackAddress());
 		else
 			lgp.join(MainLg.getInstance().getCurrentGame());
 

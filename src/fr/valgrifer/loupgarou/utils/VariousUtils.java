@@ -1,5 +1,8 @@
 package fr.valgrifer.loupgarou.utils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import fr.valgrifer.loupgarou.MainLg;
@@ -14,20 +17,30 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 public class VariousUtils {
-    private static String resourcePackAdress = null;
-    public static String resourcePackAdress(){
-        if(resourcePackAdress == null)
+    private static String resourcePackAddress = null;
+    public static String resourcePackAddress() {
+        return resourcePackAddress(null);
+    }
+    public static String resourcePackAddress(MainLg main) {
+        if(resourcePackAddress == null)
         {
-            FileConfiguration config = MainLg.getInstance().getConfig();
-            if(config.getBoolean("resourcepack.useResourcePackHosting", false) && Bukkit.getPluginManager().isPluginEnabled("ResourcePackHosting"))
-                resourcePackAdress = ResourcePackHosting.getAdresse();
+            FileConfiguration config = main.getConfig();
+            if(config.getBoolean("resourcepack.useResourcePackHosting", false) && main.getServer().getPluginManager().isPluginEnabled("ResourcePackHosting"))
+            {
+                resourcePackAddress = ResourcePackHosting.getAdresse();
+
+                if(config.getBoolean("resourcepack.generateResourcePack", false))
+                    resourcePackAddress += RandomString.generate(10);
+            }
             else
-                resourcePackAdress = config.getString("resourcepack.url", "http://leomelki.fr/mcgames/ressourcepacks/v32/loup_garou.zip");
+                resourcePackAddress = config.getString("resourcepack.url", "http://leomelki.fr/mcgames/ressourcepacks/v32/loup_garou.zip");
         }
 
-        return resourcePackAdress;
+        return resourcePackAddress;
     }
 
 	public static double distanceSquaredXZ(Location from, Location to) {
@@ -66,5 +79,39 @@ public class VariousUtils {
     public static int MinMax(int value, int min, int max)
     {
         return Math.min(Math.max(value, min), max);
+    }
+
+    public static InputStream jsonToStream(JSONObject value)
+    {
+        return stringToStream(JSONValue.toJSONString(value).replaceAll("\\\\/", "/"));
+    }
+    public static InputStream stringToStream(String value)
+    {
+        return new ByteArrayInputStream(value.getBytes());
+    }
+
+    public static String streamToString(InputStream inputStream)
+    {
+        StringBuilder result = new StringBuilder();
+
+        try
+        {
+            int BUFFER_SIZE = 1024;
+            byte[] buffer = new byte[BUFFER_SIZE];
+            while (inputStream.read(buffer) != -1)
+            {
+                for(byte b : buffer)
+                {
+                    if(b == 0) continue;
+                    result.append((char) b);
+                }
+
+                buffer = new byte[BUFFER_SIZE];
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result.toString();
     }
 }

@@ -2,8 +2,11 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import static org.bukkit.ChatColor.*;
@@ -12,7 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import fr.valgrifer.loupgarou.MainLg;
-import fr.valgrifer.loupgarou.classes.LGCustomItems;
+import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import lombok.Getter;
@@ -20,6 +23,19 @@ import lombok.Setter;
 
 @SuppressWarnings("unused")
 public abstract class Role implements Listener{
+    private static final Map<Class<? extends Role>, ItemBuilder> cards = new HashMap<>();
+    public static void setCard(Class<? extends Role> role, ItemBuilder card)
+    {
+        if(!cards.containsKey(role))
+            cards.put(role, card.clone());
+    }
+    public static ItemBuilder getCard(Class<? extends Role> role)
+    {
+        if(!cards.containsKey(role))
+            return null;
+        return cards.get(role).clone();
+    }
+
 	@Getter @Setter private int waitedPlayers;
 	@Getter private final ArrayList<LGPlayer> players = new ArrayList<>();
 	@Getter private final LGGame game;
@@ -28,10 +44,19 @@ public abstract class Role implements Listener{
 		this.game = game;
 		Bukkit.getPluginManager().registerEvents(this, MainLg.getInstance());
 		FileConfiguration config = MainLg.getInstance().getConfig();
-		String roleConfigName = "role."+getClass().getSimpleName().substring(1);
+		String roleConfigName = "role."+getId();
 		if(config.contains(roleConfigName))
 			waitedPlayers = config.getInt(roleConfigName);
 	}
+
+    public String getId()
+    {
+        return getId(getClass());
+    }
+    public static String getId(Class<? extends Role> clazz)
+    {
+        return clazz.getSimpleName().substring(1).toLowerCase();
+    }
 
     protected static Object getStatic(Class<? extends Role> clazz, String fn)
     {
@@ -93,6 +118,23 @@ public abstract class Role implements Listener{
         catch (Exception ignored)
         {
             return getName(clazz);
+        }
+    }
+    public boolean hasScoreBoardName()
+    {
+        return hasScoreBoardName(this.getClass());
+    }
+    @SneakyThrows
+    public static boolean hasScoreBoardName(Class<? extends Role> clazz)
+    {
+        try
+        {
+            getStatic(clazz, "_getScoreBoardName", false);
+            return true;
+        }
+        catch (Exception ignored)
+        {
+            return false;
         }
     }
     public String getShortDescription()
@@ -210,7 +252,7 @@ public abstract class Role implements Listener{
 	}
 	public void join(LGPlayer player) {
 		join(player, !getGame().isStarted());
-		LGCustomItems.updateItem(player);
+		LGCardItems.updateItem(player);
 	}
 	public boolean hasPlayersLeft() {
 		return getPlayers().size() > 0;

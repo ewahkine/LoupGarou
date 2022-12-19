@@ -86,8 +86,8 @@ Les fichiers relatifs à minecraft se situeront dans le dossier `minecraft_data`
 ## Todo
 
 - [ ] Add Identifier for LGChat add a Event / Ajouter un authentifier pour LGChat et lui ajouter un event
-- [ ] Change to a Better system Item Card / Changement pour un meilleure system item de carte
-- [ ] Add a resource pack generator / Ajouter un géneréteur de Resource Pack
+- [x] Change to a Better system Item Card / Changement pour un meilleure system item de carte
+- [x] Add a resource pack generator / Ajouter un géneréteur de Resource Pack
 - [x] Add RoleActionEvent with Identifier / Ajouter un event RoleAction avec un authentifier
 - [ ] Add A Option System / Ajouter un system d'option
 - [ ] Change SpawnPoint System / Changer le system de SpawnPoint

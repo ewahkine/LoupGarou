@@ -1,5 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
@@ -27,16 +28,16 @@ import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RWitch extends Role{
-    public static final ItemBuilder itemBack = ItemBuilder
-            .make(Material.IRON_NUGGET)
+    public static final ItemBuilder itemBack = ResourcePack
+            .getItem("ui_cancel")
             .setCustomId("ac_back")
             .setDisplayName(BOLD+"Revenir au choix des potions");
 
     private static final MenuPreset preset = new MenuPreset(null, null) {
         @Override
         protected void preset() {
-            setSlot(0, new MenuPreset.Slot(ItemBuilder
-                    .make(Material.PURPLE_DYE)
+            setSlot(0, new MenuPreset.Slot(ResourcePack
+                    .getItem("ui_potion_life")
                     .setCustomId("ac_life")
                     .setDisplayName(GREEN+""+BOLD+"Potion de vie")
                     .setLore(DARK_GREEN+"Sauve la cible des "+RED+""+BOLD+"Loups"+DARK_GREEN+".")) {
@@ -67,8 +68,8 @@ public class RWitch extends Role{
                 role.saveLife(lgp);
             });
 
-            setSlot(1, new MenuPreset.Slot(ItemBuilder
-                    .make(Material.IRON_NUGGET)
+            setSlot(1, new MenuPreset.Slot(ResourcePack
+                    .getItem("ui_cancel")
                     .setCustomId("ac_skip")
                     .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
@@ -88,8 +89,8 @@ public class RWitch extends Role{
                 role.callback.run();
             });
 
-            setSlot(2, new MenuPreset.Slot(ItemBuilder
-                    .make(Material.ROTTEN_FLESH)
+            setSlot(2, new MenuPreset.Slot(ResourcePack
+                    .getItem("ui_potion_death")
                     .setCustomId("ac_kill")
                     .setDisplayName(RED+""+BOLD+"Potion de mort")
                     .setLore(RED+"Tue la personne de ton choix.")) {

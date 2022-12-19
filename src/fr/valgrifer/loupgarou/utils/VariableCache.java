@@ -19,13 +19,13 @@ public class VariableCache {
 		return cache.containsKey(key);
 	}
 	public <T> T get(String key) {
-		return (T)cache.get(key);
+		return (T) cache.get(key);
 	}
 	public <T> T get(String key, T def) {
-		return has(key) ? (T)cache.get(key) : def;
+		return has(key) ? (T) cache.get(key) : def;
 	}
 	public <T> T remove(String key) {
-		return (T)cache.remove(key);
+		return (T) cache.remove(key);
 	}
 	public void reset() {
 		cache.clear();

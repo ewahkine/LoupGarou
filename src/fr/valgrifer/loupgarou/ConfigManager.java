@@ -3,6 +3,7 @@ package fr.valgrifer.loupgarou;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
 import fr.valgrifer.loupgarou.classes.LGWinType;
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.inventory.*;
 import fr.valgrifer.loupgarou.roles.Role;
 import org.bukkit.Bukkit;
@@ -12,8 +13,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-
-import java.util.*;
 
 import static org.bukkit.ChatColor.*;
 
@@ -26,15 +25,10 @@ public class ConfigManager extends LGInventoryHolder
         return mainConfigManager == null ? (mainConfigManager = new ConfigManager()) : mainConfigManager;
     }
 
-    private final List<String> roles;
     @SuppressWarnings("SpellCheckingInspection")
     public ConfigManager()
     {
         super(6, BLACK + "Lg Config");
-
-        List<String> tempsRoles = new ArrayList<>(MainLg.getInstance().getRoles().keySet());
-        tempsRoles.sort(Comparator.comparing(role -> Role.getName(MainLg.getInstance().getRoles().get(role))));
-        roles = Collections.unmodifiableList(tempsRoles);
 
         setDefaultPreset(new MenuPreset(this) {
             @Override
@@ -45,12 +39,11 @@ public class ConfigManager extends LGInventoryHolder
                                 .setDisplayName(GOLD + "Composition")) {
                             @Override
                             protected ItemBuilder getItem(LGInventoryHolder holder) {
-                                return getDefaultItem().setLore(roles.parallelStream()
-                                        .filter(role ->
-                                                MainLg.getInstance().getConfig().getInt("role." + role, 0) > 0)
+                                return getDefaultItem().setLore(MainLg.getInstance().getRoles().stream()
+                                        .filter(role -> MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0) > 0)
                                         .map(role -> {
-                                            int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
-                                            return (count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(MainLg.getInstance().getRoles().get(role));
+                                            int count = MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0);
+                                            return GREEN +""+ count + " " + Role.getScoreBoardName(role);
                                         })
                                         .sorted()
                                         .toArray(String[]::new));
@@ -101,7 +94,8 @@ public class ConfigManager extends LGInventoryHolder
                         });
 
                 setSlot(7, 2,
-                        new Slot(ItemBuilder.make(Material.SUGAR)
+                        new Slot(ResourcePack
+                                .getItem("ui_heart")
                                 .setCustomId("ac_reloadresourcepack")
                                 .setDisplayName(DARK_GREEN + "Recharge le resource pack")
                                 .setLore(GRAY + "pour tout le monde")),
@@ -125,7 +119,7 @@ public class ConfigManager extends LGInventoryHolder
 
 
                 setSlot(4, 4,
-                        new Slot(ItemBuilder.make(Material.LIME_STAINED_GLASS)
+                        new Slot(ItemBuilder.make(Material.LIME_CONCRETE)
                                 .setCustomId("ac_gamestartstop")
                                 .setDisplayName(DARK_GREEN + "Démarrer la Game"))
                         {
@@ -134,7 +128,7 @@ public class ConfigManager extends LGInventoryHolder
                                 ItemBuilder builder = getDefaultItem();
                                 if(MainLg.getInstance().getCurrentGame().isStarted())
                                 {
-                                    builder.setType(Material.REDSTONE_BLOCK)
+                                    builder.setType(Material.RED_CONCRETE)
                                             .setDisplayName(DARK_RED + "Arrêter la Game");
                                 }
                                 return builder;
@@ -173,8 +167,8 @@ public class ConfigManager extends LGInventoryHolder
                 {
                     @Override
                     protected ItemBuilder getItem(LGInventoryHolder h) {
-                        int roleAmount = roles.stream()
-                                .reduce(0, (total, role) -> total + MainLg.getInstance().getConfig().getInt("role." + role, 0), Integer::sum);
+                        int roleAmount = MainLg.getInstance().getRoles().stream()
+                                .reduce(0, (total, role) -> total + MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0), Integer::sum);
                         return getDefaultItem()
                                 .setDisplayName(GRAY + "Page " + GOLD + (getPageIndex() + 1))
                                 .setLore(AQUA + "" + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
@@ -204,37 +198,20 @@ public class ConfigManager extends LGInventoryHolder
                             }
                         });
 
-                roles.forEach(role -> {
-                    Class<? extends Role> clazz = MainLg.getInstance().getRoles().get(role);
+                MainLg.getInstance().getRoles().forEach(clazz -> {
+                    String role = Role.getId(clazz);
 
-                    List<String> description = new ArrayList<>();
-                    String[] words = Role.getDescription(clazz).split(" ");
-                    StringBuilder line = new StringBuilder();
-                    int wordCounter = 0;
-                    for(String word : words)
-                    {
-                        if(wordCounter > 0)
-                            line.append(" ");
-                        line.append(word);
-                        wordCounter++;
-
-                        if(wordCounter >= 6 || line.toString().endsWith(".")){
-                            description.add(line.toString());
-                            line = new StringBuilder(WHITE.toString());
-                            wordCounter = 0;
-                        }
-                    }
-
-                    registerItem(new Slot(new ItemBuilder()
-                                         .setCustomId("ac_role_" + role)
-                                         .setLore(description.toArray(new String[0])))
+                    registerItem(new Slot(Role.getCard(clazz))
                                  {
                                      @Override
                                      protected ItemBuilder getItem(LGInventoryHolder holder) {
                                          int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
-                                         return getDefaultItem()
-                                                 .setType(count > 0 ? Material.LIME_STAINED_GLASS : Material.REDSTONE_BLOCK)
-                                                 .setDisplayName((count > 0 ? GREEN : RED) +""+ count + " " + Role.getScoreBoardName(clazz))
+                                         ItemBuilder def =  getDefaultItem();
+                                         if(count == 0)
+                                             return def
+                                                 .setType(Material.RED_CONCRETE);
+                                         return def
+                                                 .setDisplayName(GREEN +""+ count + " " + def.getDisplayName())
                                                  .setAmount(count);
                                      }
                                  },

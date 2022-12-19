@@ -2,6 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.util.*;
 
+import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
@@ -29,7 +30,8 @@ import fr.valgrifer.loupgarou.classes.LGWinType;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 public class RPyromaniac extends Role{
-    private static final ItemBuilder itemNoAction = ItemBuilder.make(Material.IRON_NUGGET)
+    private static final ItemBuilder itemNoAction = ResourcePack
+            .getItem("ui_cancel")
             .setCustomId("ac_no")
             .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");

@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.valgrifer</groupId>
     <artifactId>LoupGarou</artifactId>
-    <version>1.5.0</version>
+    <version>1.6.0</version>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -13,25 +13,6 @@
         <directory>${project.basedir}/build</directory>
         <sourceDirectory>src</sourceDirectory>
         <plugins>
-<!--            <plugin>-->
-<!--                <artifactId>maven-assembly-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <source>${project.java.version}</source>-->
-<!--                    <target>${project.java.version}</target>-->
-<!--                    <encoding>${project.build.sourceEncoding}</encoding>-->
-<!--                    <descriptorRefs>-->
-<!--                        <descriptorRef>jar-with-dependencies</descriptorRef>-->
-<!--                    </descriptorRefs>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -42,22 +23,62 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <includeArtifactIds>zip4j</includeArtifactIds>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
                     <outputDirectory>Z:/server/minecraft/lg/plugins</outputDirectory>
                     <finalName>LoupGarou</finalName>
 <!--                    <finalName>LoupGarou.v${project.version}</finalName>-->
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
+                <directory>${project.build.directory}/lib</directory>
+            </resource>
+            <resource>
                 <directory>src</directory>
+                <filtering>false</filtering>
+            </resource>
+            <resource>
+                <directory>resources</directory>
                 <filtering>true</filtering>
-                <includes>
-                    <include>plugin.yml</include>
-                </includes>
+            </resource>
+            <resource>
+                <directory>resources-nf</directory>
+                <filtering>false</filtering>
             </resource>
         </resources>
     </build>
@@ -68,6 +89,11 @@
         </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.4.0</version>
+        </dependency>
         <dependency>
             <groupId>corg.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -93,6 +119,11 @@
             <version>1.0</version>
             <scope>system</scope>
             <systemPath>Z:/server/minecraft/lg/plugins/ResourcePackHosting-1.0.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>net.lingala.zip4j</groupId>
+            <artifactId>zip4j</artifactId>
+            <version>2.11.2</version>
         </dependency>
     </dependencies>
 </project>
