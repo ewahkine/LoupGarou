@@ -86,7 +86,7 @@ public class RHunter extends Role{
 		player.stopChoosing();
 	}
 	
-	List<LGPlayer> needToPlay = new ArrayList<>();
+	private final List<LGPlayer> needToPlay = new ArrayList<>();
 	
 	@EventHandler
 	public void onPlayerKill(LGPlayerKilledEvent e) {

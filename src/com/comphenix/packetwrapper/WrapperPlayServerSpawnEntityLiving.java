@@ -292,23 +292,4 @@ public class WrapperPlayServerSpawnEntityLiving extends AbstractPacket {
 		handle.getIntegers().write(4, (int) (value * 8000.0D));
 	}
 
-	/**
-	 * Retrieve the data watcher.
-	 * <p>
-	 * Content varies by mob, see Entities.
-	 * 
-	 * @return The current Metadata
-	 */
-/*	public WrappedDataWatcher getMetadata() {
-		return handle.getDataWatcherModifier().read(0);
-	}*/
-
-	/**
-	 * Set the data watcher.
-	 * 
-	 * @param value - new value.
-	 */
-	/*public void setMetadata(WrappedDataWatcher value) {
-		handle.getDataWatcherModifier().write(0, value);
-	}*/
 }

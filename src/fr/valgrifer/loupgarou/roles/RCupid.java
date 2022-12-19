@@ -144,7 +144,7 @@ public class RCupid extends Role{
 		player2.updatePrefix();
 	}
 
-	WrappedDataWatcherObject invisible = new WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)),
+	private final WrappedDataWatcherObject invisible = new WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class)),
 							 noGravity = new WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class));
 	protected void sendHead(LGPlayer to, LGPlayer ofWho) {
 		int entityId = Integer.MAX_VALUE-ofWho.getPlayer().getEntityId();

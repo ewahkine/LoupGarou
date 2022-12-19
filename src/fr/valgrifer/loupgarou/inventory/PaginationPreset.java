@@ -1,6 +1,5 @@
 package fr.valgrifer.loupgarou.inventory;
 
-import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -17,6 +16,10 @@ import static org.bukkit.ChatColor.*;
 public abstract class PaginationPreset extends MenuPreset
 {
     private List<Slot> registeredSlots;
+    public int getSize()
+    {
+        return registeredSlots.size();
+    }
 
     @Getter
     private final int maxPerPage;

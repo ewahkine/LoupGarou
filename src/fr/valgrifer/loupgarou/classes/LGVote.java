@@ -121,15 +121,12 @@ public class LGVote {
 			StringJoiner sj = new StringJoiner(", ");
 			for(int i = 0;i<choosable.size()-1;i++)
 				sj.add(choosable.get(0).getName());
-			//mayor.sendTitle(GOLD+"C'est à vous de délibérer", "Faut-il tuer "+sj+" ou "+choosable.get(choosable.size()-1).getName()+" ?", 100);
 			List<LGPlayer> blackListed = new ArrayList<>();
 			for(LGPlayer player : participants)
 				if(!choosable.contains(player))
 					blackListed.add(player);
 				else {
 					VariousUtils.setWarning(player.getPlayer(), true);
-					//player.sendMessage(DARK_RED+""+BOLD+"Vous êtes un des principaux suspects ! Défendez vous !");
-					//player.sendTitle(DARK_RED+""+BOLD+"Défendez vous !", RED+"Vous êtes l'un des principaux suspects", 100);
 				}
 			mayorVote = true;
 			game.wait(30, ()->{
@@ -277,7 +274,6 @@ public class LGVote {
 			WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
 			spawn.setEntityID(entityId);
 			spawn.setType(EntityType.DROPPED_ITEM);
-			//spawn.setMetadata(new WrappedDataWatcher(Arrays.asList(new WrappedWatchableObject(0, (byte)0x20), new WrappedWatchableObject(5, true))));
 			spawn.setX(loc.getX());
 			spawn.setY(loc.getY()+0.3);
 			spawn.setZ(loc.getZ());
@@ -288,50 +284,13 @@ public class LGVote {
 			final String votePercentageFormated = String.format("%.0f%%", votePercentage);
 			final String voteContent = GOLD+""+BOLD+"" + votesNbr + " / " + numberOfParticipants + YELLOW+" vote" + (votesNbr > 1 ? "s" : "") + " ("+GOLD+""+BOLD+"" + votePercentageFormated + YELLOW+")";
 
-			/*WrapperPlayServerEntityMetadata meta = new WrapperPlayServerEntityMetadata();
-			meta.setEntityID(entityId);
-			meta.setMetadata(Arrays.asList(new WrappedWatchableObject(invisible, (byte)0x20), new WrappedWatchableObject(noGravity, true), new WrappedWatchableObject(customNameVisible, true), new WrappedWatchableObject(customName, IChatBaseComponent.ChatSerializer.b(GOLD+""+BOLD+""+votesNbr+""+YELLOW+" vote"+(votesNbr > 1 ? "s" : "")))));
-			*/
-
             for(LGPlayer lgp : viewers)
                 spawn.sendPacket(lgp.getPlayer());
             NMSUtils.getInstance().updateArmorStandNameFor(eas, entityId, voteContent, viewers);
-			
-			
-		/*	EntityArmorStand ea = new EntityArmorStand(((CraftWorld)loc.getWorld()).getHandle(), loc.getX(), loc.getY()+0.3, loc.getZ());
-			ea.setPosition(loc.getX(), loc.getY()+0.3, loc.getZ());
-			ea.setInvisible(true);
-			ea.setCustomNameVisible(true);
-			int votesNbr = votes.get(voted).size();
-			ea.setCustomName((IChatBaseComponent) WrappedChatComponent.fromText(GOLD+""+BOLD+""+votesNbr+""+YELLOW+" vote"+(votesNbr > 1 ? "s" : "")).getHandle());
-			
-			PacketPlayOutSpawnEntityLiving spawn = new PacketPlayOutSpawnEntityLiving(ea);
-			try {
-				Field field = spawn.getClass().getDeclaredField("a");
-				field.setAccessible(true);
-				field.set(spawn, entityId);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}*/
-		/*	WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
-			spawn.setEntityID(entityId);
-			spawn.setType(EntityType.ARMOR_STAND);
-			WrappedDataWatcher meta = new WrappedDataWatcher();
-			meta.setObject(0, (byte)0x20);
-			meta.setObject(2, GOLD+""+BOLD+""+votes.get(voted)+""+YELLOW+" votes");
-		//	meta.setObject(3, true);
-			spawn.setMetadata(meta);
-			Location loc = voted.getPlayer().getLocation();
-			spawn.setX(loc.getX());
-			spawn.setY(loc.getY()+0.3);
-			spawn.setZ(loc.getZ());*/
-		/*	for(LGPlayer lgp : viewers)
-				((CraftPlayer)lgp.getPlayer()).getHandle().playerConnection.sendPacket(spawn);*/
-			//	spawn.sendPacket(lgp.getPlayer());
 		}
 	}
-	WrappedDataWatcher.WrappedDataWatcherObject invisible = new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class));
-    WrappedDataWatcher.WrappedDataWatcherObject noGravity = new WrappedDataWatcher.WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class));
+	private final WrappedDataWatcher.WrappedDataWatcherObject invisible = new WrappedDataWatcher.WrappedDataWatcherObject(0, WrappedDataWatcher.Registry.get(Byte.class));
+    private final WrappedDataWatcher.WrappedDataWatcherObject noGravity = new WrappedDataWatcher.WrappedDataWatcherObject(5, WrappedDataWatcher.Registry.get(Boolean.class));
 	private void showVoting(LGPlayer to, LGPlayer ofWho) {
 		int entityId = -to.getPlayer().getEntityId();
 		WrapperPlayServerEntityDestroy destroy = new WrapperPlayServerEntityDestroy();
@@ -341,7 +300,6 @@ public class LGVote {
 			WrapperPlayServerSpawnEntityLiving spawn = new WrapperPlayServerSpawnEntityLiving();
 			spawn.setEntityID(entityId);
 			spawn.setType(EntityType.DROPPED_ITEM);
-			//spawn.setMetadata(new WrappedDataWatcher(Arrays.asList(new WrappedWatchableObject(0, (byte)0x20), new WrappedWatchableObject(5, true))));
 			Location loc = ofWho.getPlayer().getLocation();
 			spawn.setX(loc.getX());
 			spawn.setY(loc.getY()+1.3);

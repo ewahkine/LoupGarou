@@ -78,7 +78,7 @@ public class RAngel extends Role {
 			vote = false;
 		}
 	}
-	List<LGPlayer> winners = new ArrayList<>();
+	private final List<LGPlayer> winners = new ArrayList<>();
 	int night = 1;
 	@EventHandler
 	public void onDeath(LGPlayerGotKilledEvent e) {

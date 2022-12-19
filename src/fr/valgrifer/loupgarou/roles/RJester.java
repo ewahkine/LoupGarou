@@ -114,7 +114,7 @@ public class RJester extends Role {
 		player.stopChoosing();
 	}
 
-    ArrayList<LGPlayer> needToPlay = new ArrayList<>();
+    private final ArrayList<LGPlayer> needToPlay = new ArrayList<>();
 	
 	@EventHandler
 	public void onPlayerKill(LGPlayerKilledEvent e) {

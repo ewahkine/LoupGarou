@@ -46,8 +46,8 @@ public class RLittleGirl extends Role{
 	}
 
     public boolean cryptAllName = false;
-	
-	List<String> customNames = Stream.of("Alpha", "Glouton", "Méchant", "Burlesque", "Peureux", "Malingre", "Gentil", "Tueur", "Énervé", "Docteur", "Enrager", "Fou", "Pensif", "réfléchi")
+
+    private final List<String> customNames = Stream.of("Alpha", "Glouton", "Méchant", "Burlesque", "Peureux", "Malingre", "Gentil", "Tueur", "Énervé", "Docteur", "Enrager", "Fou", "Pensif", "réfléchi")
             .map(ended -> "Loup " + ended).collect(Collectors.toList());
 
     public String getCustomName(int index) {

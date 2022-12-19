@@ -136,9 +136,6 @@ public class RDictator extends Role{
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.hideView();
 		closeInventory(player);
-		/*player.sendTitle(RED+"Vous ne faites pas votre coup d'état.", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		player.sendMessage(RED+"Vous ne faites pas votre coup d'état.");
-		player.sendMessage(GRAY+""+ITALIC+"Vous aurez de nouveau le choix lors de la prochaine nuit.");*/
 	}
 
     private boolean inMenu = false;

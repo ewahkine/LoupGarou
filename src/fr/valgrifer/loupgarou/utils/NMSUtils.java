@@ -25,7 +25,7 @@ public abstract class NMSUtils
     @SneakyThrows
     public static NMSUtils getInstance() {
         if(NMSUtils.instance == null)
-            NMSUtils.instance = (NMSUtils) Class.forName("fr.valgrifer.loupgarou.utils.nms." + getBukkitVersion() + "." + NMSUtils.class.getSimpleName()).newInstance();
+            NMSUtils.instance = (NMSUtils) Class.forName("fr.valgrifer.loupgarou.utils.nms." + getBukkitVersion() + "." + NMSUtils.class.getSimpleName()).getConstructor().newInstance();
 
         return NMSUtils.instance;
     }

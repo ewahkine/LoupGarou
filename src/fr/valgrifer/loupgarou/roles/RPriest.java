@@ -303,7 +303,7 @@ public class RPriest extends Role{
 	}
 
     private final Map<LGPlayer, Boolean> inMenu = new HashMap<>();
-	Map<LGPlayer, Class<? extends Role>> ressucited = new HashMap<>();
+    private final Map<LGPlayer, Class<? extends Role>> ressucited = new HashMap<>();
 
     private void closeInventory(LGPlayer player) {
         inMenu.remove(player);
