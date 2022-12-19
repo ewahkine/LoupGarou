@@ -1,5 +1,5 @@
 resourcepack:
-  url: http://leomelki.fr/mcgames/ressourcepacks/v32/loup_garou.zip
+  url: https://raw.githubusercontent.com/Valgrifer/LoupGarou/master/resourcepack/loup_garou.zip
   useResourcePackHosting: false
   generateResourcePack: false
   path: ./resourcepack/loup_garou.zip
