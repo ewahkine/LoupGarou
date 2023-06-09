@@ -51,7 +51,7 @@ public class JoinListener implements Listener {
 
         LGPlayer lgp = LGPlayer.thePlayer(e.getPlayer());
 
-		if(e.getJoinMessage() == null || !e.getJoinMessage().equals("joinall"))
+        if(e.getJoinMessage() == null || !e.getJoinMessage().equals("joinall"))
             Objects.requireNonNull(p.getPlayer()).setResourcePack(VariousUtils.resourcePackAddress());
 		else
 			lgp.join(MainLg.getInstance().getCurrentGame());
@@ -67,14 +67,14 @@ public class JoinListener implements Listener {
 		p.setWalkSpeed(0.2f);
 	}
 	@EventHandler
-	public void onResoucePack(PlayerResourcePackStatusEvent e) {
+	public void onResourcePack(PlayerResourcePackStatusEvent e) {
 		if(e.getStatus() == Status.SUCCESSFULLY_LOADED) {
 			Player p = e.getPlayer();
 			LGPlayer lgp = LGPlayer.thePlayer(p);
 			lgp.showView();
 			lgp.join(MainLg.getInstance().getCurrentGame());
 		}else if(e.getStatus() == Status.DECLINED || e.getStatus() == Status.FAILED_DOWNLOAD)
-			e.getPlayer().kickPlayer(RED+"Il vous faut le resourcepack pour jouer ! ("+e.getStatus()+")");
+			e.getPlayer().kickPlayer(RED+"Il vous faut le resource pack pour jouer ! ("+e.getStatus()+")");
 	}
 	@EventHandler
 	public void onLeave(PlayerQuitEvent e) {

@@ -3,7 +3,9 @@ package fr.valgrifer.loupgarou.classes;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.events.LGNightEndEvent;
@@ -420,10 +422,17 @@ public class LGGame implements Listener{
                     .toArray(String[]::new));
 	}
 	public List<LGPlayer> getAlive(){
-		return getInGame()
+		return getAlive(null);
+	}
+	public List<LGPlayer> getAlive(Predicate<LGPlayer> filter){
+        Stream<LGPlayer> result = getInGame()
                 .parallelStream()
-                .filter(lgp -> !lgp.isDead())
-                .collect(Collectors.toList());
+                .filter(lgp -> !lgp.isDead());
+
+        if (filter != null)
+            result = result.filter(filter);
+
+		return result.collect(Collectors.toList());
 	}
 	
 	public void nextNight() {

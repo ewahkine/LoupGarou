@@ -4,8 +4,13 @@ import java.util.Arrays;
 
 import fr.valgrifer.loupgarou.classes.ResourcePack;
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
+
+import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
+import fr.valgrifer.loupgarou.listeners.LoveListener;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
@@ -59,8 +64,6 @@ public class RCupid extends Role{
 	public boolean hasPlayersLeft() {
 		return getGame().getNight() == 1;
 	}
-
-    private boolean forceCoupleWin = false;
 	
 	@Override
 	protected void onNightTurn(LGPlayer player, Runnable callback) {
@@ -105,17 +108,17 @@ public class RCupid extends Role{
 	}
 	protected void setInLove(LGPlayer player1, LGPlayer player2)
     {
-		player1.getCache().set("inlove", player2);
-		player1.addEndGameReaveal(LIGHT_PURPLE+"\u2764");
+		player1.getCache().set(LoveListener.loveKey, player2);
+		player1.addEndGameReaveal(LIGHT_PURPLE+"❤");
         player1.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+BOLD+player2.getName()+BLUE+", il est "+player2.getRole().getName());
         player1.sendMessage(BLUE+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
 		
-		player2.getCache().set("inlove", player1);
-        player2.addEndGameReaveal(LIGHT_PURPLE+"\u2764");
+		player2.getCache().set(LoveListener.loveKey, player1);
+        player2.addEndGameReaveal(LIGHT_PURPLE+"❤");
         player2.sendMessage(BLUE+"Tu tombes amoureux de "+GRAY+BOLD+player1.getName()+BLUE+", il est "+player1.getRole().getName());
         player2.sendMessage(BLUE+ITALIC+"Tu peux lui parler en mettant un "+YELLOW+"!"+BLUE+" devant ton message.");
 
-        if(forceCoupleWin)
+        if(LoveListener.forceCoupleWin)
         {
             player1.setRoleWinType(RoleWinType.COUPLE);
             player1.sendMessage(BLUE+ITALIC+"Vous devez gagné forcement avec votre couple et votre cupidon");
@@ -183,4 +186,10 @@ public class RCupid extends Role{
 		player.sendTitle(RED+"Vous n'avez mis personne en couple", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
 		player.sendMessage(BLUE+"Tu n'as pas créé de couple.");
 	}
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onUpdatePrefix (LGUpdatePrefixEvent e) {
+        if(e.getTo().getRole() instanceof RCupid && e.getPlayer().getCache().has(LoveListener.loveKey))
+            e.setPrefix(LIGHT_PURPLE+"❤ "+WHITE+e.getPrefix());
+    }
 }
