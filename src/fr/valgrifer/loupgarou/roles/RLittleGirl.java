@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import org.bukkit.event.EventHandler;
 
@@ -23,7 +23,7 @@ public class RLittleGirl extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Petite Fille";
+		return GREEN+BOLD+"Petite Fille";
 	}
 	public static String _getFriendlyName() {
 		return "de la "+_getName();
@@ -32,7 +32,7 @@ public class RLittleGirl extends Role{
 		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Chaque nuit, tu peux espionner les "+RED+""+BOLD+"Loups"+WHITE+".";
+		return _getShortDescription()+WHITE+". Chaque nuit, tu peux espionner les "+RED+BOLD+"Loups"+WHITE+".";
 	}
 	public static String _getTask() {
 		return "";
@@ -66,7 +66,7 @@ public class RLittleGirl extends Role{
                             !player.getCache().getBoolean("infected") &&
                             player.isRoleActive())
                     .forEach(player -> player.joinChat(((RWereWolf) e.getNewRole()).getChat(), (sender, message)->
-                                    RED+""+getCustomName(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+""+message,
+                                    RED+getCustomName(e.getNewRole().getPlayers().indexOf(sender))+" "+GOLD+"» "+WHITE+message,
                             true));
         if(e.getPreviousRole() instanceof RWereWolf)
             getGame().getAlive()

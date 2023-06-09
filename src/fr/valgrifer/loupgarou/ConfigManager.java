@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 @SuppressWarnings({"unused"})
 public class ConfigManager extends LGInventoryHolder
@@ -43,7 +43,7 @@ public class ConfigManager extends LGInventoryHolder
                                         .filter(role -> MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0) > 0)
                                         .map(role -> {
                                             int count = MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0);
-                                            return GREEN +""+ count + " " + Role.getScoreBoardName(role);
+                                            return GREEN + count + " " + Role.getScoreBoardName(role);
                                         })
                                         .sorted()
                                         .toArray(String[]::new));
@@ -174,7 +174,7 @@ public class ConfigManager extends LGInventoryHolder
                                 .setLore(AQUA + "" + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
                                         AQUA + "" + BOLD + "Click Droit   " + RESET + ":" + GRAY + " Retire le rôle",
                                         " ",
-                                        RESET +""+ GRAY + "Il y a " + GOLD + roleAmount + GRAY + " rôle" + (roleAmount > 1 ? "s" : ""));
+                                        RESET + GRAY + "Il y a " + GOLD + roleAmount + GRAY + " rôle" + (roleAmount > 1 ? "s" : ""));
                     }
                 };
             }
@@ -183,7 +183,7 @@ public class ConfigManager extends LGInventoryHolder
             protected void preset() {
                 setSlot(0, getMaxLine()-1, new Slot(baseBackButton()
                         .setDisplayName(RED + "Retour")
-                        .setLore(WHITE + "Si les rôles on étais changé ou simaintient " + GRAY + "Shift",
+                        .setLore(WHITE + "Si les rôles on étais changé ou maintient " + GRAY + "Shift",
                                 WHITE + "pour faire " + GRAY + "" + UNDERLINE + "joinall" + WHITE + " en même temps que revenir à la page d'accueil")),
                         (holder, event) -> {
                             getCache().remove("pageIndex");
@@ -211,7 +211,7 @@ public class ConfigManager extends LGInventoryHolder
                                              return def
                                                  .setType(Material.RED_CONCRETE);
                                          return def
-                                                 .setDisplayName(GREEN +""+ count + " " + def.getDisplayName())
+                                                 .setDisplayName(GREEN + count + " " + def.getDisplayName())
                                                  .setAmount(count);
                                      }
                                  },

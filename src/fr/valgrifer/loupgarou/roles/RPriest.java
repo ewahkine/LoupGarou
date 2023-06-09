@@ -19,7 +19,7 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +51,7 @@ public class RPriest extends Role{
     private static final ItemBuilder itemNoAction = ResourcePack
             .getItem("ui_cancel")
             .setCustomId("ac_no")
-            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setDisplayName(GRAY+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
     private static final Map<LGPlayer, RPriest> playerToRole = new HashMap<>();
     private static final LGInventoryHolder invHolder;
@@ -76,7 +76,7 @@ public class RPriest extends Role{
                         }));
                 setSlot(5, new Slot(ItemBuilder.make(Material.ROTTEN_FLESH)
                                 .setCustomId("ac_no")
-                                .setDisplayName(DARK_GREEN+""+BOLD+"Ressuciter")
+                                .setDisplayName(DARK_GREEN+BOLD+"Ressuciter")
                                 .setLore(DARK_GRAY+"Tu peux ressusciter un "+RoleWinType.VILLAGE.getColoredName(BOLD),
                                         DARK_GRAY+"mort précédemment pendant la partie.")),
                         ((holder, event) -> {
@@ -128,8 +128,8 @@ public class RPriest extends Role{
                                 ReviveAction action = (ReviveAction) e.getAction();
                                 if(!action.isCancelled() || action.isForceMessage())
                                 {
-                                    lgp.sendMessage(GOLD+"Tu as ramené "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" à la vie.");
-                                    lgp.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" sera réssuscité");
+                                    lgp.sendMessage(GOLD+"Tu as ramené "+GRAY+BOLD+action.getTarget().getName()+GOLD+" à la vie.");
+                                    lgp.sendActionBarMessage(GRAY+BOLD+action.getTarget().getName()+GOLD+" sera réssuscité");
                                 }
                                 else
                                     player.sendMessage(RED+"Votre cible est immunisée.");
@@ -140,7 +140,7 @@ public class RPriest extends Role{
                                     return;
                                 }
 
-                                action.getTarget().sendMessage(GOLD+"Tu vas être réssuscité en tant que "+GREEN+""+BOLD+"Villageois"+GOLD+".");
+                                action.getTarget().sendMessage(GOLD+"Tu vas être réssuscité en tant que "+GREEN+BOLD+"Villageois"+GOLD+".");
                                 role.ressucited.put(action.getTarget(), action.getNewRole());
                                 role.getPlayers().remove(lgp);//Pour éviter qu'il puisse sauver plusieurs personnes.
                                 role.callback.run();
@@ -155,7 +155,7 @@ public class RPriest extends Role{
 	}
 
 	public static String _getName() {
-		return GREEN+""+BOLD+"Prêtre";
+		return GREEN+BOLD+"Prêtre";
 	}
 
 	public static String _getFriendlyName() {
@@ -175,7 +175,7 @@ public class RPriest extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" récite ses ouvrages...";
+		return "Le "+_getName()+BLUE+" récite ses ouvrages...";
 	}
 	public static RoleType _getType() {
 		return RoleType.VILLAGER;
@@ -368,7 +368,7 @@ public class RPriest extends Role{
 
             getGame().updateRoleScoreboard();
 
-            getGame().broadcastMessage(GRAY+""+BOLD+lgp.getName()+GOLD+" a été ressuscité cette nuit.", true);
+            getGame().broadcastMessage(GRAY+BOLD+lgp.getName()+GOLD+" a été ressuscité cette nuit.", true);
 
             for(LGPlayer player : getGame().getInGame())
                 if(player.getPlayer() != null && player != lgp)

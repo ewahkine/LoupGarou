@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.events.LGNightEndEvent;
 import org.bukkit.event.EventHandler;
@@ -23,7 +23,7 @@ public class RRedRidingHood extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Chaperon Rouge";
+		return GREEN+BOLD+"Chaperon Rouge";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -32,7 +32,7 @@ public class RRedRidingHood extends Role{
 		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Tant que le "+GREEN+""+BOLD+"Chasseur"+WHITE+" est en vie, tu ne peux pas te faire tuer par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pendant la nuit.";
+		return _getShortDescription()+WHITE+". Tant que le "+GREEN+BOLD+"Chasseur"+WHITE+" est en vie, tu ne peux pas te faire tuer par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pendant la nuit.";
 	}
 	public static String _getTask() {
 		return "";
@@ -80,7 +80,7 @@ public class RRedRidingHood extends Role{
 			for(LGPlayer lgp : getPlayers())
 				if(lgp.getCache().getBoolean("chaperon_kill")) {
 					lgp.getCache().remove("chaperon_kill");
-					lgp.sendMessage(BLUE+""+ITALIC+"Tu as été attaqué cette nuit.");
+					lgp.sendMessage(BLUE+ITALIC+"Tu as été attaqué cette nuit.");
 				}
 		}
 	}

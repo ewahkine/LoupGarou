@@ -5,7 +5,7 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,7 +26,7 @@ public class RPirate extends Role
     private static final ItemBuilder itemNoAction = ResourcePack
             .getItem("ui_cancel")
             .setCustomId("ac_no")
-            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setDisplayName(GRAY+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
 
     private static final MenuPreset preset = new MenuPreset(1) {
@@ -52,7 +52,7 @@ public class RPirate extends Role
 
             setSlot(5, new MenuPreset.Slot(ItemBuilder.make(Material.ROTTEN_FLESH)
                             .setCustomId("ac_takeotage")
-                            .setDisplayName(GOLD+""+BOLD+"Prendre un otage")
+                            .setDisplayName(GOLD+BOLD+"Prendre un otage")
                             .setLore(DARK_GRAY+"Tu peux prendre un joueur en otage",
                                     DARK_GRAY+"Si tu meurs du vote, il mourra à ta place.")),
                     ((holder, event) -> {
@@ -81,13 +81,13 @@ public class RPirate extends Role
                                 player.getInventory().setItem(8, null);
                                 player.updateInventory();
                                 lgp.stopChoosing();
-                                lgp.sendMessage(GOLD+"Tu as pris "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" en otage.");
-                                lgp.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est ton otage");
+                                lgp.sendMessage(GOLD+"Tu as pris "+GRAY+BOLD+choosen.getName()+GOLD+" en otage.");
+                                lgp.sendActionBarMessage(GRAY+BOLD+choosen.getName()+GOLD+" est ton otage");
                                 lgp.getCache().set("pirate_otage", choosen);
                                 choosen.getCache().set("pirate_otage_d", lgp);
                                 choosen.addEndGameReaveal(GREEN+"Otage");
                                 role.getPlayers().remove(lgp);//Pour éviter qu'il puisse prendre plusieurs otages
-                                choosen.sendMessage(GRAY+""+BOLD+""+lgp.getName()+""+GOLD+" t'a pris en otage, il est "+role.getName()+""+GOLD+".");
+                                choosen.sendMessage(GRAY+BOLD+lgp.getName()+GOLD+" t'a pris en otage, il est "+role.getName()+GOLD+".");
                                 lgp.hideView();
                                 role.callback.run();
                             }
@@ -101,7 +101,7 @@ public class RPirate extends Role
 	}
 
 	public static String _getName() {
-		return GREEN+""+BOLD+"Pirate";
+		return GREEN+BOLD+"Pirate";
 	}
 
 	public static String _getFriendlyName() {
@@ -121,7 +121,7 @@ public class RPirate extends Role
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" aiguise son crochet...";
+		return "Le "+_getName()+BLUE+" aiguise son crochet...";
 	}
 	public static RoleType _getType() {
 		return RoleType.VILLAGER;
@@ -174,7 +174,7 @@ public class RPirate extends Role
 			if(e.getKilled().getCache().has("pirate_otage") && e.getKilled().isRoleActive()) {
 				LGPlayer otage = e.getKilled().getCache().remove("pirate_otage");
 				if(!otage.isDead() && otage.getCache().get("pirate_otage_d") == e.getKilled()) {
-					getGame().broadcastMessage(GRAY+""+BOLD+""+e.getKilled().getName()+""+GOLD+" est "+getName()+""+GOLD+", c'est son otage qui va mourir.", true);
+					getGame().broadcastMessage(GRAY+BOLD+e.getKilled().getName()+GOLD+" est "+getName()+GOLD+", c'est son otage qui va mourir.", true);
 					e.setKilled(otage);
 					e.setReason(Reason.PIRATE);
 				}

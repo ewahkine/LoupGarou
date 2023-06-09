@@ -9,7 +9,7 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +29,7 @@ public class RDictator extends Role{
     private static final ItemBuilder itemNoAction = ResourcePack
             .getItem("ui_cancel")
             .setCustomId("ac_no")
-            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setDisplayName(GRAY+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
 
     private static final MenuPreset preset = new MenuPreset(1) {
@@ -49,17 +49,17 @@ public class RDictator extends Role{
 
                         role.closeInventory(lgp);
                         lgp.sendMessage(RED+"Vous ne faites pas votre coup d'état.");
-//                            lgp.sendMessage(GRAY+""+ITALIC+"Vous aurez de nouveau le choix lors de la prochaine nuit.");
+//                            lgp.sendMessage(GRAY+ITALIC+"Vous aurez de nouveau le choix lors de la prochaine nuit.");
                         lgp.hideView();
                         role.callback.run();
                     }));
             setSlot(5, new MenuPreset.Slot(ItemBuilder.make(Material.GUNPOWDER)
                             .setCustomId("ac_yes")
-                            .setDisplayName(YELLOW+""+BOLD+"Coup d'État")
+                            .setDisplayName(YELLOW+BOLD+"Coup d'État")
                             .setLore(DARK_GRAY+"Prends le contrôle du village",
                                     DARK_GRAY+"et choisis seul qui mourra demain.",
                                     "",
-                                    DARK_GRAY+"Si tu tues un "+GREEN+""+BOLD+"Villageois"+DARK_GRAY+", tu",
+                                    DARK_GRAY+"Si tu tues un "+GREEN+BOLD+"Villageois"+DARK_GRAY+", tu",
                                     DARK_GRAY+"l'auras sur la conscience.")),
                     ((holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
@@ -73,7 +73,7 @@ public class RDictator extends Role{
                         RDictator role = (RDictator) lgp.getRole();
 
                         role.closeInventory(lgp);
-                        lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu effectueras un coup d'état");
+                        lgp.sendActionBarMessage(BLUE+BOLD+"Tu effectueras un coup d'état");
                         lgp.sendMessage(GOLD+"Tu as décidé de faire un coup d'état.");
                         lgp.getCache().set("coup_d_etat", true);
                         lgp.getCache().set("just_coup_d_etat", true);
@@ -93,7 +93,7 @@ public class RDictator extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Dictateur";
+		return GREEN+BOLD+"Dictateur";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -102,13 +102,13 @@ public class RDictator extends Role{
 		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Une fois dans la partie, tu peux choisir d'effectuer un "+YELLOW+""+ITALIC+""+BOLD+"coup d'état"+WHITE+", tu choisiras alors seul qui mourra au jour suivant. Si tu fais le bon choix, tu deviendras "+DARK_PURPLE+""+BOLD+"Capitaine"+WHITE+" mais si tu tues un "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+", tu te suicideras la nuit qui suit.";
+		return _getShortDescription()+WHITE+". Une fois dans la partie, tu peux choisir d'effectuer un "+YELLOW+ITALIC+BOLD+"coup d'état"+WHITE+", tu choisiras alors seul qui mourra au jour suivant. Si tu fais le bon choix, tu deviendras "+DARK_PURPLE+BOLD+"Capitaine"+WHITE+" mais si tu tues un "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+", tu te suicideras la nuit qui suit.";
 	}
 	public static String _getTask() {
 		return "Veux-tu réaliser un coup d'état ?";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" décide s'il veut se dévoiler.";
+		return "Le "+_getName()+BLUE+" décide s'il veut se dévoiler.";
 	}
 	
 	@Override
@@ -159,7 +159,7 @@ public class RDictator extends Role{
         lgp.stopChoosing();
         player.getInventory().setItem(8, null);
         player.updateInventory();
-        getGame().broadcastMessage(GRAY+""+BOLD+""+lgp.getName()+""+BLUE+" n'a tué personne.", true);
+        getGame().broadcastMessage(GRAY+BOLD+lgp.getName()+BLUE+" n'a tué personne.", true);
         run.run();
 	}
 
@@ -206,7 +206,7 @@ public class RDictator extends Role{
                     if(lgp.getCache().getBoolean("just_coup_d_etat")) {
                         getPlayers().remove(lgp);
                         lgp.getCache().remove("just_coup_d_etat");
-                        getGame().broadcastMessage(GRAY+""+BOLD+""+lgp.getName()+" "+BLUE+"réalise un coup d'état.", true);
+                        getGame().broadcastMessage(GRAY+BOLD+lgp.getName()+" "+BLUE+"réalise un coup d'état.", true);
                         //lgp.sendTitle(GOLD+"Vous faites votre coup d'état", GREEN+"Choisissez qui tuer", 60);
 
                         //On le met sur le slot 0 pour éviter un missclick sur la croix
@@ -217,11 +217,11 @@ public class RDictator extends Role{
                         lgp.sendMessage(GOLD+"Choisis un joueur à exécuter.");
                         getGame().wait(60, ()->{
                             lgp.stopChoosing();
-                            getGame().broadcastMessage(GRAY+""+BOLD+""+lgp.getName()+""+BLUE+" n'a tué personne.", true);
+                            getGame().broadcastMessage(GRAY+BOLD+lgp.getName()+BLUE+" n'a tué personne.", true);
                             lgp.getPlayer().getInventory().setItem(8, null);
                             lgp.getPlayer().updateInventory();
                             this.run();
-                        }, (player, secondsLeft)-> lgp == player ? BLUE+""+BOLD+"C'est à ton tour !" : GOLD+"Le Dictateur choisit sa victime ("+YELLOW+""+secondsLeft+" s"+GOLD+")");
+                        }, (player, secondsLeft)-> lgp == player ? BLUE+BOLD+"C'est à ton tour !" : GOLD+"Le Dictateur choisit sa victime ("+YELLOW+secondsLeft+" s"+GOLD+")");
                         lgp.choose((choosen)->{
                             if(choosen != null) {
                                 getGame().cancelWait();
@@ -253,15 +253,15 @@ public class RDictator extends Role{
 			return;
 		
 		if(roleType != RoleType.VILLAGER) {
-			getGame().broadcastMessage(GRAY+""+BOLD+""+dicta.getName()+" "+BLUE+"devient le "+DARK_PURPLE+""+BOLD+"Capitaine"+BLUE+" du village.", true);
+			getGame().broadcastMessage(GRAY+BOLD+dicta.getName()+" "+BLUE+"devient le "+DARK_PURPLE+BOLD+"Capitaine"+BLUE+" du village.", true);
 			getGame().setMayor(dicta);
 		} else {
 			getGame().kill(dicta, Reason.DICTATOR_SUICIDE);
 			for(LGPlayer lgp : getGame().getInGame()) {
 				if(lgp == dicta)
-					lgp.sendMessage(BLUE+""+ITALIC+"Ça ne s'est pas passé comme prévu...");
+					lgp.sendMessage(BLUE+ITALIC+"Ça ne s'est pas passé comme prévu...");
 				else
-					lgp.sendMessage(BLUE+"Le "+getName()+""+BLUE+" s'est trompé, il mourra la nuit suivante.");
+					lgp.sendMessage(BLUE+"Le "+getName()+BLUE+" s'est trompé, il mourra la nuit suivante.");
 			}
 		}
 		callback.run();
@@ -272,7 +272,7 @@ public class RDictator extends Role{
 		if(e.getGame() == getGame()) {
 			LGPlayer lgp = getGame().getDeaths().get(Reason.DICTATOR_SUICIDE);
 			if(lgp != null)
-				lgp.sendMessage(DARK_GRAY+""+ITALIC+"Des pensées sombres hantent ton esprit...");
+				lgp.sendMessage(DARK_GRAY+ITALIC+"Des pensées sombres hantent ton esprit...");
 		}
 	}
 }

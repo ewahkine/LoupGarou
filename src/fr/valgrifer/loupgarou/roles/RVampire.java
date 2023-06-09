@@ -8,7 +8,7 @@ import fr.valgrifer.loupgarou.classes.*;
 import fr.valgrifer.loupgarou.events.*;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -24,11 +24,11 @@ public class RVampire extends Role{
 	}
 
 	public static String _getName() {
-		return DARK_PURPLE+""+BOLD+"Vampire";
+		return DARK_PURPLE+BOLD+"Vampire";
 	}
 
 	public static String _getFriendlyName() {
-		return "des "+ DARK_PURPLE+""+BOLD+"Vampires";
+		return "des "+ DARK_PURPLE+BOLD+"Vampires";
 	}
 
 	public static String _getShortDescription() {
@@ -44,7 +44,7 @@ public class RVampire extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Les "+DARK_PURPLE+""+BOLD+"Vampires"+BLUE+" choisissent leur cible.";
+		return "Les "+DARK_PURPLE+BOLD+"Vampires"+BLUE+" choisissent leur cible.";
 	}
 	public static RoleType _getType() {
 		return RoleType.VAMPIRE;
@@ -62,7 +62,7 @@ public class RVampire extends Role{
 		return nextCanInfect < getGame().getNight() && super.hasPlayersLeft();
 	}
 	
-	@Getter private final LGChat chat = new LGChat((sender, message) -> DARK_PURPLE+""+sender.getName()+" "+GOLD+"» "+WHITE+""+message);
+	@Getter private final LGChat chat = new LGChat((sender, message) -> DARK_PURPLE+sender.getName()+" "+GOLD+"» "+WHITE+message);
 	int nextCanInfect = 0;
 	LGVote vote;
 	@Override
@@ -81,13 +81,13 @@ public class RVampire extends Role{
             return;
         }
 
-		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+""+BLUE+"Vous votez pour "+RED+""+BOLD+""+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+""+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+""+GOLD+" pour voter");
+		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez pour "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
 		for(LGPlayer lgp : getGame().getAlive())
 			if(lgp.getRoleType() == RoleType.VAMPIRE)
 				lgp.showView();
 		for(LGPlayer player : getPlayers()) {
-			player.sendMessage(GOLD+""+getTask());
-		//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
+			player.sendMessage(GOLD+getTask());
+		//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 100);
 			player.joinChat(chat);
 		}
 		vote.start(getPlayers(), getPlayers(), ()->{
@@ -155,12 +155,12 @@ public class RVampire extends Role{
 			}
 
             for(LGPlayer player : getPlayers())
-                player.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+".");
+                player.sendMessage(GRAY+BOLD+action.getTarget().getName()+" s'est transformé en "+DARK_PURPLE+BOLD+"Vampire"+GOLD+".");
 
             if(!action.isForceMessage())
             {
-                action.getTarget().sendMessage(GOLD+"Tu as été infecté par les "+DARK_PURPLE+""+BOLD+"Vampires "+GOLD+"pendant la nuit. Tu as perdu tes pouvoirs.");
-                action.getTarget().sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+DARK_PURPLE+""+BOLD+""+ITALIC+"Vampires"+GOLD+""+ITALIC+".");
+                action.getTarget().sendMessage(GOLD+"Tu as été infecté par les "+DARK_PURPLE+BOLD+"Vampires "+GOLD+"pendant la nuit. Tu as perdu tes pouvoirs.");
+                action.getTarget().sendMessage(GOLD+ITALIC+"Tu gagnes désormais avec les "+DARK_PURPLE+BOLD+ITALIC+"Vampires"+GOLD+ITALIC+".");
                 action.getTarget().setRoleWinType(RoleWinType.VAMPIRE);
                 action.getTarget().setRoleType(RoleType.VAMPIRE);
                 action.getTarget().setRoleActive(false);
@@ -187,9 +187,9 @@ public class RVampire extends Role{
                     player.getCache().remove("just_vampire");
                     for(LGPlayer lgp : getGame().getInGame()) {
                         if(lgp.getRoleType() == RoleType.VAMPIRE)
-                            lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
+                            lgp.sendMessage(GRAY+BOLD+player.getName()+GOLD+" s'est transformé en "+DARK_PURPLE+BOLD+"Vampire"+GOLD+"...");
                         else
-                            lgp.sendMessage(GOLD+"Quelqu'un s'est transformé en "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
+                            lgp.sendMessage(GOLD+"Quelqu'un s'est transformé en "+DARK_PURPLE+BOLD+"Vampire"+GOLD+"...");
                     }
 
                     if(getGame().checkEndGame())
@@ -217,7 +217,7 @@ public class RVampire extends Role{
 	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
 		if(e.getGame() == getGame())
 			if(getPlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
-				e.setPrefix(e.getPrefix()+""+DARK_PURPLE+"");
+				e.setPrefix(e.getPrefix()+DARK_PURPLE+"");
 	}
 	
 	@EventHandler

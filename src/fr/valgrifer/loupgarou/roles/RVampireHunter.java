@@ -13,7 +13,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 @SuppressWarnings("unused")
 public class RVampireHunter extends Role{
@@ -27,7 +27,7 @@ public class RVampireHunter extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Chasseur de Vampires";
+		return GREEN+BOLD+"Chasseur de Vampires";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -42,7 +42,7 @@ public class RVampireHunter extends Role{
 		return "Choisis un joueur à pister.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" traque ses proies...";
+		return "Le "+_getName()+BLUE+" traque ses proies...";
 	}
 	@Override
 	public int getTimeout() {
@@ -74,8 +74,8 @@ public class RVampireHunter extends Role{
 
                 if(!action.isCancelled() || action.isForceMessage())
                 {
-                    player.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+" est un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+", à l'attaque.");
-                    player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir");
+                    player.sendMessage(GRAY+BOLD+action.getTarget().getName()+GOLD+" est un "+DARK_PURPLE+BOLD+"Vampire"+GOLD+", à l'attaque.");
+                    player.sendActionBarMessage(YELLOW+BOLD+action.getTarget().getName()+GOLD+" va mourir");
                 }
                 else
                     player.sendMessage(RED+"Votre cible est immunisée.");
@@ -99,8 +99,8 @@ public class RVampireHunter extends Role{
             }
             else
             {
-                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire"+GOLD+"...");
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" n'est pas un "+DARK_PURPLE+""+BOLD+"Vampire");
+                player.sendMessage(GRAY+BOLD+choosen.getName()+GOLD+" n'est pas un "+DARK_PURPLE+BOLD+"Vampire"+GOLD+"...");
+                player.sendActionBarMessage(YELLOW+BOLD+choosen.getName()+GOLD+" n'est pas un "+DARK_PURPLE+BOLD+"Vampire");
             }
 
             callback.run();

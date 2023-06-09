@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -27,7 +27,7 @@ public class RHunter extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Chasseur";
+		return GREEN+BOLD+"Chasseur";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -42,7 +42,7 @@ public class RHunter extends Role{
 		return "Tu dois choisir qui va mourir avec toi.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" choisit qui il va emporter avec lui.";
+		return "Le "+_getName()+BLUE+" choisit qui il va emporter avec lui.";
 	}
 	@Override
 	public int getTimeout() {
@@ -54,10 +54,10 @@ public class RHunter extends Role{
 		getGame().wait(getTimeout(), ()->{
 			this.onNightTurnTimeout(player);
 			callback.run();
-		}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+""+BOLD+"C'est à ton tour !" : GOLD+"Le Chasseur choisit sa cible ("+YELLOW+""+secondsLeft+" s"+GOLD+")");
-		getGame().broadcastMessage(BLUE+""+getBroadcastedTask(), true);
-		player.sendMessage(GOLD+""+getTask());
-		//player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 60);
+		}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+BOLD+"C'est à ton tour !" : GOLD+"Le Chasseur choisit sa cible ("+YELLOW+secondsLeft+" s"+GOLD+")");
+		getGame().broadcastMessage(BLUE+getBroadcastedTask(), true);
+		player.sendMessage(GOLD+getTask());
+		//player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 60);
 		player.choose((choosen)->{
 			if(choosen == null)
                 return;

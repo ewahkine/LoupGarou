@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.events.*;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class RRaven extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Corbeau";
+		return GREEN+BOLD+"Corbeau";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -41,7 +41,7 @@ public class RRaven extends Role{
 		return "Tu peux choisir un joueur qui aura deux votes contre lui.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" s'apprête à diffamer quelqu'un...";
+		return "Le "+_getName()+BLUE+" s'apprête à diffamer quelqu'un...";
 	}
 	@Override
 	public int getTimeout() {
@@ -58,15 +58,15 @@ public class RRaven extends Role{
 
             player.stopChoosing();
             player.hideView();
-            //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+""+BOLD+" est "+YELLOW+""+BOLD+""+choosen.getRole().getName(), 5*20);
+            //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+BOLD+choosen.getName()+GOLD+BOLD+" est "+YELLOW+BOLD+choosen.getRole().getName(), 5*20);
 
             LGRoleActionEvent event = new LGRoleActionEvent(getGame(), new VoteAction(choosen), player);
             Bukkit.getPluginManager().callEvent(event);
             VoteAction action = (VoteAction) event.getAction();
             if(!action.isCancelled() || action.isForceMessage())
             {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" aura deux votes contre lui");
-                player.sendMessage(GOLD+"Tu nuis à la réputation de "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                player.sendActionBarMessage(YELLOW+BOLD+action.getTarget().getName()+GOLD+" aura deux votes contre lui");
+                player.sendMessage(GOLD+"Tu nuis à la réputation de "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
             }
             else
                 player.sendMessage(RED+"Votre cible est immunisée.");
@@ -100,9 +100,9 @@ public class RRaven extends Role{
 						
 						@Override
 						public void run() {
-							getGame().getVote().vote(new LGPlayer(GREEN+""+BOLD+"Le corbeau"), lgp);
-							getGame().getVote().vote(new LGPlayer(GREEN+""+BOLD+"Le corbeau"), lgp);//fix
-							getGame().broadcastMessage(GRAY+""+BOLD+""+ lgp.getName()+""+GOLD+" a reçu la visite du "+getName()+""+GOLD+".", true);
+							getGame().getVote().vote(new LGPlayer(GREEN+BOLD+"Le corbeau"), lgp);
+							getGame().getVote().vote(new LGPlayer(GREEN+BOLD+"Le corbeau"), lgp);//fix
+							getGame().broadcastMessage(GRAY+BOLD+ lgp.getName()+GOLD+" a reçu la visite du "+getName()+GOLD+".", true);
 						}
 					}.runTask(MainLg.getInstance());
 					

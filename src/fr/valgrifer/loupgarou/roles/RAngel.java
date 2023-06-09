@@ -3,7 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -28,7 +28,7 @@ public class RAngel extends Role {
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return LIGHT_PURPLE+""+BOLD+"Ange";
+		return LIGHT_PURPLE+BOLD+"Ange";
 	}
 	public static String _getFriendlyName() {
 		return "de l'"+_getName();
@@ -52,7 +52,7 @@ public class RAngel extends Role {
 			vote = true;
 			for(LGPlayer lgp : getPlayers())
 				if(!lgp.isDead() && lgp.isRoleActive())
-					lgp.sendMessage(BLUE+""+ITALIC+"Fais en sorte que les autres votent contre toi !");
+					lgp.sendMessage(BLUE+ITALIC+"Fais en sorte que les autres votent contre toi !");
 		}
 	}
 	boolean vote;
@@ -67,7 +67,7 @@ public class RAngel extends Role {
 				
 				for(LGPlayer lgp : getPlayers()) {
 					if(lgp.isRoleActive())
-						lgp.sendMessage(DARK_RED+""+ITALIC+"Tu as échoué, tu deviens "+GREEN+""+BOLD+""+ITALIC+"Villageois"+DARK_RED+""+ITALIC+"...");
+						lgp.sendMessage(DARK_RED+ITALIC+"Tu as échoué, tu deviens "+GREEN+BOLD+ITALIC+"Villageois"+DARK_RED+ITALIC+"...");
 					lgp.setRole(villageois);
 					villageois.join(lgp);
 				}

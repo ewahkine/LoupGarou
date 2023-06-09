@@ -26,7 +26,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.*;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class MainLg extends JavaPlugin {
     private static MainLg instance;

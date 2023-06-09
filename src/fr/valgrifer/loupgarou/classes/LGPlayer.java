@@ -3,7 +3,7 @@ package fr.valgrifer.loupgarou.classes;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
@@ -138,7 +138,7 @@ public class LGPlayer {
 	public void choose(LGChooseCallback callback, LGPlayer... blacklisted) {
 		this.blacklistedChoice = blacklisted == null ? new ArrayList<>(0) : Arrays.asList(blacklisted);
 		this.chooseCallback = callback;
-//		sendMessage(GRAY+""+ITALIC+"TIP: Regardez un joueur et tapez le afin de le sélectionner.");
+//		sendMessage(GRAY+ITALIC+"TIP: Regardez un joueur et tapez le afin de le sélectionner.");
 	}
 	public void stopChoosing() {
 		this.blacklistedChoice = null;

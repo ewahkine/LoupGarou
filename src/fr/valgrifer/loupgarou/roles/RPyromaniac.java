@@ -12,7 +12,7 @@ import fr.valgrifer.loupgarou.inventory.MenuPreset;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -33,7 +33,7 @@ public class RPyromaniac extends Role{
     private static final ItemBuilder itemNoAction = ResourcePack
             .getItem("ui_cancel")
             .setCustomId("ac_no")
-            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setDisplayName(GRAY+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
 
     private static final MenuPreset preset = new MenuPreset(2) {
@@ -57,7 +57,7 @@ public class RPyromaniac extends Role{
 
             setSlot(4, new MenuPreset.Slot(ItemBuilder.make(Material.FLINT_AND_STEEL)
                             .setCustomId("ac_fire")
-                            .setDisplayName(YELLOW+""+BOLD+"Mettre le feu")
+                            .setDisplayName(YELLOW+BOLD+"Mettre le feu")
                             .setLore(DARK_GRAY+"Tuez les joueurs que vous avez",
                                     DARK_GRAY+"Précédemment recouvert de gasoil.")){
                         @Override
@@ -92,17 +92,17 @@ public class RPyromaniac extends Role{
                                 }
                             }
                             liste.clear();
-                            lgp.sendMessage(GOLD+""+BOLD+"Tu as décidé de brûler tes victimes ce soir.");
+                            lgp.sendMessage(GOLD+BOLD+"Tu as décidé de brûler tes victimes ce soir.");
                             lgp.sendActionBarMessage(GOLD+"Tes victimes brûleront ce soir.");
                         }else
-                            lgp.sendMessage(GOLD+""+BOLD+"Personne n'a pris feu.");
+                            lgp.sendMessage(GOLD+BOLD+"Personne n'a pris feu.");
                         lgp.hideView();
                         role.callback.run();
                     }));
 
             setSlot(6, new MenuPreset.Slot(ItemBuilder.make(Material.LAVA_BUCKET)
                             .setCustomId("ac_gasoil")
-                            .setDisplayName(RED+""+BOLD+"Recouvrir d'essence")
+                            .setDisplayName(RED+BOLD+"Recouvrir d'essence")
                             .setLore(DARK_GRAY+"Recouvres jusqu'à deux joueurs d'essence")),
                     ((holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
@@ -130,17 +130,17 @@ public class RPyromaniac extends Role{
                         lgp.choose(choosen -> {
                             if(choosen != null) {
                                 if(choosen == role.first) {
-                                    lgp.sendMessage(RED+"Tu as déjà versé du gasoil sur "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
+                                    lgp.sendMessage(RED+"Tu as déjà versé du gasoil sur "+GRAY+BOLD+choosen.getName()+GOLD+".");
                                     return;
                                 }
                                 List<LGPlayer> gasoilList = lgp.getCache().get("pyromane_essence");
                                 if(gasoilList.contains(choosen)) {
-                                    lgp.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+RED+" est déjà recouvert de gasoil.");
+                                    lgp.sendMessage(GRAY+BOLD+choosen.getName()+RED+" est déjà recouvert de gasoil.");
                                     return;
                                 }
 
-                                lgp.sendMessage(GOLD+"Tu as versé du gasoil sur "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
-                                lgp.sendActionBarMessage(GOLD+""+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est recouvert de gasoil");
+                                lgp.sendMessage(GOLD+"Tu as versé du gasoil sur "+GRAY+BOLD+choosen.getName()+GOLD+".");
+                                lgp.sendActionBarMessage(GOLD+GRAY+BOLD+choosen.getName()+GOLD+" est recouvert de gasoil");
                                 if(role.first != null || role.getGame().getAlive().size() == 2) {
                                     lgp.hideView();
                                     lgp.stopChoosing();
@@ -166,7 +166,7 @@ public class RPyromaniac extends Role{
 	}
 
 	public static String _getName() {
-		return GOLD+""+BOLD+"Pyromane";
+		return GOLD+BOLD+"Pyromane";
 	}
 
 	public static String _getFriendlyName() {
@@ -186,7 +186,7 @@ public class RPyromaniac extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" joue avec une allumette...";
+		return "Le "+_getName()+BLUE+" joue avec une allumette...";
 	}
 	public static RoleType _getType() {
 		return RoleType.NEUTRAL;
@@ -308,7 +308,7 @@ public class RPyromaniac extends Role{
         if(!action.isCancelled() || action.isForceMessage())
             action.getTarget().sendMessage(GOLD+"Tu es recouvert de gasoil...");
         else
-            from.sendMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+RED+" est immunisée.");
+            from.sendMessage(GRAY+BOLD+action.getTarget().getName()+RED+" est immunisée.");
 
         if(!action.isCancelled())
             gasoilList.add(action.getTarget());

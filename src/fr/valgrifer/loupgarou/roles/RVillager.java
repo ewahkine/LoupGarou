@@ -1,7 +1,7 @@
 package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class RVillager extends Role{
 	public RVillager(LGGame game) {
@@ -14,7 +14,7 @@ public class RVillager extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Villageois";
+		return GREEN+BOLD+"Villageois";
 	}
 	public static String _getFriendlyName() {
 		return "des "+_getName();

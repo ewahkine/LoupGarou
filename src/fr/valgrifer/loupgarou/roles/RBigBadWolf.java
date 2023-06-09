@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
@@ -23,7 +23,7 @@ public class RBigBadWolf extends Role{
 	}
 
 	public static String _getName() {
-		return RED+""+BOLD+"Grand Méchant Loup";
+		return RED+BOLD+"Grand Méchant Loup";
 	}
 
 	public static String _getFriendlyName() {
@@ -43,7 +43,7 @@ public class RBigBadWolf extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+RED+""+BOLD+"Grand Méchant Loup"+BLUE+" n'en a pas terminé...";
+		return "Le "+RED+BOLD+"Grand Méchant Loup"+BLUE+" n'en a pas terminé...";
 	}
 	public static RoleType _getType() {
 		return RoleType.LOUP_GAROU;
@@ -80,8 +80,8 @@ public class RBigBadWolf extends Role{
             KillAction action = (KillAction) event.getAction();
             if(!action.isCancelled() || action.isForceMessage())
             {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir cette nuit");
-                player.sendMessage(GOLD+"Tu as choisi de manger "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                player.sendActionBarMessage(YELLOW+BOLD+action.getTarget().getName()+GOLD+" va mourir cette nuit");
+                player.sendMessage(GOLD+"Tu as choisi de manger "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
             }
             else
                 player.sendMessage(RED+"Votre cible est immunisée.");

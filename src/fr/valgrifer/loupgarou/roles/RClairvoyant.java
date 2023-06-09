@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class RClairvoyant extends Role{
 	public RClairvoyant(LGGame game) {
@@ -22,7 +22,7 @@ public class RClairvoyant extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Voyante";
+		return GREEN+BOLD+"Voyante";
 	}
 	public static String _getFriendlyName() {
 		return "de la "+_getName();
@@ -38,7 +38,7 @@ public class RClairvoyant extends Role{
 		return "Choisis un joueur dont tu veux connnaître l'identité.";
 	}
 	public static String _getBroadcastedTask() {
-		return "La "+_getName()+""+BLUE+" s'apprête à sonder un joueur...";
+		return "La "+_getName()+BLUE+" s'apprête à sonder un joueur...";
 	}
 	@Override
 	public int getTimeout() {
@@ -62,8 +62,8 @@ public class RClairvoyant extends Role{
             if(!action.isCancelled())
             {
                 LGPlayer target = action.getTarget();
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+target.getName()+""+GOLD+" est "+YELLOW+""+BOLD+""+action.getRoleView().getPublicName(target));
-                player.sendMessage(GOLD+"Tu découvres que "+GRAY+""+BOLD+""+target.getName()+""+GOLD+" est "+action.getRoleView().getPublicName(target)+""+GOLD+".");
+                player.sendActionBarMessage(YELLOW+BOLD+target.getName()+GOLD+" est "+YELLOW+BOLD+action.getRoleView().getPublicName(target));
+                player.sendMessage(GOLD+"Tu découvres que "+GRAY+BOLD+target.getName()+GOLD+" est "+action.getRoleView().getPublicName(target)+GOLD+".");
             }
             else
                 player.sendMessage(RED+"Votre cible est immunisée.");

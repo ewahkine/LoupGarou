@@ -6,7 +6,7 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -30,7 +30,7 @@ public class RSurvivor extends Role{
             setSlot(3, new Slot(ResourcePack
                     .getItem("ui_cancel")
                     .setCustomId("ac_skip")
-                    .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+                    .setDisplayName(GRAY+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
                 if(!(holder instanceof LGPrivateInventoryHolder))
                     return;
@@ -43,7 +43,7 @@ public class RSurvivor extends Role{
                 RSurvivor role = (RSurvivor) lgp.getRole();
 
                 role.closeInventory(lgp);
-                lgp.sendMessage(DARK_RED+""+ITALIC+"Tu es sans défense...");
+                lgp.sendMessage(DARK_RED+ITALIC+"Tu es sans défense...");
                 lgp.hideView();
                 role.callback.run();
             });
@@ -52,7 +52,7 @@ public class RSurvivor extends Role{
                             .getItem("ui_validation")
                             .setCustomId("ac_protect")
                             .setLore(DARK_GRAY+"Tu ne pourras pas être tué par",
-                                    DARK_GRAY+"les "+RED+""+BOLD+"Loups"+DARK_GRAY+" cette nuit.")){
+                                    DARK_GRAY+"les "+RED+BOLD+"Loups"+DARK_GRAY+" cette nuit.")){
                         @Override
                         protected ItemBuilder getItem(LGInventoryHolder holder) {
                             if(!(holder instanceof LGPrivateInventoryHolder))
@@ -61,7 +61,7 @@ public class RSurvivor extends Role{
                             LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
                             return getDefaultItem()
-                                    .setDisplayName(DARK_GREEN+""+BOLD+"Se protéger ("+GOLD+""+BOLD+""+lgp.getCache().<Integer>get("survivant_left")+""+DARK_GREEN+""+BOLD+" restant)");
+                                    .setDisplayName(DARK_GREEN+BOLD+"Se protéger ("+GOLD+BOLD+lgp.getCache().<Integer>get("survivant_left")+DARK_GREEN+BOLD+" restant)");
                         }
                     },
                     (holder, event) -> {
@@ -83,7 +83,7 @@ public class RSurvivor extends Role{
                         ProtectAction action = (ProtectAction) e.getAction();
                         if(!action.isCancelled() || action.isForceMessage())
                         {
-                            lgp.sendActionBarMessage(BLUE+""+BOLD+"Tu as décidé de te protéger.");
+                            lgp.sendActionBarMessage(BLUE+BOLD+"Tu as décidé de te protéger.");
                             lgp.sendMessage(GOLD+"Tu as décidé de te protéger.");
                         }
                         else
@@ -114,7 +114,7 @@ public class RSurvivor extends Role{
 		return RoleWinType.NONE;
 	}
 	public static String _getName() {
-		return LIGHT_PURPLE+""+BOLD+"Survivant";
+		return LIGHT_PURPLE+BOLD+"Survivant";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -129,7 +129,7 @@ public class RSurvivor extends Role{
 		return "Veux-tu utiliser une protection cette nuit ?";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" décide s'il veut se protéger.";
+		return "Le "+_getName()+BLUE+" décide s'il veut se protéger.";
 	}
 	@Override
 	public int getTimeout() {
@@ -163,7 +163,7 @@ public class RSurvivor extends Role{
 	protected void onNightTurnTimeout(LGPlayer player) {
 		player.hideView();
 		closeInventory(player);
-		player.sendMessage(DARK_RED+""+ITALIC+"Tu es sans défense...");
+		player.sendMessage(DARK_RED+ITALIC+"Tu es sans défense...");
 	}
 
     private void closeInventory(LGPlayer player) {
@@ -225,7 +225,7 @@ public class RSurvivor extends Role{
 			new BukkitRunnable() {
 				@Override
 				public void run() {
-					getGame().broadcastMessage(GOLD+""+ITALIC+"Le "+getName()+""+GOLD+""+ITALIC+" a rempli son objectif.", true);
+					getGame().broadcastMessage(GOLD+ITALIC+"Le "+getName()+GOLD+ITALIC+" a rempli son objectif.", true);
 				}
 			}.runTaskAsynchronously(MainLg.getInstance());
 		}

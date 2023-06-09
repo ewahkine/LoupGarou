@@ -6,7 +6,7 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,8 +39,8 @@ public class RWitch extends Role{
             setSlot(0, new MenuPreset.Slot(ResourcePack
                     .getItem("ui_potion_life")
                     .setCustomId("ac_life")
-                    .setDisplayName(GREEN+""+BOLD+"Potion de vie")
-                    .setLore(DARK_GREEN+"Sauve la cible des "+RED+""+BOLD+"Loups"+DARK_GREEN+".")) {
+                    .setDisplayName(GREEN+BOLD+"Potion de vie")
+                    .setLore(DARK_GREEN+"Sauve la cible des "+RED+BOLD+"Loups"+DARK_GREEN+".")) {
                 @Override
                 protected ItemBuilder getItem(LGInventoryHolder holder) {
                     if(!(holder instanceof LGPrivateInventoryHolder))
@@ -71,7 +71,7 @@ public class RWitch extends Role{
             setSlot(1, new MenuPreset.Slot(ResourcePack
                     .getItem("ui_cancel")
                     .setCustomId("ac_skip")
-                    .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+                    .setDisplayName(GRAY+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
                 if(!(holder instanceof LGPrivateInventoryHolder))
                     return;
@@ -92,7 +92,7 @@ public class RWitch extends Role{
             setSlot(2, new MenuPreset.Slot(ResourcePack
                     .getItem("ui_potion_death")
                     .setCustomId("ac_kill")
-                    .setDisplayName(RED+""+BOLD+"Potion de mort")
+                    .setDisplayName(RED+BOLD+"Potion de mort")
                     .setLore(RED+"Tue la personne de ton choix.")) {
                 @Override
                 protected ItemBuilder getItem(LGInventoryHolder holder) {
@@ -148,7 +148,7 @@ public class RWitch extends Role{
                         return getDefaultItem().setType(Material.AIR);
 
                     return getDefaultItem()
-                            .setDisplayName(GRAY+""+BOLD+""+((RWitch) lgp.getRole()).sauver.getName()+""+RED+" est ciblé");
+                            .setDisplayName(GRAY+BOLD+((RWitch) lgp.getRole()).sauver.getName()+RED+" est ciblé");
                 }
             });
         }
@@ -165,7 +165,7 @@ public class RWitch extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Sorcière";
+		return GREEN+BOLD+"Sorcière";
 	}
 	public static String _getFriendlyName() {
 		return "de la "+_getName();
@@ -174,13 +174,13 @@ public class RWitch extends Role{
 		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Tu disposes de deux potions : une "+YELLOW+""+ITALIC+""+BOLD+"potion de vie"+WHITE+" pour sauver la victime des "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", et une "+YELLOW+""+ITALIC+""+BOLD+"potion de mort"+WHITE+" pour assassiner quelqu'un.";
+		return _getShortDescription()+WHITE+". Tu disposes de deux potions : une "+YELLOW+ITALIC+BOLD+"potion de vie"+WHITE+" pour sauver la victime des "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", et une "+YELLOW+ITALIC+BOLD+"potion de mort"+WHITE+" pour assassiner quelqu'un.";
 	}
 	public static String _getTask() {
 		return "Que veux-tu faire cette nuit ?";
 	}
 	public static String _getBroadcastedTask() {
-		return "La "+_getName()+""+BLUE+" est en train de concocter un nouvel élixir.";
+		return "La "+_getName()+BLUE+" est en train de concocter un nouvel élixir.";
 	}
 	@Override
 	public int getTimeout() {
@@ -214,7 +214,7 @@ public class RWitch extends Role{
 
 	private void openInventory(LGPlayer player) {
         inMenu = true;
-        invHolder = new LGPrivateInventoryHolder(InventoryType.BREWING, BLACK + (sauver == null ? "Personne n'a été ciblé" : BOLD+""+sauver.getName()+" "+BLACK+"est ciblé"), player);
+        invHolder = new LGPrivateInventoryHolder(InventoryType.BREWING, BLACK + (sauver == null ? "Personne n'a été ciblé" : BOLD+sauver.getName()+" "+BLACK+"est ciblé"), player);
         invHolder.setDefaultPreset(preset.clone(invHolder));
 
         player.getPlayer().closeInventory();
@@ -288,8 +288,8 @@ public class RWitch extends Role{
         KillAction action = (KillAction) e.getAction();
         if(!action.isCancelled() || action.isForceMessage())
         {
-            player.sendMessage(GOLD+"Tu as décidé d'assassiner "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
-            player.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+BLUE+" a été tué.");
+            player.sendMessage(GOLD+"Tu as décidé d'assassiner "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
+            player.sendActionBarMessage(GRAY+BOLD+action.getTarget().getName()+BLUE+" a été tué.");
         }
         else
             player.sendMessage(RED+"Votre cible est immunisée.");
@@ -322,8 +322,8 @@ public class RWitch extends Role{
         SaveAction action = (SaveAction) e.getAction();
         if(!action.isCancelled() || action.isForceMessage())
         {
-            player.sendMessage(GOLD+"Tu as décidé de sauver "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
-            player.sendActionBarMessage(GRAY+""+BOLD+""+action.getTarget().getName()+""+BLUE+" a été sauvé.");
+            player.sendMessage(GOLD+"Tu as décidé de sauver "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
+            player.sendActionBarMessage(GRAY+BOLD+action.getTarget().getName()+BLUE+" a été sauvé.");
         }
         else
             player.sendMessage(RED+"Votre cible est immunisée.");

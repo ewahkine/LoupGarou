@@ -2,7 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.util.Random;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -16,10 +16,10 @@ public class RChildWild extends Role{
 	}
 
 	public static String _getName() {
-		return GREEN+""+BOLD+"Enfant-Sauvage";
+		return GREEN+BOLD+"Enfant-Sauvage";
 	}
 	public static String _getScoreBoardName() {
-		return GREEN+""+BOLD+"Enfant"+GRAY+"-"+RED+""+BOLD+"Sauvage";
+		return GREEN+BOLD+"Enfant"+GRAY+"-"+RED+BOLD+"Sauvage";
 	}
 
 	public static String _getFriendlyName() {
@@ -39,7 +39,7 @@ public class RChildWild extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "L'"+_getName()+""+BLUE+" cherche ses marques...";
+		return "L'"+_getName()+BLUE+" cherche ses marques...";
 	}
 	public static RoleType _getType() {
 		return RoleType.VILLAGER;
@@ -60,8 +60,8 @@ public class RChildWild extends Role{
 		player.choose(choosen -> {
             if(choosen != null) {
                 player.stopChoosing();
-                player.sendMessage(GOLD+"Si "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" meurt, tu deviendras "+RED+""+BOLD+"Loup-Garou"+GOLD+".");
-                player.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est ton modèle");
+                player.sendMessage(GOLD+"Si "+GRAY+BOLD+choosen.getName()+GOLD+" meurt, tu deviendras "+RED+BOLD+"Loup-Garou"+GOLD+".");
+                player.sendActionBarMessage(GRAY+BOLD+choosen.getName()+GOLD+" est ton modèle");
                 player.getCache().set("enfant_svg", choosen);
                 choosen.getCache().set("enfant_svg_d", player);
                 getPlayers().remove(player);//Pour éviter qu'il puisse avoir plusieurs modèles
@@ -78,8 +78,8 @@ public class RChildWild extends Role{
 		LGPlayer choosen = null;
 		while(choosen == null || choosen == player)
 			choosen = getGame().getAlive().get(random.nextInt(getGame().getAlive().size()));
-		player.sendMessage(GOLD+"Si "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" meurt, tu deviendras "+RED+""+BOLD+"Loup-Garou"+GOLD+".");
-		player.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est ton modèle");
+		player.sendMessage(GOLD+"Si "+GRAY+BOLD+choosen.getName()+GOLD+" meurt, tu deviendras "+RED+BOLD+"Loup-Garou"+GOLD+".");
+		player.sendActionBarMessage(GRAY+BOLD+choosen.getName()+GOLD+" est ton modèle");
 		player.getCache().set("enfant_svg", choosen);
 		choosen.getCache().set("enfant_svg_d", player);
 		getPlayers().remove(player);
@@ -91,7 +91,7 @@ public class RChildWild extends Role{
 			if(e.getKilled().getCache().has("enfant_svg_d")) {
 				LGPlayer enfant = e.getKilled().getCache().remove("enfant_svg_d");
 				if(!enfant.isDead() && enfant.getCache().remove("enfant_svg") == e.getKilled() && enfant.isRoleActive()) {
-					enfant.sendMessage(GRAY+""+BOLD+""+e.getKilled().getName()+""+GOLD+" est mort, tu deviens un "+RED+""+BOLD+"Loup-Garou"+GOLD+".");
+					enfant.sendMessage(GRAY+BOLD+e.getKilled().getName()+GOLD+" est mort, tu deviens un "+RED+BOLD+"Loup-Garou"+GOLD+".");
 					RChildWildWW lgEnfantSvg = getGame().getRole(RChildWildWW.class);
 					
 					if(lgEnfantSvg == null)

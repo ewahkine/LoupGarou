@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -11,7 +11,7 @@ public class RChildWildWW extends Role{
 		super(game);
 	}
 	public static String _getName() {
-        return RED+""+BOLD+"Enfant-Sauvage";
+        return RED+BOLD+"Enfant-Sauvage";
 	}
 
 	public static String _getFriendlyName() {
@@ -59,6 +59,6 @@ public class RChildWildWW extends Role{
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())
                 if(lgp != player)
-                    lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" a rejoint les "+RED+""+BOLD+"Loups-Garous"+GOLD+".");
+                    lgp.sendMessage(GRAY+BOLD+player.getName()+GOLD+" a rejoint les "+RED+BOLD+"Loups-Garous"+GOLD+".");
 	}
 }

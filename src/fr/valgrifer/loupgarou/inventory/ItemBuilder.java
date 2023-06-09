@@ -1,12 +1,13 @@
 package fr.valgrifer.loupgarou.inventory;
 
-import fr.valgrifer.loupgarou.utils.NMSUtils;
-import fr.valgrifer.loupgarou.utils.nms.nbt.NBTCompound;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @SuppressWarnings("ALL")
 public class ItemBuilder {
+    private static final NamespacedKey CUSTOMIDTAG = new NamespacedKey("LG", "CustomIDLG");
+
     private String customId = null;
     private Material mat = Material.AIR;
     private String displayName = null;
@@ -36,17 +39,17 @@ public class ItemBuilder {
     }
     public static boolean checkId(ItemStack item, String customId)
     {
-        NBTCompound tag;
-        if(item == null || item.getType() == Material.AIR || (tag = NMSUtils.getInstance().getItemTag(item)) == null)
+        PersistentDataContainer tag;
+        if(item == null || item.getType() == Material.AIR || (tag = item.getItemMeta().getPersistentDataContainer()) == null || tag.isEmpty())
             return false;
-        return tag.getStringOrDefault("CustomIDLG", "").equalsIgnoreCase(customId);
+        return tag.getOrDefault(CUSTOMIDTAG, PersistentDataType.STRING, "").equalsIgnoreCase(customId);
     }
     public static String getCustomId(ItemStack item)
     {
-        NBTCompound tag;
-        if(item == null ||item.getType() == Material.AIR || (tag = NMSUtils.getInstance().getItemTag(item)) == null)
+        PersistentDataContainer tag;
+        if(item == null || item.getType() == Material.AIR || (tag = item.getItemMeta().getPersistentDataContainer()) == null || tag.isEmpty())
             return null;
-        return NMSUtils.getInstance().getItemTag(item).getStringOrDefault("CustomIDLG", null);
+        return tag.getOrDefault(CUSTOMIDTAG, PersistentDataType.STRING, null);
     }
 
     public ItemBuilder clone()
@@ -66,7 +69,7 @@ public class ItemBuilder {
         ItemStack item = new ItemStack(mat);
         item.setAmount(amount);
 
-        if(displayName != null || lore.size() > 0)
+        if(displayName != null || lore.size() > 0 || customModelData > 0 || customId != null)
         {
             ItemMeta meta = item.getItemMeta();
             if(meta != null)
@@ -76,22 +79,11 @@ public class ItemBuilder {
                 meta.setLore(lore);
                 if(skull != null && mat == Material.PLAYER_HEAD && meta instanceof SkullMeta)
                     ((SkullMeta) meta).setOwningPlayer(skull);
-                item.setItemMeta(meta);
-            }
-        }
-
-        if(customId != null || customModelData > 0)
-        {
-            NBTCompound tag = NMSUtils.getInstance().getItemTag(item);
-
-            if(tag != null)
-            {
-                if(customId != null)
-                    tag.put("CustomIDLG", customId);
                 if(customModelData > 0)
-                    tag.put("CustomModelData", customModelData);
-
-                return NMSUtils.getInstance().setItemTag(item, tag);
+                    meta.setCustomModelData(customModelData);
+                if(customId != null)
+                    meta.getPersistentDataContainer().set(CUSTOMIDTAG, PersistentDataType.STRING, customId);
+                item.setItemMeta(meta);
             }
         }
 

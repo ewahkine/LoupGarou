@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Function;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class SpecManager extends LGInventoryHolder
 {

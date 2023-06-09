@@ -53,6 +53,10 @@ public class RoleType {
     {
         return color + Arrays.stream(moreColors).map(ChatColor::toString).collect(Collectors.joining()) + name;
     }
+    public String getColoredName(String... moreColors)
+    {
+        return color + String.join("", moreColors) + name;
+    }
 
     @Override
     public String toString() {

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -25,7 +25,7 @@ public class RReaper extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Faucheur";
+		return GREEN+BOLD+"Faucheur";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();

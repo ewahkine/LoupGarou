@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -27,7 +27,7 @@ public class RJester extends Role {
 		return RoleWinType.NONE;
 	}
 	public static String _getName() {
-		return LIGHT_PURPLE+""+BOLD+"Bouffon";
+		return LIGHT_PURPLE+BOLD+"Bouffon";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -42,7 +42,7 @@ public class RJester extends Role {
 		return "Choisis quelqu’un à hanter parmi ceux qui ont voté pour ta mort.";
 	}
 	public static String _getBroadcastedTask() {
-		return "L'esprit vengeur du "+_getName()+""+BLUE+" rôde sur le village...";
+		return "L'esprit vengeur du "+_getName()+BLUE+" rôde sur le village...";
 	}
 	@Override
 	public int getTimeout() {
@@ -61,9 +61,9 @@ public class RJester extends Role {
 				}
 				LGPlayer player = players.remove(0);
 				getGame().wait(getTimeout(), ()->{
-                    RJester.this.onNightTurnTimeout(player);this.run();}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+""+BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")");
-				player.sendMessage(GOLD+""+getTask());
-				//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
+                    RJester.this.onNightTurnTimeout(player);this.run();}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")");
+				player.sendMessage(GOLD+getTask());
+				//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 100);
 				onNightTurn(player, this);
 			}
 		}.run();
@@ -80,28 +80,28 @@ public class RJester extends Role {
 		player.showView();
 		player.getCache().set("bouffon_win", true);
 		List<LGPlayer> choosable = getGame().getVote().getVotes(player);
-		StringJoiner sj = new StringJoiner(GOLD+""+ITALIC+", "+GOLD+""+ITALIC+""+BOLD+"");
+		StringJoiner sj = new StringJoiner(GOLD+ITALIC+", "+GOLD+ITALIC+BOLD+"");
 		for(LGPlayer lgp : choosable)
 			if(lgp.getPlayer() != null && lgp != player)
 				sj.add(lgp.getName());
 		
 		String toPut = sj.toString();
 		if(toPut.length() == 0)
-			player.sendMessage(GOLD+""+ITALIC+""+BOLD+"Personne"+GOLD+""+ITALIC+" n'a voté pour toi.");
+			player.sendMessage(GOLD+ITALIC+BOLD+"Personne"+GOLD+ITALIC+" n'a voté pour toi.");
 		else
-			player.sendMessage(GOLD+""+ITALIC+""+BOLD+""+toPut+""+GOLD+""+ITALIC+" "+(toPut.contains(",") ? "ont" : "a")+" voté pour toi.");
+			player.sendMessage(GOLD+ITALIC+BOLD+toPut+GOLD+ITALIC+" "+(toPut.contains(",") ? "ont" : "a")+" voté pour toi.");
 				
 		player.choose((choosen)->{
 			if(choosen == null)
                 return;
 
             if(!choosable.contains(choosen))
-                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'a pas voté pour vous.");
+                player.sendMessage(GRAY+BOLD+choosen.getName()+DARK_RED+" n'a pas voté pour vous.");
             else if(choosen.isDead())
-                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" est mort.");//fix
+                player.sendMessage(GRAY+BOLD+choosen.getName()+DARK_RED+" est mort.");//fix
             else {
                 player.stopChoosing();
-                player.sendMessage(GOLD+"Ton fantôme va hanter l'esprit de "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
+                player.sendMessage(GOLD+"Ton fantôme va hanter l'esprit de "+GRAY+BOLD+choosen.getName()+GOLD+".");
                 getGame().kill(choosen, Reason.BOUFFON);
                 player.hideView();
                 callback.run();
@@ -120,7 +120,7 @@ public class RJester extends Role {
 	public void onPlayerKill(LGPlayerKilledEvent e) {
 		if(e.getKilled().getRole() == this && e.getReason() == Reason.VOTE && e.getKilled().isRoleActive()) {
 			needToPlay.add(e.getKilled());
-			getGame().broadcastMessage(BLUE+""+ITALIC+"Quelle erreur, le "+getName()+""+BLUE+""+ITALIC+" aura droit à sa vengeance...", true);
+			getGame().broadcastMessage(BLUE+ITALIC+"Quelle erreur, le "+getName()+BLUE+ITALIC+" aura droit à sa vengeance...", true);
 			e.getKilled().sendMessage(GOLD+"Tu as rempli ta mission, l'heure de la vengeance a sonné.");
 		}
 	}
@@ -134,7 +134,7 @@ public class RJester extends Role {
 					new BukkitRunnable() {
 						@Override
 						public void run() {
-							getGame().broadcastMessage(GOLD+""+ITALIC+"Le "+getName()+""+GOLD+""+ITALIC+" a rempli son objectif.", true);
+							getGame().broadcastMessage(GOLD+ITALIC+"Le "+getName()+GOLD+ITALIC+" a rempli son objectif.", true);
 						}
 					}.runTaskAsynchronously(MainLg.getInstance());
 				}

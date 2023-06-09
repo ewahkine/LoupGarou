@@ -2,7 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -22,7 +22,7 @@ public class RBearShowman extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Montreur d'Ours";
+		return GREEN+BOLD+"Montreur d'Ours";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -68,7 +68,7 @@ public class RBearShowman extends Role{
 						if(lgp.getRoleWinType() == RoleWinType.VILLAGE || lgp.getRoleWinType() == RoleWinType.NONE)
 							break;
 						else{
-							getGame().broadcastMessage(GOLD+"La bête du "+getName()+""+GOLD+" grogne...", true);
+							getGame().broadcastMessage(GOLD+"La bête du "+getName()+GOLD+" grogne...", true);
 							return;
 						}
 					}
@@ -83,7 +83,7 @@ public class RBearShowman extends Role{
 						if(lgp.getRoleWinType() == RoleWinType.VILLAGE || lgp.getRoleWinType() == RoleWinType.NONE)
 							break;
 						else{
-							getGame().broadcastMessage(GOLD+"La bête du "+getName()+""+GOLD+" grogne...", true);
+							getGame().broadcastMessage(GOLD+"La bête du "+getName()+GOLD+" grogne...", true);
 							return;
 						}
 					}

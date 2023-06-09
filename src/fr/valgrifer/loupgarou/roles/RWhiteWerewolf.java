@@ -2,7 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
@@ -10,7 +10,6 @@ import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
@@ -26,7 +25,7 @@ public class RWhiteWerewolf extends Role{
 	private static final ItemBuilder itemNoAction = ResourcePack
             .getItem("ui_cancel")
             .setCustomId("ac_skip")
-            .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+            .setDisplayName(GRAY+BOLD+"Ne rien faire")
             .setLore(DARK_GRAY+"Passez votre tour");
 
 	public RWhiteWerewolf(LGGame game) {
@@ -34,7 +33,7 @@ public class RWhiteWerewolf extends Role{
 	}
 
 	public static String _getName() {
-		return RED+""+BOLD+"Loup Blanc";
+		return RED+BOLD+"Loup Blanc";
 	}
 
 	public static String _getFriendlyName() {
@@ -54,7 +53,7 @@ public class RWhiteWerewolf extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" pourrait faire un ravage cette nuit...";
+		return "Le "+_getName()+BLUE+" pourrait faire un ravage cette nuit...";
 	}
 	public static RoleType _getType() {
 		return RoleType.LOUP_GAROU;
@@ -92,7 +91,7 @@ public class RWhiteWerewolf extends Role{
                 return;
 
             if(!targetable.contains(choosen)) {
-                player.sendMessage(GRAY+""+BOLD+""+choosen.getName()+""+DARK_RED+" n'est pas ciblable.");
+                player.sendMessage(GRAY+BOLD+choosen.getName()+DARK_RED+" n'est pas ciblable.");
                 return;
             }
 
@@ -106,8 +105,8 @@ public class RWhiteWerewolf extends Role{
             KillAction action = (KillAction) event.getAction();
             if(!action.isCancelled() || action.isForceMessage())
             {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir cette nuit");
-                player.sendMessage(GOLD+"Tu as choisi de dévorer "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                player.sendActionBarMessage(YELLOW+BOLD+action.getTarget().getName()+GOLD+" va mourir cette nuit");
+                player.sendMessage(GOLD+"Tu as choisi de dévorer "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
             }
             else
                 player.sendMessage(RED+"Votre cible est immunisée.");

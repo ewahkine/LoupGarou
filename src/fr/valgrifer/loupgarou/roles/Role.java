@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -220,12 +220,12 @@ public abstract class Role implements Listener{
 							err.printStackTrace();
 						}
 						this.run();
-					}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+""+ BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")");
-					player.sendMessage(GOLD+""+getTask());
-				//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
+					}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+ BOLD+"C'est à ton tour !" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")");
+					player.sendMessage(GOLD+getTask());
+				//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 100);
 					onNightTurn(player, this);
 				} else {
-					getGame().wait(getTimeout(), ()->{}, (currentPlayer, secondsLeft)-> currentPlayer == player ? RED+""+BOLD+"Tu ne peux pas jouer" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")");
+					getGame().wait(getTimeout(), ()->{}, (currentPlayer, secondsLeft)-> currentPlayer == player ? RED+BOLD+"Tu ne peux pas jouer" : GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")");
 					Runnable run = this;
 					new BukkitRunnable() {
 						
@@ -245,8 +245,8 @@ public abstract class Role implements Listener{
 			player.setRole(this);
 		waitedPlayers--;
 		if(sendMessage) {
-			player.sendTitle(GOLD+"Tu es "+getName(), YELLOW+""+getShortDescription(), 200);
-			player.sendMessage(GOLD+"Tu es "+getName()+""+GOLD+".");
+			player.sendTitle(GOLD+"Tu es "+getName(), YELLOW+getShortDescription(), 200);
+			player.sendMessage(GOLD+"Tu es "+getName()+GOLD+".");
 			player.sendMessage(GOLD+"Description : "+getDescription());
 		}
 	}

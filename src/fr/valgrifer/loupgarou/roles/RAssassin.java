@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.events.MessageForcable;
 import fr.valgrifer.loupgarou.events.*;
@@ -28,7 +28,7 @@ public class RAssassin extends Role{
 		return RoleWinType.SOLO;
 	}
 	public static String _getName() {
-		return DARK_BLUE+""+BOLD+"Assassin";
+		return DARK_BLUE+BOLD+"Assassin";
 	}
 	public static String _getFriendlyName() {
 		return "de l'"+_getName();
@@ -43,7 +43,7 @@ public class RAssassin extends Role{
 		return "Choisis un joueur à éliminer.";
 	}
 	public static String _getBroadcastedTask() {
-		return "L'"+_getName()+""+BLUE+" ne controle plus ses pulsions...";
+		return "L'"+_getName()+BLUE+" ne controle plus ses pulsions...";
 	}
 	@Override
 	public int getTimeout() {
@@ -66,8 +66,8 @@ public class RAssassin extends Role{
             KillAction action = (KillAction) event.getAction();
             if(!action.isCancelled() || action.isForceMessage())
             {
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+action.getTarget().getName()+""+GOLD+" va mourir");
-                player.sendMessage(GOLD+"Tu as choisi de tuer "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                player.sendActionBarMessage(YELLOW+BOLD+action.getTarget().getName()+GOLD+" va mourir");
+                player.sendMessage(GOLD+"Tu as choisi de tuer "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
             }
             else
                 player.sendMessage(RED+"Votre cible est immunisée.");

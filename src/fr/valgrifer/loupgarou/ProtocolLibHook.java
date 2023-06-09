@@ -108,7 +108,7 @@ public class ProtocolLibHook
                     if(evt2.getPrefix().length() > 0)
                         team.setPrefix(WrappedChatComponent.fromText(evt2.getPrefix()));
                     else
-                        team.setPrefix(WrappedChatComponent.fromText(WHITE+""));
+                        team.setPrefix(WrappedChatComponent.fromText(WHITE.toString()));
                 }
             }
         });

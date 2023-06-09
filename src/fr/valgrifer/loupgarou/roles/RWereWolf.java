@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import fr.valgrifer.loupgarou.classes.*;
 import fr.valgrifer.loupgarou.events.*;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -23,11 +23,11 @@ public class RWereWolf extends Role{
 	}
 
 	public static String _getName() {
-		return RED+""+BOLD+"Loup-Garou";
+		return RED+BOLD+"Loup-Garou";
 	}
 
 	public static String _getFriendlyName() {
-		return "des "+RED+""+BOLD+"Loups-Garous";
+		return "des "+RED+BOLD+"Loups-Garous";
 	}
 
 	public static String _getShortDescription() {
@@ -57,7 +57,7 @@ public class RWereWolf extends Role{
 		return 30;
 	}
 	
-	@Getter private final LGChat chat = new LGChat((sender, message) -> RED+""+sender.getName()+" "+GOLD+"» "+WHITE+""+message);
+	@Getter private final LGChat chat = new LGChat((sender, message) -> RED+sender.getName()+" "+GOLD+"» "+WHITE+message);
 
 	boolean showSkins = false;
 	LGVote vote;
@@ -93,12 +93,12 @@ public class RWereWolf extends Role{
             return;
         }
 
-		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+""+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+""+BLUE+"Vous votez contre "+RED+""+BOLD+""+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+""+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+""+GOLD+" pour voter");
+		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez contre "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
 
 		for(LGPlayer player : getPlayers()) {
-			player.sendMessage(GOLD+""+getTask());
+			player.sendMessage(GOLD+getTask());
             player.showView();
-		//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+""+getTask(), 100);
+		//	player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 100);
 			player.joinChat(chat);
 		}
 		vote.start(getPlayers(), getPlayers(), ()->{
@@ -144,7 +144,7 @@ public class RWereWolf extends Role{
         {
 			getGame().kill(choosen, Reason.LOUP_GAROU);
 			for(LGPlayer player : getPlayers())
-				player.sendMessage(GOLD+"Les "+RED+""+BOLD+"Loups"+GOLD+" ont décidé de tuer "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+".");
+				player.sendMessage(GOLD+"Les "+RED+BOLD+"Loups"+GOLD+" ont décidé de tuer "+GRAY+BOLD+choosen.getName()+GOLD+".");
 		}
         else
 			for(LGPlayer player : getPlayers())
@@ -183,7 +183,7 @@ public class RWereWolf extends Role{
 	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
 		if(e.getGame() == getGame())
 			if(getPlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
-				e.setPrefix(e.getPrefix()+""+RED+"");
+				e.setPrefix(e.getPrefix()+RED+"");
 	}
 	
 	@EventHandler

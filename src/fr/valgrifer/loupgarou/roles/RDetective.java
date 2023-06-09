@@ -8,7 +8,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Cancellable;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class RDetective extends Role{
 	public RDetective(LGGame game) {
@@ -21,7 +21,7 @@ public class RDetective extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Détective";
+		return GREEN+BOLD+"Détective";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -36,7 +36,7 @@ public class RDetective extends Role{
 		return "Choisis deux joueurs à étudier.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" est sur une enquête...";
+		return "Le "+_getName()+BLUE+" est sur une enquête...";
 	}
 	
 	@Override
@@ -61,7 +61,7 @@ public class RDetective extends Role{
             if(first != null) {
                 first = player.getCache().remove("detective_first");
                 if(first == choosen) {
-                    player.sendMessage(RED+"Vous ne pouvez pas comparer "+GRAY+""+BOLD+""+first.getName()+""+RED+" avec lui même !");
+                    player.sendMessage(RED+"Vous ne pouvez pas comparer "+GRAY+BOLD+first.getName()+RED+" avec lui même !");
                 } else {
                     player.stopChoosing();
                     player.hideView();
@@ -71,16 +71,16 @@ public class RDetective extends Role{
                     CompareAction action = (CompareAction) event.getAction();
                     if(!action.isCancelled())
                         if(action.isDifferentCamp())
-                            player.sendMessage(GRAY+""+BOLD+""+action.getTarget1().getName()+""+GOLD+" et "+GRAY+""+BOLD+""+action.getTarget2().getName()+""+GOLD+" ne sont "+RED+"pas du même camp.");
+                            player.sendMessage(GRAY+BOLD+action.getTarget1().getName()+GOLD+" et "+GRAY+BOLD+action.getTarget2().getName()+GOLD+" ne sont "+RED+"pas du même camp.");
                         else
-                            player.sendMessage(GRAY+""+BOLD+""+action.getTarget1().getName()+""+GOLD+" et "+GRAY+""+BOLD+""+action.getTarget2().getName()+""+GOLD+" sont "+GREEN+"du même camp.");
+                            player.sendMessage(GRAY+BOLD+action.getTarget1().getName()+GOLD+" et "+GRAY+BOLD+action.getTarget2().getName()+GOLD+" sont "+GREEN+"du même camp.");
                     else
                         player.sendMessage(RED+"Votre information a été brouillé.");
                     callback.run();
                 }
             } else {
                 first = choosen;
-                player.sendMessage(BLUE+"Choisis un joueur avec qui tu souhaites comparer le rôle de "+GRAY+""+BOLD+""+choosen.getName());
+                player.sendMessage(BLUE+"Choisis un joueur avec qui tu souhaites comparer le rôle de "+GRAY+BOLD+choosen.getName());
             }
         });
 	}

@@ -3,7 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.events.*;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class RGardien extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Garde";
+		return GREEN+BOLD+"Garde";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -36,13 +36,13 @@ public class RGardien extends Role{
 		return RVillager._getShortDescription();
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Chaque nuit, tu peux te protéger toi ou quelqu'un d'autre des attaques "+RED+""+BOLD+"hostiles"+WHITE+". Tu ne peux pas protéger deux fois d’affilé la même personne.";
+		return _getShortDescription()+WHITE+". Chaque nuit, tu peux te protéger toi ou quelqu'un d'autre des attaques "+RED+BOLD+"hostiles"+WHITE+". Tu ne peux pas protéger deux fois d’affilé la même personne.";
 	}
 	public static String _getTask() {
 		return "Choisis un joueur à protéger.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" choisit un joueur à protéger.";
+		return "Le "+_getName()+BLUE+" choisit un joueur à protéger.";
 	}
 	
 	@Override
@@ -59,9 +59,9 @@ public class RGardien extends Role{
                 LGPlayer lastProtected = player.getCache().get("garde_lastProtected");
                 if(choosen == lastProtected) {
                     if(lastProtected == player)
-                        player.sendMessage(DARK_RED+""+ITALIC+"Tu t'es déjà protégé la nuit dernière.");
+                        player.sendMessage(DARK_RED+ITALIC+"Tu t'es déjà protégé la nuit dernière.");
                     else
-                        player.sendMessage(DARK_RED+""+ITALIC+"Tu as déjà protégé "+GRAY+""+BOLD+""+ITALIC+""+lastProtected.getName()+""+DARK_RED+""+ITALIC+" la nuit dernière.");
+                        player.sendMessage(DARK_RED+ITALIC+"Tu as déjà protégé "+GRAY+BOLD+ITALIC+lastProtected.getName()+DARK_RED+ITALIC+" la nuit dernière.");
                 }  else {
                     player.stopChoosing();
                     player.hideView();
@@ -78,8 +78,8 @@ public class RGardien extends Role{
                         }
                         else
                         {
-                            player.sendMessage(GOLD+"Tu vas protéger "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" cette nuit.");
-                            player.sendActionBarMessage(GRAY+""+BOLD+""+choosen.getName()+""+BLUE+" sera protégé.");
+                            player.sendMessage(GOLD+"Tu vas protéger "+GRAY+BOLD+choosen.getName()+GOLD+" cette nuit.");
+                            player.sendActionBarMessage(GRAY+BOLD+choosen.getName()+BLUE+" sera protégé.");
                         }
                     }
                     else

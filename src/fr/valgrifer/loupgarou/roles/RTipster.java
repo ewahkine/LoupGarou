@@ -2,7 +2,7 @@ package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class RTipster extends Role{
 	public RTipster(LGGame game) {
@@ -15,7 +15,7 @@ public class RTipster extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Pronostiqueur";
+		return GREEN+BOLD+"Pronostiqueur";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -30,7 +30,7 @@ public class RTipster extends Role{
 		return "Choisis un joueur sur lequel pronostiquer.";
 	}
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" s'apprête à pronostiquer...";
+		return "Le "+_getName()+BLUE+" s'apprête à pronostiquer...";
 	}
 	@Override
 	public int getTimeout() {
@@ -43,10 +43,10 @@ public class RTipster extends Role{
 		
 		player.choose(choosen -> {
             if(choosen != null && choosen != player) {
-                //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+""+BOLD+" est "+YELLOW+""+BOLD+""+choosen.getRole().getName(), 5*20);
-                String gentilMechant = choosen.getRoleWinType() == RoleWinType.VILLAGE || choosen.getRoleWinType() == RoleWinType.NONE ? GREEN+""+BOLD+"gentil" : RED+""+BOLD+"méchant";
-                player.sendActionBarMessage(YELLOW+""+BOLD+""+choosen.getName()+""+GOLD+" est "+gentilMechant);
-                player.sendMessage(GOLD+"Votre instinct vous dit que "+GRAY+""+BOLD+""+choosen.getName()+""+GOLD+" est "+gentilMechant+""+GOLD+".");
+                //player.sendTitle(GOLD+"Vous avez regardé un rôle", YELLOW+BOLD+choosen.getName()+GOLD+BOLD+" est "+YELLOW+BOLD+choosen.getRole().getName(), 5*20);
+                String gentilMechant = choosen.getRoleWinType() == RoleWinType.VILLAGE || choosen.getRoleWinType() == RoleWinType.NONE ? GREEN+BOLD+"gentil" : RED+BOLD+"méchant";
+                player.sendActionBarMessage(YELLOW+BOLD+choosen.getName()+GOLD+" est "+gentilMechant);
+                player.sendMessage(GOLD+"Votre instinct vous dit que "+GRAY+BOLD+choosen.getName()+GOLD+" est "+gentilMechant+GOLD+".");
                 player.stopChoosing();
                 player.hideView();
                 callback.run();

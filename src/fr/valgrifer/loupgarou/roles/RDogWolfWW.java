@@ -3,7 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import fr.valgrifer.loupgarou.classes.LGCardItems;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.classes.LGPlayer;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 @SuppressWarnings("unused")
 public class RDogWolfWW extends Role{
@@ -11,7 +11,7 @@ public class RDogWolfWW extends Role{
 		super(game);
 	}
 	public static String _getName() {
-        return RED+""+BOLD+"Chien-Loup";
+        return RED+BOLD+"Chien-Loup";
 	}
 
 	public static String _getFriendlyName() {
@@ -59,6 +59,6 @@ public class RDogWolfWW extends Role{
         if(lgs != null)
             for(LGPlayer lgp : lgs.getPlayers())
                 if(lgp != player)
-                    lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" a rejoint les "+RED+""+BOLD+"Loups-Garous"+GOLD+".");
+                    lgp.sendMessage(GRAY+BOLD+player.getName()+GOLD+" a rejoint les "+RED+BOLD+"Loups-Garous"+GOLD+".");
 	}
 }

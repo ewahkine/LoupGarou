@@ -3,7 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,8 +22,8 @@ public class RDogWolf extends Role {
             setSlot(3, new Slot(ItemBuilder.make(Material.GOLDEN_APPLE)
                             .setCustomId("ac_villager")
                             .setDisplayName(DARK_GREEN+"Devenir Villageois")
-                            .setLore(GRAY+""+BOLD+"Vous n'aurez aucun pouvoir mais",
-                                    GRAY+""+BOLD+"resterez dans le camp du "+GREEN+""+BOLD+"Village"+GRAY+""+BOLD+".")),
+                            .setLore(GRAY+BOLD+"Vous n'aurez aucun pouvoir mais",
+                                    GRAY+BOLD+"resterez dans le camp du "+GREEN+BOLD+"Village"+GRAY+BOLD+".")),
                     (holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
                             return;
@@ -36,8 +36,8 @@ public class RDogWolf extends Role {
                         RDogWolf role = (RDogWolf) lgp.getRole();
 
                         role.closeInventory(lgp);
-                        lgp.sendActionBarMessage(GOLD+"Tu resteras fidèle au "+GREEN+""+BOLD+"Village"+GOLD+".");
-                        lgp.sendMessage(GOLD+"Tu resteras fidèle au "+GREEN+""+BOLD+"Village"+GOLD+".");
+                        lgp.sendActionBarMessage(GOLD+"Tu resteras fidèle au "+GREEN+BOLD+"Village"+GOLD+".");
+                        lgp.sendMessage(GOLD+"Tu resteras fidèle au "+GREEN+BOLD+"Village"+GOLD+".");
                         lgp.hideView();
                         role.callback.run();
                     });
@@ -45,7 +45,7 @@ public class RDogWolf extends Role {
             setSlot(5, new Slot(ItemBuilder.make(Material.ROTTEN_FLESH)
                             .setCustomId("ac_loupgarou")
                             .setDisplayName(RED+"Devenir Loup-Garou")
-                            .setLore(RED+"Vous rejoindrez le camp des "+RED+""+BOLD+"Loups")),
+                            .setLore(RED+"Vous rejoindrez le camp des "+RED+BOLD+"Loups")),
                     (holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
                             return;
@@ -82,10 +82,10 @@ public class RDogWolf extends Role {
 	}
 
 	public static String _getName() {
-		return GREEN+""+BOLD+"Chien-Loup";
+		return GREEN+BOLD+"Chien-Loup";
 	}
     public static String _getScoreBoardName() {
-        return GREEN+""+BOLD+"Chien"+GRAY+"-"+RED+""+BOLD+"Loup";
+        return GREEN+BOLD+"Chien"+GRAY+"-"+RED+BOLD+"Loup";
     }
 
 	public static String _getFriendlyName() {
@@ -101,11 +101,11 @@ public class RDogWolf extends Role {
 	}
 
 	public static String _getTask() {
-		return "Souhaites-tu devenir un "+RED+""+BOLD+"Loup-Garou"+GOLD+" ?";
+		return "Souhaites-tu devenir un "+RED+BOLD+"Loup-Garou"+GOLD+" ?";
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" pourrait trouver de nouveaux amis...";
+		return "Le "+_getName()+BLUE+" pourrait trouver de nouveaux amis...";
 	}
 	public static RoleType _getType() {
 		return RoleType.VILLAGER;
@@ -148,8 +148,8 @@ public class RDogWolf extends Role {
 		closeInventory(player);
 		player.hideView();
 		//player.sendTitle(RED+"Vous n'infectez personne", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		player.sendActionBarMessage(GOLD+"Tu rejoins le "+GREEN+""+BOLD+"Village.");
-		player.sendMessage(GOLD+"Tu rejoins le "+GREEN+""+BOLD+"Village.");
+		player.sendActionBarMessage(GOLD+"Tu rejoins le "+GREEN+BOLD+"Village.");
+		player.sendMessage(GOLD+"Tu rejoins le "+GREEN+BOLD+"Village.");
 	}
 	
 	private void closeInventory(LGPlayer player) {

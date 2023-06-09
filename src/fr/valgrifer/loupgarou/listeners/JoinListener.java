@@ -6,7 +6,7 @@ import java.util.Objects;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import fr.valgrifer.loupgarou.MainLg;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

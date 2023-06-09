@@ -4,7 +4,7 @@ import fr.valgrifer.loupgarou.classes.ResourcePack;
 import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGInventoryHolder;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
@@ -33,7 +33,7 @@ public class RBlackWerewolf extends Role{
             setSlot(3, new Slot(ResourcePack
                     .getItem("ui_cancel")
                     .setCustomId("ac_skip")
-                    .setDisplayName(GRAY+""+BOLD+"Ne rien faire")
+                    .setDisplayName(GRAY+BOLD+"Ne rien faire")
                     .setLore(DARK_GRAY+"Passez votre tour")), (holder, event) -> {
                 if(!(holder instanceof LGPrivateInventoryHolder))
                     return;
@@ -54,7 +54,7 @@ public class RBlackWerewolf extends Role{
             setSlot(5, new Slot(ItemBuilder
                     .make(Material.ROTTEN_FLESH)
                     .setCustomId("ac_infect")
-                    .setDisplayName(RED+""+BOLD+"Infecter")
+                    .setDisplayName(RED+BOLD+"Infecter")
                     .setLore(DARK_GRAY+"Tu peux infecter la cible du vote.",
                             DARK_GRAY+"Le joueur tiendra avec les Loups.")), (holder, event) -> {
                 if(!(holder instanceof LGPrivateInventoryHolder))
@@ -76,8 +76,8 @@ public class RBlackWerewolf extends Role{
                 InfectAction action = (InfectAction) e.getAction();
                 if(!action.isCancelled() || action.isForceMessage())
                 {
-                    lgp.sendActionBarMessage(BLUE+""+BOLD+"Vous infectez "+BLUE+""+action.getTarget().getName());
-                    lgp.sendMessage(GOLD+"Tu as infecté "+GRAY+""+BOLD+""+action.getTarget().getName()+""+GOLD+".");
+                    lgp.sendActionBarMessage(BLUE+BOLD+"Vous infectez "+BLUE+action.getTarget().getName());
+                    lgp.sendMessage(GOLD+"Tu as infecté "+GRAY+BOLD+action.getTarget().getName()+GOLD+".");
                 }
                 else
                     lgp.sendMessage(RED+"Votre cible est immunisée.");
@@ -110,7 +110,7 @@ public class RBlackWerewolf extends Role{
 	}
 
 	public static String _getName() {
-		return RED+""+BOLD+"Loup Noir";
+		return RED+BOLD+"Loup Noir";
 	}
 
 	public static String _getFriendlyName() {
@@ -130,7 +130,7 @@ public class RBlackWerewolf extends Role{
 	}
 
 	public static String _getBroadcastedTask() {
-		return "Le "+_getName()+""+BLUE+" décide s'il veut infecter sa cible.";
+		return "Le "+_getName()+BLUE+" décide s'il veut infecter sa cible.";
 	}
 	public static RoleType _getType() {
 		return RoleType.LOUP_GAROU;
@@ -200,7 +200,7 @@ public class RBlackWerewolf extends Role{
                 .forEach(player -> {
                     player.getCache().remove("just_infected");
                     player.sendMessage(GOLD+"Tu as été infecté pendant la nuit.");
-                    player.sendMessage(GOLD+""+ITALIC+"Tu gagnes désormais avec les "+RED+""+BOLD+""+ITALIC+"Loups-Garous"+GOLD+""+ITALIC+".");
+                    player.sendMessage(GOLD+ITALIC+"Tu gagnes désormais avec les "+RED+BOLD+ITALIC+"Loups-Garous"+GOLD+ITALIC+".");
                     if(!player.isDead()) {//Si il n'a pas été tué je ne sais comment
                         RWereWolf.forceJoin(player);
                         LGCardItems.updateItem(player);
@@ -208,9 +208,9 @@ public class RBlackWerewolf extends Role{
 
                     for(LGPlayer lgp : getGame().getInGame()) {
                         if(lgp.getRoleType() == RoleType.LOUP_GAROU)
-                            lgp.sendMessage(GRAY+""+BOLD+""+player.getName()+""+GOLD+" s'est fait infecter pendant la nuit.");
+                            lgp.sendMessage(GRAY+BOLD+player.getName()+GOLD+" s'est fait infecter pendant la nuit.");
                         else
-                            lgp.sendMessage(GOLD+"Un joueur a été "+RED+""+BOLD+"infecté"+GOLD+" pendant la nuit.");
+                            lgp.sendMessage(GOLD+"Un joueur a été "+RED+BOLD+"infecté"+GOLD+" pendant la nuit.");
                     }
 
                     if(getGame().checkEndGame())

@@ -11,7 +11,7 @@ import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.utils.NMSUtils;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import org.bukkit.Bukkit;
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -105,7 +105,7 @@ public class LGVote {
 		
 		if(equal && mayor != null && max != 0) {
 			for(LGPlayer player : viewers)
-				player.sendMessage(BLUE+"Égalité, le "+DARK_PURPLE+""+BOLD+"Capitaine"+BLUE+" va départager les votes.");
+				player.sendMessage(BLUE+"Égalité, le "+DARK_PURPLE+BOLD+"Capitaine"+BLUE+" va départager les votes.");
 			mayor.sendMessage(GOLD+"Tu dois choisir qui va mourir.");
 
 			List<LGPlayer> choosable = new ArrayList<>();
@@ -142,12 +142,12 @@ public class LGVote {
 				callback.run();
 			}, (player, secondsLeft)->{
 				timeout = secondsLeft;
-				return mayor == player ? GOLD+"Il te reste "+YELLOW+""+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+""+GOLD+" pour délibérer" : GOLD+"Le "+DARK_PURPLE+""+BOLD+"Capitaine"+GOLD+" délibère ("+YELLOW+""+secondsLeft+" s"+GOLD+")";
+				return mayor == player ? GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour délibérer" : GOLD+"Le "+DARK_PURPLE+BOLD+"Capitaine"+GOLD+" délibère ("+YELLOW+secondsLeft+" s"+GOLD+")";
 			});
 			mayor.choose(choosen -> {
                 if(choosen != null) {
                     if(blackListed.contains(choosen))
-                        mayor.sendMessage(DARK_RED+""+ITALIC+"Ce joueur n'est pas concerné par le choix.");
+                        mayor.sendMessage(DARK_RED+ITALIC+"Ce joueur n'est pas concerné par le choix.");
                     else {
                         for(LGPlayer player : participants)
                             if(choosable.contains(player))
@@ -176,7 +176,7 @@ public class LGVote {
 	}
 	public void vote(LGPlayer voter, LGPlayer voted) {
 		if(blacklisted.contains(voted)) {
-			voter.sendMessage(RED+"Vous ne pouvez pas votre pour "+GRAY+""+BOLD+""+voted.getName()+""+RED+".");
+			voter.sendMessage(RED+"Vous ne pouvez pas votre pour "+GRAY+BOLD+voted.getName()+RED+".");
 			return;
 		}
 		if(voted == voter.getCache().get("vote"))
@@ -208,7 +208,7 @@ public class LGVote {
 		}
 		
 		if(voted != null) {//Si il vient de voter, on ajoute le nouveau vote
-			//voter.sendTitle("", GRAY+"Tu as voté pour "+GRAY+""+BOLD+""+voted.getName(), 40);
+			//voter.sendTitle("", GRAY+"Tu as voté pour "+GRAY+BOLD+voted.getName(), 40);
 			if(votes.containsKey(voted))
 				votes.get(voted).add(voter);
 			else
@@ -222,14 +222,14 @@ public class LGVote {
 			String message;
 			if(voted != null) {
 				if(changeVote) {
-					message = GRAY+""+BOLD+""+voter.getName()+""+GOLD+" a changé son vote pour "+GRAY+""+BOLD+""+voted.getName()+""+GOLD+".";
-					voter.sendMessage(GOLD+"Tu as changé de vote pour "+GRAY+""+BOLD+""+voted.getName()+""+GOLD+".");
+					message = GRAY+BOLD+voter.getName()+GOLD+" a changé son vote pour "+GRAY+BOLD+voted.getName()+GOLD+".";
+					voter.sendMessage(GOLD+"Tu as changé de vote pour "+GRAY+BOLD+voted.getName()+GOLD+".");
 				} else {
-					message = GRAY+""+BOLD+""+voter.getName()+""+GOLD+" a voté pour "+GRAY+""+BOLD+""+voted.getName()+""+GOLD+".";
-					voter.sendMessage(GOLD+"Tu as voté pour "+GRAY+""+BOLD+""+voted.getName()+""+GOLD+".");
+					message = GRAY+BOLD+voter.getName()+GOLD+" a voté pour "+GRAY+BOLD+voted.getName()+GOLD+".";
+					voter.sendMessage(GOLD+"Tu as voté pour "+GRAY+BOLD+voted.getName()+GOLD+".");
 				}
 			} else {
-				message = GRAY+""+BOLD+""+voter.getName()+""+GOLD+" a annulé son vote.";
+				message = GRAY+BOLD+voter.getName()+GOLD+" a annulé son vote.";
 				voter.sendMessage(GOLD+"Tu as annulé ton vote.");
 			}
 
@@ -282,7 +282,7 @@ public class LGVote {
 			final int numberOfParticipants = participants.size();
 			final double votePercentage =  ((double)votesNbr / numberOfParticipants) * 100;
 			final String votePercentageFormated = String.format("%.0f%%", votePercentage);
-			final String voteContent = GOLD+""+BOLD+"" + votesNbr + " / " + numberOfParticipants + YELLOW+" vote" + (votesNbr > 1 ? "s" : "") + " ("+GOLD+""+BOLD+"" + votePercentageFormated + YELLOW+")";
+			final String voteContent = GOLD+BOLD+"" + votesNbr + " / " + numberOfParticipants + YELLOW+" vote" + (votesNbr > 1 ? "s" : "") + " ("+GOLD+BOLD+"" + votePercentageFormated + YELLOW+")";
 
             for(LGPlayer lgp : viewers)
                 spawn.sendPacket(lgp.getPlayer());

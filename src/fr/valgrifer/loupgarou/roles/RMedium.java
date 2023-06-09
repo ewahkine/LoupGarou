@@ -1,6 +1,6 @@
 package fr.valgrifer.loupgarou.roles;
 
-import static org.bukkit.ChatColor.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -21,7 +21,7 @@ public class RMedium extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+""+BOLD+"Médium";
+		return GREEN+BOLD+"Médium";
 	}
 	public static String _getFriendlyName() {
 		return "du "+_getName();
@@ -47,7 +47,7 @@ public class RMedium extends Role{
 	public void onNight(LGDayEndEvent e) {
 		if(e.getGame() == getGame())
 			for(LGPlayer lgp : getPlayers()) {
-				lgp.sendMessage(DARK_GRAY+""+ITALIC+"Tu entres en contact avec le monde des morts...");
+				lgp.sendMessage(DARK_GRAY+ITALIC+"Tu entres en contact avec le monde des morts...");
 				joinChat(lgp);
 			}
 	}
@@ -58,12 +58,12 @@ public class RMedium extends Role{
 
 			@Override
 			public String receive(LGPlayer sender, String message) {
-				return GRAY+""+sender.getName()+""+GOLD+" » "+WHITE+""+message;
+				return GRAY+sender.getName()+GOLD+" » "+WHITE+message;
 			}
 			
 			@Override
 			public String send(LGPlayer sender, String message) {
-				return getName()+""+GOLD+" » "+WHITE+""+message;
+				return getName()+GOLD+" » "+WHITE+message;
 			}
 			
 		});
@@ -74,7 +74,7 @@ public class RMedium extends Role{
 			if(e.getPreviousRole() instanceof RWereWolf)
 				for(LGPlayer lgp : getPlayers())
 					if(lgp.getChat() != getGame().getSpectatorChat() && lgp.isRoleActive()) {
-						lgp.sendMessage(GOLD+""+ITALIC+"Tu peux de nouveau parler aux morts...");
+						lgp.sendMessage(GOLD+ITALIC+"Tu peux de nouveau parler aux morts...");
 						joinChat(lgp);
 					}
 	}
