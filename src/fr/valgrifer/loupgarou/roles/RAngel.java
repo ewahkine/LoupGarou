@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
+
+import fr.valgrifer.loupgarou.classes.LGVoteCause;
 import org.bukkit.event.EventHandler;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
@@ -47,7 +49,7 @@ public class RAngel extends Role {
 	}
 	@EventHandler
 	public void onVoteStart(LGVoteEvent e) {
-		if(e.getGame() == getGame()) {
+		if(e.getGame() == getGame() && e.getCause() == LGVoteCause.VILLAGE) {
 			night = getGame().getNight();
 			vote = true;
 			for(LGPlayer lgp : getPlayers())
@@ -60,10 +62,7 @@ public class RAngel extends Role {
 	public void onDayEnd(LGDayEndEvent e) {
 		if(e.getGame() == getGame()) {
 			if(getPlayers().size() > 0 && getGame().getNight() == night+1 && vote) {
-				Role villageois = getGame().getRole(RVillager.class);
-				
-				if(villageois == null)
-					getGame().getRoles().add(villageois = new RVillager(getGame()));
+                RVillager villageois = getGame().getRole(RVillager.class, true);
 				
 				for(LGPlayer lgp : getPlayers()) {
 					if(lgp.isRoleActive())
@@ -91,7 +90,7 @@ public class RAngel extends Role {
 	public void onWinCheck(LGEndCheckEvent e) {
 		if(e.getGame() == getGame())
 			if(winners.size() > 0)
-				e.setWinType(winners.size() == 1 && winners.get(0).getCache().has("inlove") ? LGWinType.COUPLE : LGWinType.ANGE);
+				e.setWinType(LGWinType.ANGE);
 	}
 	
 	@EventHandler

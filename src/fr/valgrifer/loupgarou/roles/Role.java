@@ -39,6 +39,8 @@ public abstract class Role implements Listener{
 	@Getter @Setter private int waitedPlayers;
 	@Getter private final ArrayList<LGPlayer> players = new ArrayList<>();
 	@Getter private final LGGame game;
+
+    @Getter @Setter private boolean fakeTimer = false;
 	
 	public Role(LGGame game) {
 		this.game = game;
@@ -211,7 +213,7 @@ public abstract class Role implements Listener{
 					return;
 				}
 				LGPlayer player = players.remove(0);
-				if(player.isRoleActive()) {
+				if(player.isRoleActive() && !Role.this.isFakeTimer()) {
 					getGame().wait(getTimeout(), ()->{
 						try {
 							Role.this.onNightTurnTimeout(player);

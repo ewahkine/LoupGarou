@@ -70,6 +70,9 @@ public class RSurvivor extends Role{
 
                         LGPlayer lgp = ((LGPrivateInventoryHolder) holder).getPlayer();
 
+                        if(lgp.getCache().get("survivant_left", 0) <= 0)
+                            return;
+
                         if(!(lgp.getRole() instanceof RSurvivor))
                             return;
 
@@ -90,7 +93,7 @@ public class RSurvivor extends Role{
                             lgp.sendMessage(RED+"Tu ne peux pas te protégé.");
 
                         if(!action.isCancelled() || action.isForceConsume())
-                            lgp.getCache().set("survivant_left", lgp.getCache().<Integer>get("survivant_left")-1);
+                            lgp.getCache().set("survivant_left", lgp.getCache().get("survivant_left", 0) - 1);
 
                         if(action.isCancelled())
                         {
@@ -179,7 +182,7 @@ public class RSurvivor extends Role{
 	}
 
     @EventHandler
-    public void onPyroGasoil(LGRoleActionEvent e) {
+    public void onVampired(LGRoleActionEvent e) {
         if(e.getGame() != getGame())
             return;
         if(e.isAction(RVampire.VampiredAction.class))

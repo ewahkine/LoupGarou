@@ -204,6 +204,7 @@ public class MainLg extends JavaPlugin {
             this.blacklistRoleSpec.add(clazz);
     }
 
+    @SuppressWarnings("SpellCheckingInspection")
     private void loadRoles() {
         try {
             addRole(RWereWolf.class, getResource("roles/werewolf.png"));
@@ -221,6 +222,9 @@ public class MainLg extends JavaPlugin {
             addRole(RWhiteWerewolf.class, getResource("roles/whitewerewolf.png"));
             addRole(RJester.class, getResource("roles/jester.png"));
             addRole(RAngel.class, getResource("roles/angel.png"));
+            addRole(RAngelV2.class, getResource("roles/angelv2.png"));
+            addRole(RAngelV2Guardian.class, getResource("roles/guardianangel.png"), true);
+            addRole(RAngelV2Fallen.class, getResource("roles/fallenangel.png"), true);
             addRole(RSurvivor.class, getResource("roles/survivor.png"));
             addRole(RAssassin.class, getResource("roles/assassin.png"));
             addRole(RBigBadWolf.class, getResource("roles/bigbadwolf.png"));
@@ -250,7 +254,6 @@ public class MainLg extends JavaPlugin {
         return this.getClassLoader().getResourceAsStream("assets/" + path);
     }
 
-    @SuppressWarnings("unchecked")
     private void registerResources() {
         Arrays.asList("entity/steve.png", "entity/alex.png", "misc/pumpkinblur.png").forEach(o ->
                 ResourcePack.addFile("assets/minecraft/textures/" + o, getResource(o), true));

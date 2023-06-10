@@ -14,7 +14,7 @@ public class LGVoteEvent extends LGEvent implements Cancellable{
         this.cause = cause;
 	}
 
-	@Getter @Setter private LGVoteCause cause;
+	@Getter private final LGVoteCause cause;
 
 	@Getter @Setter private boolean cancelled = false;
 	@Getter @Setter private boolean continuePeopleVote = true;

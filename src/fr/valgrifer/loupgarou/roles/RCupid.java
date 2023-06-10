@@ -190,6 +190,6 @@ public class RCupid extends Role{
     @EventHandler(priority = EventPriority.HIGH)
     public void onUpdatePrefix (LGUpdatePrefixEvent e) {
         if(e.getTo().getRole() instanceof RCupid && e.getPlayer().getCache().has(LoveListener.loveKey))
-            e.setPrefix(LIGHT_PURPLE+"❤ "+WHITE+e.getPrefix());
+            e.setPrefix(LIGHT_PURPLE+"❤ "+e.getPrefix());
     }
 }

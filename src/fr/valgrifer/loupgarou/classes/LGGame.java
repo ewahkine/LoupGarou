@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import fr.valgrifer.loupgarou.MainLg;
-import fr.valgrifer.loupgarou.events.LGNightEndEvent;
+import fr.valgrifer.loupgarou.events.*;
 import fr.valgrifer.loupgarou.roles.Role;
 import fr.valgrifer.loupgarou.roles.RoleType;
 import fr.valgrifer.loupgarou.roles.RoleWinType;
@@ -43,22 +43,7 @@ import com.comphenix.packetwrapper.WrapperPlayServerUpdateHealth;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateTime;
 import fr.valgrifer.loupgarou.classes.LGCardItems.Constraint;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
-import fr.valgrifer.loupgarou.events.LGCustomItemChangeEvent;
-import fr.valgrifer.loupgarou.events.LGDayEndEvent;
-import fr.valgrifer.loupgarou.events.LGDayStartEvent;
-import fr.valgrifer.loupgarou.events.LGEndCheckEvent;
-import fr.valgrifer.loupgarou.events.LGGameEndEvent;
-import fr.valgrifer.loupgarou.events.LGGameJoinEvent;
-import fr.valgrifer.loupgarou.events.LGNightPlayerPreKilledEvent;
-import fr.valgrifer.loupgarou.events.LGNightStart;
-import fr.valgrifer.loupgarou.events.LGPlayerGotKilledEvent;
-import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
-import fr.valgrifer.loupgarou.events.LGPreDayStartEvent;
-import fr.valgrifer.loupgarou.events.LGRoleTurnEndEvent;
-import fr.valgrifer.loupgarou.events.LGSkinLoadEvent;
-import fr.valgrifer.loupgarou.events.LGVoteEvent;
-import fr.valgrifer.loupgarou.events.LGVoteLeaderChange;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -385,13 +370,17 @@ public class LGGame implements Listener{
 		
 		updateRoleScoreboard();
 		
-		//Classe les roles afin de les appeler dans le bon ordre
-		roles.sort(Comparator.comparingInt(Role::getTurnOrder));
-		
 		//Start day one
 		nextNight(10);
 	}
 	public void updateRoleScoreboard() {
+        if(MainLg.getInstance().getConfig().getBoolean("compo_hidden", false))
+        {
+            for(LGPlayer lgp : getInGame())
+                lgp.getScoreboard().getLine(0).setDisplayName(GOLD+"Composition Caché");
+            return;
+        }
+
 		HashMap<Role, Integer> rolesAlive = new HashMap<>();
 		for(LGPlayer lgp : getAlive())
             if(lgp.getRole() != null)
@@ -501,7 +490,9 @@ public class LGGame implements Listener{
 		for(LGPlayer player : getInGame())
 			player.hideView();
 
+        //Classe les roles afin de les appeler dans le bon ordre
 		ArrayList<Role> roles = (ArrayList<Role>) getRoles().clone();
+        roles.sort(Comparator.comparingInt(Role::getTurnOrder));
 		new Runnable() {
 			Role lastRole;
 			
@@ -847,7 +838,7 @@ public class LGGame implements Listener{
 
         broadcastMessage(BLUE+"Il est temps de voter pour élire un "+DARK_PURPLE+BOLD+"Capitaine"+BLUE+".", true);
         vote = new LGVote(180, 20, this, event.isHiveViewersMessage(), true, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
-        vote.start(getAlive(), getInGame(), ()->{
+        vote.start(getAlive(), getInGame(), () -> {
             if(vote.getChoosen() == null)
                 setMayor(getAlive().get(random.nextInt(getAlive().size())));
             else
@@ -883,17 +874,23 @@ public class LGGame implements Listener{
         broadcastMessage(BLUE+"La phase des votes a commencé.", true);
         isPeopleVote = true;
         vote = new LGVote(180, 20, this, event.isHiveViewersMessage(), false, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
-        vote.start(getAlive(), getInGame(), ()->{
+        vote.start(getAlive(), getInGame(), () -> {
             isPeopleVote = false;
             if(vote.getChoosen() == null || (vote.isMayorVote() && getMayor() == null))
                 broadcastMessage(BLUE+"Personne n'est mort aujourd'hui.", true);
             else {
-                LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(this, vote.getChoosen(), Reason.VOTE);
+                LGVoteEndEvent voteEnd = new LGVoteEndEvent(this, vote, LGVoteCause.VILLAGE);
+                Bukkit.getPluginManager().callEvent(voteEnd);
+                LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(this, voteEnd.getVote().getChoosen(), Reason.VOTE);
                 Bukkit.getPluginManager().callEvent(killEvent);
-                if(killEvent.isCancelled())
+                if(killEvent.isCancelled()) {
+                    nextNight();
                     return;
-                if(kill(killEvent.getKilled(), killEvent.getReason(), true))
+                }
+                if(kill(killEvent.getKilled(), killEvent.getReason(), true)) {
+                    nextNight();
                     return;
+                }
             }
             nextNight();
         }, mayor);
@@ -937,9 +934,22 @@ public class LGGame implements Listener{
 
     public <R extends Role> R getRole(Class<R> clazz)
     {
+        return getRole(clazz, false);
+    }
+
+    public <R extends Role> R getRole(Class<R> clazz, boolean addRole)
+    {
         for(Role role : getRoles())
             if(role.getClass().equals(clazz))
                 return (R) role;
-        return null;
+
+        if(!addRole)
+            return null;
+
+        R role = Role.makeNew(clazz, this);
+
+        this.getRoles().add(role);
+
+        return role;
     }
 }

@@ -63,12 +63,7 @@ public class RDogWolf extends Role {
                         lgp.sendMessage(GOLD+"Tu as changé de camp.");
 
                         //On le fait aussi rejoindre le camp des loups pour le tour pendant la nuit.
-                        RDogWolfWW lgChienLoup = role.getGame().getRole(RDogWolfWW.class);
-
-                        if(lgChienLoup == null)
-                            role.getGame().getRoles().add(lgChienLoup = new RDogWolfWW(role.getGame()));
-
-                        lgChienLoup.join(lgp, false);
+                        role.getGame().getRole(RDogWolfWW.class, true).join(lgp, false);
                         lgp.updateOwnSkin();
 
                         lgp.hideView();

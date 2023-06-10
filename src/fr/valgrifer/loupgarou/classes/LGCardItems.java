@@ -37,7 +37,6 @@ public class LGCardItems {
     }
 
     private static final JSONParser parser = new JSONParser();
-    @SuppressWarnings("unchecked")
     @SneakyThrows
     public static void registerResources(MainLg main)
     {
@@ -269,7 +268,7 @@ public class LGCardItems {
 		@Getter private final Slot slot;
         @Getter private final List<Constraint> incompatibles;
         private Constraint(String name, Slot slot, Constraint...incompatibles) {
-            this.name = name.replaceAll("[^\\w]", "");
+            this.name = name.replaceAll("\\W", "");
             this.slot = slot;
             this.incompatibles = Arrays.asList(incompatibles);
 

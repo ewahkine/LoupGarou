@@ -15,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("ALL")
 public class ItemBuilder {
-    private static final NamespacedKey CUSTOMIDTAG = new NamespacedKey("LG", "CustomIDLG");
+    private static final NamespacedKey CUSTOMIDTAG = new NamespacedKey("lg", "customidlg");
 
     private String customId = null;
     private Material mat = Material.AIR;

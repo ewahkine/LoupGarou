@@ -145,7 +145,7 @@ public class LGPlayer {
 		this.chooseCallback = null;
 	}
 	
-	public interface LGChooseCallback{
+	public interface LGChooseCallback {
 		void callback(LGPlayer choosen);
 	}
 

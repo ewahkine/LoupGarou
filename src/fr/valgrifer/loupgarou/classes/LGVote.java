@@ -24,7 +24,8 @@ import fr.valgrifer.loupgarou.events.LGVoteLeaderChange;
 import lombok.Getter;
 
 public class LGVote {
-	@Getter LGPlayer choosen;
+    @Getter
+    private LGPlayer choosen;
 	private int timeout;
     private final int initialTimeout, littleTimeout;
 	private Runnable callback;
@@ -94,7 +95,7 @@ public class LGVote {
 			player.stopChoosing();
 		}
 		if(equal)
-			choosen = null;
+            choosen = null;
 		if(equal && mayor == null && randomIfEqual) {
 			List<LGPlayer> choosable = new ArrayList<>();
 			for(Entry<LGPlayer, List<LGPlayer>> entry : votes.entrySet())
@@ -144,9 +145,9 @@ public class LGVote {
 				timeout = secondsLeft;
 				return mayor == player ? GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour délibérer" : GOLD+"Le "+DARK_PURPLE+BOLD+"Capitaine"+GOLD+" délibère ("+YELLOW+secondsLeft+" s"+GOLD+")";
 			});
-			mayor.choose(choosen -> {
-                if(choosen != null) {
-                    if(blackListed.contains(choosen))
+			mayor.choose(c -> {
+                if(c != null) {
+                    if(blackListed.contains(c))
                         mayor.sendMessage(DARK_RED+ITALIC+"Ce joueur n'est pas concerné par le choix.");
                     else {
                         for(LGPlayer player : participants)
@@ -157,7 +158,7 @@ public class LGVote {
                             showArrow(mayor, null, -mayor.getPlayer().getEntityId()-i);
                         }
                         game.cancelWait();
-                        LGVote.this.choosen = choosen;
+                        choosen = c;
                         callback.run();
                     }
                 }
@@ -207,7 +208,7 @@ public class LGVote {
 			changeVote = true;
 		}
 		
-		if(voted != null) {//Si il vient de voter, on ajoute le nouveau vote
+		if(voted != null) {//S'il vient de voter, on ajoute le nouveau vote
 			//voter.sendTitle("", GRAY+"Tu as voté pour "+GRAY+BOLD+voted.getName(), 40);
 			if(votes.containsKey(voted))
 				votes.get(voted).add(voter);
@@ -281,8 +282,8 @@ public class LGVote {
 			int votesNbr = votes.get(voted).size();
 			final int numberOfParticipants = participants.size();
 			final double votePercentage =  ((double)votesNbr / numberOfParticipants) * 100;
-			final String votePercentageFormated = String.format("%.0f%%", votePercentage);
-			final String voteContent = GOLD+BOLD+"" + votesNbr + " / " + numberOfParticipants + YELLOW+" vote" + (votesNbr > 1 ? "s" : "") + " ("+GOLD+BOLD+"" + votePercentageFormated + YELLOW+")";
+			final String voteFormatedPercentage = String.format("%.0f%%", votePercentage);
+			final String voteContent = GOLD+BOLD + votesNbr + " / " + numberOfParticipants + YELLOW+" vote" + (votesNbr > 1 ? "s" : "") + " ("+GOLD+BOLD + voteFormatedPercentage + YELLOW+")";
 
             for(LGPlayer lgp : viewers)
                 spawn.sendPacket(lgp.getPlayer());

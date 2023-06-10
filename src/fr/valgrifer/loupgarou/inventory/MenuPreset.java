@@ -193,7 +193,7 @@ public abstract class MenuPreset
         }
 
         public ItemBuilder getDefaultItem() {
-            return defaultItem.clone();
+            return this.defaultItem.clone();
         }
 
         protected ItemBuilder getItem(LGInventoryHolder holder)
