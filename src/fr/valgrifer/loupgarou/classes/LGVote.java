@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import com.comphenix.protocol.wrappers.WrappedWatchableObject;
 import fr.valgrifer.loupgarou.MainLg;
+import fr.valgrifer.loupgarou.events.LGVoteStartEvent;
 import fr.valgrifer.loupgarou.utils.NMSUtils;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import org.bukkit.Bukkit;
@@ -25,6 +26,8 @@ import lombok.Getter;
 
 public class LGVote {
     @Getter
+    private final LGVoteCause cause;
+    @Getter
     private LGPlayer choosen;
 	private int timeout;
     private final int initialTimeout, littleTimeout;
@@ -37,17 +40,21 @@ public class LGVote {
 	private LGPlayer mayor;
 	private List<LGPlayer> latestTop = new ArrayList<>(), blacklisted = new ArrayList<>();
 	@SuppressWarnings({"FieldCanBeLocal", "unused"})
-    private final boolean hiveViewersMessage, randomIfEqual;
+    private final boolean hideViewersMessage, randomIfEqual;
 	@Getter private boolean mayorVote;
     private boolean ended;
-	public LGVote(int timeout, int littleTimeout, LGGame game, boolean hiveViewersMessage, boolean randomIfEqual, LGGame.TextGenerator generator) {
+	public LGVote(LGVoteCause cause, int timeout, int littleTimeout, LGGame game, boolean hiveViewersMessage, boolean randomIfEqual, LGGame.TextGenerator generator) {
+        this.cause = cause;
 		this.littleTimeout = littleTimeout;
 		this.initialTimeout = timeout;
 		this.timeout = timeout;
 		this.game = game;
 		this.generator = generator;
-		this.hiveViewersMessage = hiveViewersMessage;
+		this.hideViewersMessage = hiveViewersMessage;
 		this.randomIfEqual = randomIfEqual;
+
+
+        Bukkit.getPluginManager().callEvent(new LGVoteStartEvent(game, this, cause));
 	}
 	public void start(List<LGPlayer> participants, List<LGPlayer> viewers, Runnable callback) {
 		this.callback = callback;
@@ -234,7 +241,7 @@ public class LGVote {
 				voter.sendMessage(GOLD+"Tu as annulé ton vote.");
 			}
 
-			if(!hiveViewersMessage)
+			if(!hideViewersMessage)
                 for(LGPlayer player : viewers)
                     if(player != voter)
                         player.sendMessage(message);

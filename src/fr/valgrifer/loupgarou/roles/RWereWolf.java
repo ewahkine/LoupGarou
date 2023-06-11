@@ -75,17 +75,13 @@ public class RWereWolf extends Role{
         if(game == null)
             return null;
 
-        RWereWolf lg = game.getRole(RWereWolf.class);
-
-        if(lg == null)
-            game.getRoles().add(lg = new RWereWolf(game));
-
+        RWereWolf lg = game.getRole(RWereWolf.class, true);
         lg.join(player, false);
         return lg;
     }
 
 	public void onNightTurn(Runnable callback) {
-        LGVoteEvent event = new LGVoteEvent(getGame(), LGVoteCause.LOUPGAROU);
+        LGVoteRequestedEvent event = new LGVoteRequestedEvent(getGame(), LGVoteCause.LOUPGAROU);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()){
@@ -93,7 +89,7 @@ public class RWereWolf extends Role{
             return;
         }
 
-		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez contre "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
+		vote = new LGVote(event.getCause(), getTimeout(), getTimeout()/3, getGame(), event.isHideViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez contre "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
 
 		for(LGPlayer player : getPlayers()) {
 			player.sendMessage(GOLD+getTask());

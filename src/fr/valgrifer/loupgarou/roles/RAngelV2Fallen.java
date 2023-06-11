@@ -28,11 +28,16 @@ public class RAngelV2Fallen extends Role {
 		return RoleWinType.NONE;
 	}
 	public static String _getName() {
-		return LIGHT_PURPLE+BOLD+"Ange";
+		return RED+BOLD+"Ange Déchu";
 	}
 	public static String _getFriendlyName() {
 		return "de l'"+_getName();
 	}
+
+    public static String _getScoreBoardName()
+    {
+        return RAngelV2._getScoreBoardName();
+    }
 	public static String _getShortDescription() {
 		return WHITE+"Tu gagnes si tu remplis ton objectif";
 	}
@@ -74,9 +79,8 @@ public class RAngelV2Fallen extends Role {
 
         LGPlayer firstVote = e.getVote().getVotes().get(e.getVote().getChoosen()).get(0);
 
-        getPlayers().stream()
-                .filter(lgPlayer -> lgPlayer == firstVote)
-                .forEach(winners::add);
+        if(getPlayers().contains(firstVote))
+            winners.add(firstVote);
     }
 
     @EventHandler

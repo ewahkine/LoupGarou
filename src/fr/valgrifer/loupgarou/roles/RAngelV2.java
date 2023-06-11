@@ -121,6 +121,11 @@ public class RAngelV2 extends Role {
 	public static String _getFriendlyName() {
 		return "de l'"+_getName();
 	}
+
+    public static String _getScoreBoardName()
+    {
+        return _getName();
+    }
 	public static String _getShortDescription() {
 		return WHITE+"Tu gagnes si tu remplis ton objectif";
 	}

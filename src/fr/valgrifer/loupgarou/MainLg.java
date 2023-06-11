@@ -33,6 +33,8 @@ public class MainLg extends JavaPlugin {
     @Getter
     private List<Class<? extends Role>> roles = new ArrayList<>();
     @Getter
+    private List<Class<? extends Role>> notSelectableRoles = new ArrayList<>();
+    @Getter
     private static int maxPlayers = 0;
 
     @Getter
@@ -68,6 +70,7 @@ public class MainLg extends JavaPlugin {
     public void onEnable() {
         roles.sort(Comparator.comparing(Role::getName));
         roles = Collections.unmodifiableList(roles);
+        notSelectableRoles = Collections.unmodifiableList(notSelectableRoles);
 
         loadMaxPlayers();
 
@@ -195,8 +198,9 @@ public class MainLg extends JavaPlugin {
     public void addRole(Class<? extends Role> clazz, InputStream image, boolean selectable) {
         String id = Role.getId(clazz);
         LGCardItems.registerCardTexture(id, image);
-        if(selectable)
-            this.roles.add(clazz);
+        this.roles.add(clazz);
+        if(!selectable)
+            this.notSelectableRoles.add(clazz);
     }
 
     public void addBlackListSpecRole(Class<? extends Role> clazz) {
@@ -208,12 +212,15 @@ public class MainLg extends JavaPlugin {
     private void loadRoles() {
         try {
             addRole(RWereWolf.class, getResource("roles/werewolf.png"));
+            addRole(RWereWolfGrimmer.class, getResource("roles/werewolfgrimmer.png"));
             addRole(RBlackWerewolf.class, getResource("roles/blackwerewolf.png"));
             addRole(RGardien.class, getResource("roles/gardien.png"));
             addRole(RWitch.class, getResource("roles/witch.png"));
             addRole(RClairvoyant.class, getResource("roles/clairvoyant.png"));
+            addRole(RWereWolfClairvoyant.class, getResource("roles/werewolfclairvoyant.png"));
             addRole(RHunter.class, getResource("roles/hunter.png"));
             addRole(RVillager.class, getResource("roles/villager.png"));
+            addRole(RVillagerVillager.class, getResource("roles/villager.png"));
             addRole(RMedium.class, getResource("roles/medium.png"));
             addRole(RDictator.class, getResource("roles/dictator.png"));
             addRole(RCupid.class, getResource("roles/cupid.png"));
@@ -223,8 +230,8 @@ public class MainLg extends JavaPlugin {
             addRole(RJester.class, getResource("roles/jester.png"));
             addRole(RAngel.class, getResource("roles/angel.png"));
             addRole(RAngelV2.class, getResource("roles/angelv2.png"));
-            addRole(RAngelV2Guardian.class, getResource("roles/guardianangel.png"), true);
-            addRole(RAngelV2Fallen.class, getResource("roles/fallenangel.png"), true);
+            addRole(RAngelV2Guardian.class, getResource("roles/guardianangel.png"), false);
+            addRole(RAngelV2Fallen.class, getResource("roles/fallenangel.png"), false);
             addRole(RSurvivor.class, getResource("roles/survivor.png"));
             addRole(RAssassin.class, getResource("roles/assassin.png"));
             addRole(RBigBadWolf.class, getResource("roles/bigbadwolf.png"));
@@ -234,6 +241,7 @@ public class MainLg extends JavaPlugin {
             addRole(RDogWolfWW.class, getResource("roles/dogwolfww.png"), false);
             addRole(RPirate.class, getResource("roles/pirate.png"));
             addRole(RPyromaniac.class, getResource("roles/pyromaniac.png"));
+            addRole(RPriestess.class, getResource("roles/priestess.png"));
 //            addRole(RPriest.class, getResource("roles/priest.png"));
             addRole(RReaper.class, getResource("roles/reaper.png"));
             addRole(RChildWild.class, getResource("roles/childwild.png"));

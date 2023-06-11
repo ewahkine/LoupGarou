@@ -7,8 +7,8 @@ import org.bukkit.event.Cancellable;
 import lombok.Getter;
 import lombok.Setter;
 
-public class LGVoteEvent extends LGEvent implements Cancellable{
-	public LGVoteEvent(LGGame game, LGVoteCause cause) {
+public class LGVoteRequestedEvent extends LGEvent implements Cancellable{
+	public LGVoteRequestedEvent(LGGame game, LGVoteCause cause) {
 		super(game);
 
         this.cause = cause;
@@ -18,5 +18,5 @@ public class LGVoteEvent extends LGEvent implements Cancellable{
 
 	@Getter @Setter private boolean cancelled = false;
 	@Getter @Setter private boolean continuePeopleVote = true;
-	@Getter @Setter private boolean hiveViewersMessage = false;
+	@Getter @Setter private boolean hideViewersMessage = false;
 }

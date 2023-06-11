@@ -91,7 +91,7 @@ public class RRaven extends Role{
 	}
 	
 	@EventHandler
-	public void onVoteStart(LGVoteEvent e) {
+	public void onVoteStart(LGVoteRequestedEvent e) {
 		if(e.getGame() == getGame())
 			for(LGPlayer lgp : getGame().getAlive())
 				if(lgp.getCache().getBoolean("corbeau_selected")) {

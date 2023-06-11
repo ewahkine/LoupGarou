@@ -374,8 +374,12 @@ public class LGPlayer {
     }
     public String getRevealRole()
     {
+        return getRevealRole(this.getRole().getClass());
+    }
+    public String getRevealRole(Class<? extends Role> role)
+    {
         List<String> cache = getCache().get("endReaveal", new ArrayList<>());
-        return getRole().getName()+(getCache().has("endReaveal") ? BLUE + " " + getCache().<List<String>>get("endReaveal").parallelStream().collect(Collectors.joining(BLUE + " ")) : "");
+        return Role.getName(role) + (getCache().has("endReaveal") ? BLUE + " " + getCache().<List<String>>get("endReaveal").parallelStream().collect(Collectors.joining(BLUE + " ")) : "");
     }
 	
 	@Override

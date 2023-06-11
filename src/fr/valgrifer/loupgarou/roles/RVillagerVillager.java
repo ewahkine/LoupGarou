@@ -1,10 +1,14 @@
 package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
+import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
-public class RVillager extends Role{
-	public RVillager(LGGame game) {
+public class RVillagerVillager extends Role{
+	public RVillagerVillager(LGGame game) {
 		super(game);
 	}
 	public static RoleType _getType() {
@@ -14,7 +18,7 @@ public class RVillager extends Role{
 		return RoleWinType.VILLAGE;
 	}
 	public static String _getName() {
-		return GREEN+BOLD+"Villageois";
+		return GREEN+BOLD+"Villageois-Villageois";
 	}
 	public static String _getFriendlyName() {
 		return "des "+_getName();
@@ -23,7 +27,7 @@ public class RVillager extends Role{
 		return WHITE+"Tu gagnes avec le "+RoleWinType.VILLAGE.getColoredName(BOLD);
 	}
 	public static String _getDescription() {
-		return _getShortDescription()+WHITE+". Tu ne disposes d'aucun pouvoir particulier, uniquement ta perspicacité et ta force de persuasion.";
+		return _getShortDescription()+WHITE+". Tu ne disposes d'aucun pouvoir particulier, uniquement tous le monde sais que tu es gentil.";
 	}
 	public static String _getTask() {
 		return "";
@@ -31,4 +35,11 @@ public class RVillager extends Role{
 	public static String _getBroadcastedTask() {
 		return "";
 	}
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onUpdatePrefix (LGUpdatePrefixEvent e) {
+        if(e.getGame() == getGame())
+            if(e.getPlayer().getRole() instanceof RVillagerVillager)
+                e.setPrefix(e.getPrefix() + GREEN);
+    }
 }

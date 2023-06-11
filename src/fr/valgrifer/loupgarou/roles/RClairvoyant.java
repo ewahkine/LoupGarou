@@ -35,7 +35,7 @@ public class RClairvoyant extends Role{
 		return _getShortDescription()+WHITE+". Chaque nuit, tu peux espionner un joueur et découvrir sa véritable identité...";
 	}
 	public static String _getTask() {
-		return "Choisis un joueur dont tu veux connnaître l'identité.";
+		return "Choisis un joueur dont tu veux connaître l'identité.";
 	}
 	public static String _getBroadcastedTask() {
 		return "La "+_getName()+BLUE+" s'apprête à sonder un joueur...";

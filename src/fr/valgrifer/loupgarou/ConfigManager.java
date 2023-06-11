@@ -70,7 +70,7 @@ public class ConfigManager extends LGInventoryHolder
                         (holder, event) -> {
                             event.getWhoClicked().sendMessage(GREEN + "Vous êtes passé à la prochaine journée");
                             if (MainLg.getInstance().getCurrentGame() != null) {
-                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + "" + BOLD + "Le passage à la prochaine journée a été forcé !", true);
+                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + BOLD + "Le passage à la prochaine journée a été forcé !", true);
                                 MainLg.getInstance().getCurrentGame().cancelWait();
                                 for (LGPlayer lgp : MainLg.getInstance().getCurrentGame().getInGame())
                                     lgp.stopChoosing();
@@ -85,7 +85,7 @@ public class ConfigManager extends LGInventoryHolder
                         (holder, event) -> {
                             event.getWhoClicked().sendMessage(GREEN + "Vous êtes passé à la prochaine nuit");
                             if (MainLg.getInstance().getCurrentGame() != null) {
-                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + "" + BOLD + "Le passage à la prochaine nuit a été forcé !", true);
+                                MainLg.getInstance().getCurrentGame().broadcastMessage(DARK_GREEN + BOLD + "Le passage à la prochaine nuit a été forcé !", true);
                                 for (LGPlayer lgp : MainLg.getInstance().getCurrentGame().getInGame())
                                     lgp.stopChoosing();
                                 MainLg.getInstance().getCurrentGame().cancelWait();
@@ -110,10 +110,10 @@ public class ConfigManager extends LGInventoryHolder
                         new Slot(ItemBuilder.make(Material.PAPER)
                                 .setCustomId("ac_reloadconfig")
                                 .setDisplayName(DARK_GREEN + "Recharge les config")
-                                .setLore(GRAY + "A faire si la compo est modifier par le fichier", RESET + "" + DARK_GRAY + "Autant dire jamais")),
+                                .setLore(GRAY + "A faire si la compo est modifier par le fichier", RESET + DARK_GRAY + "Autant dire jamais")),
                         (holder, event) -> {
                             event.getWhoClicked().sendMessage(GREEN + "Vous avez bien reload la config !");
-                            event.getWhoClicked().sendMessage(GRAY + "" + ITALIC + "Si vous avez changé les rôles, écriver " + DARK_GRAY + "" + ITALIC + "/lg joinall" + GRAY + "" + ITALIC + " !");
+                            event.getWhoClicked().sendMessage(GRAY + ITALIC + "Si vous avez changé les rôles, écriver " + DARK_GRAY + ITALIC + "/lg joinall" + GRAY + ITALIC + " !");
                             MainLg.getInstance().loadMaxPlayers();
                         });
 
@@ -171,8 +171,8 @@ public class ConfigManager extends LGInventoryHolder
                                 .reduce(0, (total, role) -> total + MainLg.getInstance().getConfig().getInt("role." + Role.getId(role), 0), Integer::sum);
                         return getDefaultItem()
                                 .setDisplayName(GRAY + "Page " + GOLD + (getPageIndex() + 1))
-                                .setLore(AQUA + "" + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
-                                        AQUA + "" + BOLD + "Click Droit   " + RESET + ":" + GRAY + " Retire le rôle",
+                                .setLore(AQUA + BOLD + "Click Gauche " + RESET + ":" + GRAY + " Ajoute le rôle",
+                                        AQUA + BOLD + "Click Droit   " + RESET + ":" + GRAY + " Retire le rôle",
                                         " ",
                                         RESET + GRAY + "Il y a " + GOLD + roleAmount + GRAY + " rôle" + (roleAmount > 1 ? "s" : ""));
                     }
@@ -184,7 +184,7 @@ public class ConfigManager extends LGInventoryHolder
                 setSlot(0, getMaxLine()-1, new Slot(baseBackButton()
                         .setDisplayName(RED + "Retour")
                         .setLore(WHITE + "Si les rôles on étais changé ou maintient " + GRAY + "Shift",
-                                WHITE + "pour faire " + GRAY + "" + UNDERLINE + "joinall" + WHITE + " en même temps que revenir à la page d'accueil")),
+                                WHITE + "pour faire " + GRAY + UNDERLINE + "joinall" + WHITE + " en même temps que revenir à la page d'accueil")),
                         (holder, event) -> {
                             getCache().remove("pageIndex");
                             loadPreset("default");
@@ -198,7 +198,9 @@ public class ConfigManager extends LGInventoryHolder
                             }
                         });
 
-                MainLg.getInstance().getRoles().forEach(clazz -> {
+                MainLg.getInstance().getRoles().stream()
+                        .filter(clazz -> !MainLg.getInstance().getNotSelectableRoles().contains(clazz))
+                        .forEach(clazz -> {
                     String role = Role.getId(clazz);
 
                     registerItem(new Slot(Role.getCard(clazz))

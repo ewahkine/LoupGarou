@@ -128,11 +128,16 @@ public class RAngelV2Guardian extends Role {
 		return RoleWinType.NONE;
 	}
 	public static String _getName() {
-		return LIGHT_PURPLE+BOLD+"Ange";
+		return YELLOW+BOLD+"Ange Gardien";
 	}
 	public static String _getFriendlyName() {
 		return "de l'"+_getName();
 	}
+
+    public static String _getScoreBoardName()
+    {
+        return RAngelV2._getScoreBoardName();
+    }
 	public static String _getShortDescription() {
 		return WHITE+"Tu gagnes si tu remplis ton objectif";
 	}

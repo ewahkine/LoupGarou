@@ -17,7 +17,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
 public class ResourcePack
 {
     private static ZipFile zip;
@@ -104,7 +103,7 @@ public class ResourcePack
         fileMap.put(path, file);
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "unchecked"})
+    @SuppressWarnings({"ResultOfMethodCallIgnored"})
     @SneakyThrows
     public static void generate(MainLg main, String path)
     {

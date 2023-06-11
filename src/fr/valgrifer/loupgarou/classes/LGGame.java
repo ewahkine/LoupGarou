@@ -352,7 +352,7 @@ public class LGGame implements Listener{
 		ArrayList<LGPlayer> toGive = (ArrayList<LGPlayer>) inGame.clone();
 		started = false;
 
-		for(Role role : getRoles())
+		for(Role role : new ArrayList<>(getRoles()))
         {
             while (role.getWaitedPlayers() > 0) {
                 int randomized = random.nextInt(toGive.size());
@@ -543,18 +543,26 @@ public class LGGame implements Listener{
 			if(vote != null)
 				vote.remove(killed);
 
-			broadcastMessage(String.format(reason.getMessage(), killed.getName())+", il était "+killed.getRevealRole()+DARK_RED+".", true);
-			
-			//Lightning effect
-			killed.getPlayer().getWorld().strikeLightningEffect(killed.getPlayer().getLocation());
-			
+            //Lightning effect
+            killed.getPlayer().getWorld().strikeLightningEffect(killed.getPlayer().getLocation());
+            killed.setDead(true);
+
+            for(LGPlayer lgp : inGame)
+            {
+                LGDeathAnnouncementEvent event = new LGDeathAnnouncementEvent(this, lgp, killed, reason);
+                Bukkit.getPluginManager().callEvent(event);
+                if(!event.isMessageHidden())
+                    lgp.sendMessage(String.format(reason.getMessage(), killed.getName())+", il était "+killed.getRevealRole(event.getShowedRole())+DARK_RED+".");
+            }
+
+
+            logMessage(String.format(reason.getMessage(), killed.getName())+", il était "+killed.getRevealRole()+DARK_RED+".");
+
 			for(Role role : getRoles())
                 role.getPlayers().remove(killed);
-	
-			killed.setDead(true);
 
             killed.sendMessage(GRAY + "Vous pouvez faire " + WHITE + "/spec" + GRAY + " pour voir les rôles de tout le monde");
-			
+
 			Bukkit.getPluginManager().callEvent(new LGPlayerGotKilledEvent(this, killed, reason, !checkEndGame(false) && endGame));
 			
 			VariousUtils.setWarning(killed.getPlayer(), true);
@@ -826,7 +834,7 @@ public class LGGame implements Listener{
 	private void mayorVote() {
 		if(ended)return;
 
-        LGVoteEvent event = new LGVoteEvent(this, LGVoteCause.MAYOR);
+        LGVoteRequestedEvent event = new LGVoteRequestedEvent(this, LGVoteCause.MAYOR);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled())
@@ -837,7 +845,7 @@ public class LGGame implements Listener{
         }
 
         broadcastMessage(BLUE+"Il est temps de voter pour élire un "+DARK_PURPLE+BOLD+"Capitaine"+BLUE+".", true);
-        vote = new LGVote(180, 20, this, event.isHiveViewersMessage(), true, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
+        vote = new LGVote(event.getCause(), 180, 20, this, event.isHideViewersMessage(), true, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
         vote.start(getAlive(), getInGame(), () -> {
             if(vote.getChoosen() == null)
                 setMayor(getAlive().get(random.nextInt(getAlive().size())));
@@ -865,7 +873,7 @@ public class LGGame implements Listener{
 	private void peopleVote() {
 		if(ended)return;
 
-		LGVoteEvent event = new LGVoteEvent(this, LGVoteCause.VILLAGE);
+		LGVoteRequestedEvent event = new LGVoteRequestedEvent(this, LGVoteCause.VILLAGE);
 		Bukkit.getPluginManager().callEvent(event);
 
 		if(event.isCancelled())
@@ -873,13 +881,13 @@ public class LGGame implements Listener{
 
         broadcastMessage(BLUE+"La phase des votes a commencé.", true);
         isPeopleVote = true;
-        vote = new LGVote(180, 20, this, event.isHiveViewersMessage(), false, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
+        vote = new LGVote(event.getCause(), 180, 20, this, event.isHideViewersMessage(), false, (player, secondsLeft)-> player.getCache().has("vote") ? GOLD+"Tu votes pour "+GRAY+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il te reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
         vote.start(getAlive(), getInGame(), () -> {
             isPeopleVote = false;
             if(vote.getChoosen() == null || (vote.isMayorVote() && getMayor() == null))
                 broadcastMessage(BLUE+"Personne n'est mort aujourd'hui.", true);
             else {
-                LGVoteEndEvent voteEnd = new LGVoteEndEvent(this, vote, LGVoteCause.VILLAGE);
+                LGVoteEndEvent voteEnd = new LGVoteEndEvent(this, vote, vote.getCause());
                 Bukkit.getPluginManager().callEvent(voteEnd);
                 LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(this, voteEnd.getVote().getChoosen(), Reason.VOTE);
                 Bukkit.getPluginManager().callEvent(killEvent);

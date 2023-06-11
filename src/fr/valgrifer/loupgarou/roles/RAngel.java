@@ -15,7 +15,7 @@ import fr.valgrifer.loupgarou.events.LGDayEndEvent;
 import fr.valgrifer.loupgarou.events.LGEndCheckEvent;
 import fr.valgrifer.loupgarou.events.LGGameEndEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerGotKilledEvent;
-import fr.valgrifer.loupgarou.events.LGVoteEvent;
+import fr.valgrifer.loupgarou.events.LGVoteRequestedEvent;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 
 @SuppressWarnings("unused")
@@ -48,7 +48,7 @@ public class RAngel extends Role {
 		return "";
 	}
 	@EventHandler
-	public void onVoteStart(LGVoteEvent e) {
+	public void onVoteStart(LGVoteRequestedEvent e) {
 		if(e.getGame() == getGame() && e.getCause() == LGVoteCause.VILLAGE) {
 			night = getGame().getNight();
 			vote = true;

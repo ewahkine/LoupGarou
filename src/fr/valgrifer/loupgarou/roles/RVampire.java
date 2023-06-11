@@ -73,7 +73,7 @@ public class RVampire extends Role{
 	}
 
 	public void onNightTurn(Runnable callback) {
-        LGVoteEvent event = new LGVoteEvent(getGame(), LGVoteCause.VAMPIRE);
+        LGVoteRequestedEvent event = new LGVoteRequestedEvent(getGame(), LGVoteCause.VAMPIRE);
         Bukkit.getPluginManager().callEvent(event);
 
         if(event.isCancelled()){
@@ -81,7 +81,7 @@ public class RVampire extends Role{
             return;
         }
 
-		vote = new LGVote(getTimeout(), getTimeout()/3, getGame(), event.isHiveViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez pour "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
+		vote = new LGVote(event.getCause(), getTimeout(), getTimeout()/3, getGame(), event.isHideViewersMessage(), false, (player, secondsLeft)-> !getPlayers().contains(player) ? GOLD+"C'est au tour "+getFriendlyName()+" "+GOLD+"("+YELLOW+secondsLeft+" s"+GOLD+")" : player.getCache().has("vote") ? BOLD+BLUE+"Vous votez pour "+RED+BOLD+player.getCache().<LGPlayer>get("vote").getName() : GOLD+"Il vous reste "+YELLOW+secondsLeft+" seconde"+(secondsLeft > 1 ? "s" : "")+GOLD+" pour voter");
 		for(LGPlayer lgp : getGame().getAlive())
 			if(lgp.getRoleType() == RoleType.VAMPIRE)
 				lgp.showView();

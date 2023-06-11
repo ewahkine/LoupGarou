@@ -4,7 +4,7 @@ import java.util.*;
 
 import fr.valgrifer.loupgarou.classes.LGVoteCause;
 import fr.valgrifer.loupgarou.classes.ResourcePack;
-import fr.valgrifer.loupgarou.events.LGVoteEvent;
+import fr.valgrifer.loupgarou.events.LGVoteRequestedEvent;
 import fr.valgrifer.loupgarou.inventory.ItemBuilder;
 import fr.valgrifer.loupgarou.inventory.LGPrivateInventoryHolder;
 import fr.valgrifer.loupgarou.inventory.MenuPreset;
@@ -180,7 +180,7 @@ public class RDictator extends Role{
     }
 
 	@EventHandler
-	public void onVote(LGVoteEvent e) {
+	public void onVote(LGVoteRequestedEvent e) {
 		if(e.getGame() != getGame())
             return;
 

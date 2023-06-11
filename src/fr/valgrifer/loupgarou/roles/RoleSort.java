@@ -75,6 +75,7 @@ public class RoleSort {
     public static final RoleSort Garde;
     public static final RoleSort Survivant;
     public static final RoleSort Voyante;
+    public static final RoleSort LoupGarouVoyante;
     public static final RoleSort Detective;
     public static final RoleSort Dictateur;
     public static final RoleSort Pretre;
@@ -101,6 +102,7 @@ public class RoleSort {
         Garde = register(RGardien.class);
         Survivant = register(RSurvivor.class);
         Voyante = register(RClairvoyant.class);
+        LoupGarouVoyante = register(RWereWolfClairvoyant.class);
         Detective = register(RDetective.class);
         Dictateur = register(RDictator.class);
         Pretre = register(RPriest.class);
