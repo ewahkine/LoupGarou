@@ -7,8 +7,8 @@ import org.bukkit.Bukkit;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
-public class RWereWolfClairvoyant extends Role{
-	public RWereWolfClairvoyant(LGGame game) {
+public class RWolfClairvoyant extends Role{
+	public RWolfClairvoyant(LGGame game) {
 		super(game);
 	}
     public static RoleType _getType() {
@@ -19,7 +19,7 @@ public class RWereWolfClairvoyant extends Role{
     }
 
     public static String _getName() {
-        return RED+BOLD+"Loup-Garou Voyante";
+        return RED+BOLD+"Loup Voyante";
     }
 
     public static String _getFriendlyName() {

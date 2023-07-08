@@ -22,8 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
@@ -125,13 +123,13 @@ public class RAngelV2Guardian extends Role {
 		return RoleType.NEUTRAL;
 	}
     public static RoleWinType _getWinType() {
-		return RoleWinType.NONE;
+		return RoleWinType.SOLO;
 	}
 	public static String _getName() {
 		return YELLOW+BOLD+"Ange Gardien";
 	}
 	public static String _getFriendlyName() {
-		return "de l'"+_getName();
+		return "de l'"+_getScoreBoardName();
 	}
 
     public static String _getScoreBoardName()
@@ -151,7 +149,7 @@ public class RAngelV2Guardian extends Role {
         return "Choisis ton Role";
     }
     public static String _getBroadcastedTask() {
-        return "L'"+_getName()+BLUE+" réfléchit.";
+        return "L'"+_getScoreBoardName()+BLUE+" réfléchit.";
     }
 
     @Override

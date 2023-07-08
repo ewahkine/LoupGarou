@@ -39,10 +39,6 @@ public class RBearShowman extends Role{
 	public static String _getBroadcastedTask() {
 		return "";
 	}
-	@Override
-	public int getTimeout() {
-		return -1;
-	}
 
 	private int lastNight = -1;
 

@@ -102,7 +102,7 @@ public class RoleSort {
         Garde = register(RGardien.class);
         Survivant = register(RSurvivor.class);
         Voyante = register(RClairvoyant.class);
-        LoupGarouVoyante = register(RWereWolfClairvoyant.class);
+        LoupGarouVoyante = register(RWolfClairvoyant.class);
         Detective = register(RDetective.class);
         Dictateur = register(RDictator.class);
         Pretre = register(RPriest.class);

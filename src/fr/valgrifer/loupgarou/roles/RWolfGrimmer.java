@@ -7,16 +7,16 @@ import org.bukkit.event.EventPriority;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
-public class RWereWolfGrimmer extends Role{
+public class RWolfGrimmer extends Role{
     public static final String canGrimmedKey = "can_grimmed";
     public static final String grimmedKey = "grimmed";
 
-	public RWereWolfGrimmer(LGGame game) {
+	public RWolfGrimmer(LGGame game) {
 		super(game);
 	}
 
 	public static String _getName() {
-		return RED+BOLD+"Loup-Garou Grimmer";
+		return RED+BOLD+"Loup Grimmer";
 	}
 
 	public static String _getFriendlyName() {

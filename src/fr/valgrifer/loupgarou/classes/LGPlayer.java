@@ -284,7 +284,14 @@ public class LGPlayer {
 		return this.getCache().get("RoleType", getRole().getType());
 	}
 	public RoleWinType getRoleWinType() {
-		return this.getCache().get("RoleWinType", getRole().getWinType());
+        try
+        {
+            return this.getCache().get("RoleWinType", getRole().getWinType());
+        }
+        catch (Exception ignored)
+        {
+            return getRole().getWinType();
+        }
 	}
 	public void setRoleType(RoleType roleType) {
         this.getCache().set("RoleType", roleType);

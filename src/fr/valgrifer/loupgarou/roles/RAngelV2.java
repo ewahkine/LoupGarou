@@ -113,7 +113,7 @@ public class RAngelV2 extends Role {
 		return RoleType.NEUTRAL;
 	}
     public static RoleWinType _getWinType() {
-		return RoleWinType.NONE;
+		return RoleWinType.SOLO;
 	}
 	public static String _getName() {
 		return LIGHT_PURPLE+BOLD+"Ange";
@@ -178,7 +178,8 @@ public class RAngelV2 extends Role {
     @Override
     @SuppressWarnings("ComparatorMethodParameterNotUsed")
     protected void onNightTurn(LGPlayer player, Runnable callback) {
-        Optional<LGPlayer> target = getGame().getAlive(lgPlayer -> lgPlayer != player).stream()
+        Optional<LGPlayer> target = getGame().getAlive(lgPlayer -> lgPlayer != player && lgPlayer.getRoleType() == RoleType.VILLAGER)
+                .stream()
                 .sorted((o1, o2) -> ThreadLocalRandom.current().nextInt(-1, 2))
                 .findAny();
 

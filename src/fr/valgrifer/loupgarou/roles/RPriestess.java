@@ -44,6 +44,12 @@ public class RPriestess extends Role{
         if(e.getGame() != getGame())
             return;
 
+        if(e.getPlayer().isDead())
+            return;
+
+        if(e.getPlayer().getRole().getType() == RoleType.NEUTRAL)
+            return;
+
         boolean priestessAlive = !getGame().getAlive(lgPlayer -> lgPlayer.getRole() instanceof RPriestess).isEmpty();
 
         int random = 30;
@@ -53,8 +59,7 @@ public class RPriestess extends Role{
         else if(!priestessAlive && e.getPlayer().getRole().getType() == RoleType.LOUP_GAROU)
             random = 70;
 
-        if(e.getPlayer().getRole().getType() != RoleType.NEUTRAL &&
-                ThreadLocalRandom.current().nextInt(0, 100) > random)
+        if(ThreadLocalRandom.current().nextInt(0, 100) > random)
             e.setShowedRole(HiddenRole.class);
     }
 

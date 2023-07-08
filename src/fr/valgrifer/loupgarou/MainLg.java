@@ -212,12 +212,12 @@ public class MainLg extends JavaPlugin {
     private void loadRoles() {
         try {
             addRole(RWereWolf.class, getResource("roles/werewolf.png"));
-            addRole(RWereWolfGrimmer.class, getResource("roles/werewolfgrimmer.png"));
+            addRole(RWolfGrimmer.class, getResource("roles/werewolfgrimmer.png"));
             addRole(RBlackWerewolf.class, getResource("roles/blackwerewolf.png"));
             addRole(RGardien.class, getResource("roles/gardien.png"));
             addRole(RWitch.class, getResource("roles/witch.png"));
             addRole(RClairvoyant.class, getResource("roles/clairvoyant.png"));
-            addRole(RWereWolfClairvoyant.class, getResource("roles/werewolfclairvoyant.png"));
+            addRole(RWolfClairvoyant.class, getResource("roles/werewolfclairvoyant.png"));
             addRole(RHunter.class, getResource("roles/hunter.png"));
             addRole(RVillager.class, getResource("roles/villager.png"));
             addRole(RVillagerVillager.class, getResource("roles/villager.png"));

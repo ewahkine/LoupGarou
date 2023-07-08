@@ -25,13 +25,13 @@ public class RAngelV2Fallen extends Role {
 		return RoleType.NEUTRAL;
 	}
     public static RoleWinType _getWinType() {
-		return RoleWinType.NONE;
+		return RoleWinType.SOLO;
 	}
 	public static String _getName() {
 		return RED+BOLD+"Ange Déchu";
 	}
 	public static String _getFriendlyName() {
-		return "de l'"+_getName();
+		return "de l'"+_getScoreBoardName();
 	}
 
     public static String _getScoreBoardName()
@@ -51,7 +51,7 @@ public class RAngelV2Fallen extends Role {
         return "Choisis ton Role";
     }
     public static String _getBroadcastedTask() {
-        return "L'"+_getName()+BLUE+" réfléchit.";
+        return "L'"+_getScoreBoardName()+BLUE+" réfléchit.";
     }
 
     @Override
