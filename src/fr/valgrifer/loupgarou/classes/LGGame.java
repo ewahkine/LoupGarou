@@ -374,7 +374,7 @@ public class LGGame implements Listener{
 		nextNight(10);
 	}
 	public void updateRoleScoreboard() {
-        if(MainLg.getInstance().getConfig().getBoolean("compo_hidden", false))
+        if(MainLg.getInstance().getConfig().getBoolean("compo.hidden", false))
         {
             for(LGPlayer lgp : getInGame())
                 lgp.getScoreboard().getLine(0).setDisplayName(GOLD+"Composition Caché");
@@ -577,8 +577,9 @@ public class LGGame implements Listener{
 		}
 		
 		//Update scoreboard
-		
-		updateRoleScoreboard();
+
+        if(MainLg.getInstance().getConfig().getBoolean("compo.update_on_kill", true))
+		    updateRoleScoreboard();
 		
 		//End update scoreboard
 		

@@ -56,7 +56,7 @@ public class RPriest extends Role{
     private static final Map<LGPlayer, RPriest> playerToRole = new HashMap<>();
     private static final LGInventoryHolder invHolder;
 	static {
-        invHolder = new LGInventoryHolder(1, BLACK+"Veux-tu réssusciter quelqu'un ?");
+        invHolder = new LGInventoryHolder(1, BLACK+"Veux-tu ressusciter quelqu'un ?");
         invHolder.setDefaultPreset(new MenuPreset(invHolder) {
             @Override
             protected void preset() {
@@ -76,7 +76,7 @@ public class RPriest extends Role{
                         }));
                 setSlot(5, new Slot(ItemBuilder.make(Material.ROTTEN_FLESH)
                                 .setCustomId("ac_no")
-                                .setDisplayName(DARK_GREEN+BOLD+"Ressuciter")
+                                .setDisplayName(DARK_GREEN+BOLD+"Ressusciter")
                                 .setLore(DARK_GRAY+"Tu peux ressusciter un "+RoleWinType.VILLAGE.getColoredName(BOLD),
                                         DARK_GRAY+"mort précédemment pendant la partie.")),
                         ((holder, event) -> {
@@ -94,7 +94,7 @@ public class RPriest extends Role{
                             WrapperPlayServerHeldItemSlot held = new WrapperPlayServerHeldItemSlot();
                             held.setSlot(0);
                             held.sendPacket(player);
-                            lgp.sendMessage(GOLD+"Choisissez qui réssusciter.");
+                            lgp.sendMessage(GOLD+"Choisissez qui ressusciter.");
                             lgp.canSelectDead = true;
                             lgp.choose(choosen -> {
                                 if(choosen == null)
@@ -102,17 +102,17 @@ public class RPriest extends Role{
 
                                 if(!choosen.isDead())
                                 {
-                                    lgp.sendMessage(GRAY + "" + BOLD + choosen.getName() + "" + RED + " n'est pas mort.");
+                                    lgp.sendMessage(GRAY + BOLD + choosen.getName() + RED + " n'est pas mort.");
                                     return;
                                 }
                                 else if(lgp.getRoleType() == RoleType.LOUP_GAROU && choosen.getRoleType() == RoleType.NEUTRAL)
                                 {
-                                    lgp.sendMessage(GRAY + "" + BOLD + choosen.getName() + "" + RED + " ne faisait ni partie du " + GREEN + "" + BOLD + "Village" + GOLD + " ni des " + RED + "" + BOLD + "Loups" + GOLD + ".");
+                                    lgp.sendMessage(GRAY + BOLD + choosen.getName() + RED + " ne faisait ni partie du " + GREEN + BOLD + "Village" + GOLD + " ni des " + RED + BOLD + "Loups" + GOLD + ".");
                                     return;
                                 }
                                 else if(lgp.getRoleType() != RoleType.LOUP_GAROU && choosen.getRoleType() != RoleType.VILLAGER)
                                 {
-                                    lgp.sendMessage(GRAY + "" + BOLD + choosen.getName() + "" + RED + " ne faisait pas partie du " + GREEN + "" + BOLD + "Village" + GOLD + ".");
+                                    lgp.sendMessage(GRAY + BOLD + choosen.getName() + RED + " ne faisait pas partie du " + GREEN + BOLD + "Village" + GOLD + ".");
                                     return;
                                 }
 
@@ -140,7 +140,7 @@ public class RPriest extends Role{
                                     return;
                                 }
 
-                                action.getTarget().sendMessage(GOLD+"Tu vas être réssuscité en tant que "+GREEN+BOLD+"Villageois"+GOLD+".");
+                                action.getTarget().sendMessage(GOLD+"Tu vas être ressuscité en tant que "+GREEN+BOLD+"Villageois"+GOLD+".");
                                 role.ressucited.put(action.getTarget(), action.getNewRole());
                                 role.getPlayers().remove(lgp);//Pour éviter qu'il puisse sauver plusieurs personnes.
                                 role.callback.run();
@@ -258,7 +258,7 @@ public class RPriest extends Role{
                 continue;
             }
 
-            if (lgp.getPlayer() != null)
+            if (lgp.getPlayer() == null)
                 continue;
 
             player.getPlayer().showPlayer(MainLg.getInstance(), lgp.getPlayer());
@@ -366,7 +366,9 @@ public class RPriest extends Role{
             lgp.joinChat(getGame().getDayChat());//Pour qu'il ne parle plus dans le chat des morts (et ne le voit plus) et qu'il parle dans le chat des vivants
             VariousUtils.setWarning(lgp.getPlayer(), true);
 
-            getGame().updateRoleScoreboard();
+
+            if(MainLg.getInstance().getConfig().getBoolean("compo.update_on_kill", true))
+                getGame().updateRoleScoreboard();
 
             getGame().broadcastMessage(GRAY+BOLD+lgp.getName()+GOLD+" a été ressuscité cette nuit.", true);
 
