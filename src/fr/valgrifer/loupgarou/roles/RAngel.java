@@ -5,6 +5,7 @@ import java.util.List;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
+import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.classes.LGVoteCause;
 import org.bukkit.event.EventHandler;
 
@@ -72,7 +73,8 @@ public class RAngel extends Role {
 				}
 				
 				getPlayers().clear();
-				getGame().updateRoleScoreboard();
+                if(MainLg.getInstance().getConfig().getBoolean("compo.update_on_kill", true))
+				    getGame().updateRoleScoreboard();
 			}
 			vote = false;
 		}
