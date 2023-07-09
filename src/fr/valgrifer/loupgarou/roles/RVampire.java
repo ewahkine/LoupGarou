@@ -3,6 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import fr.valgrifer.loupgarou.classes.*;
 import fr.valgrifer.loupgarou.events.*;
@@ -17,7 +18,7 @@ import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import lombok.Getter;
 
-public class RVampire extends Role{
+public class RVampire extends Role implements CampTeam {
 
 	public RVampire(LGGame game) {
 		super(game);
@@ -71,6 +72,82 @@ public class RVampire extends Role{
 		for(LGPlayer p : getPlayers())
 			p.updatePrefix();
 	}
+
+    @Getter
+    private final List<LGPlayer> hiddenPlayers = new ArrayList<>();
+    @Getter
+    private final List<LGPlayer> fakePlayers = new ArrayList<>();
+
+    @Override
+    public boolean addHiddenPlayer(LGPlayer player) {
+        if(!getPlayers().contains(player) || hiddenPlayers.contains(player))
+            return false;
+        return hiddenPlayers.add(player);
+    }
+
+    @Override
+    public boolean removeHiddenPlayer(LGPlayer player) {
+        if(!getPlayers().contains(player) || !hiddenPlayers.contains(player))
+            return false;
+        return hiddenPlayers.remove(player);
+    }
+
+    @Override
+    public boolean addAllHiddenPlayer(List<LGPlayer> players) {
+        return hiddenPlayers.addAll(players
+                .stream()
+                .filter(player -> getPlayers().contains(player) && !hiddenPlayers.contains(player))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    @Override
+    public boolean removeAllHiddenPlayer(List<LGPlayer> players) {
+        return hiddenPlayers.removeAll(players
+                .stream()
+                .filter(player -> getPlayers().contains(player) && hiddenPlayers.contains(player))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    @Override
+    public boolean addFakePlayer(LGPlayer player) {
+        if(getPlayers().contains(player) || fakePlayers.contains(player))
+            return false;
+        return fakePlayers.add(player);
+    }
+
+    @Override
+    public boolean removeFakePlayer(LGPlayer player) {
+        if(getPlayers().contains(player) || !fakePlayers.contains(player))
+            return false;
+        return fakePlayers.remove(player);
+    }
+
+    @Override
+    public boolean addAllFakePlayer(List<LGPlayer> players) {
+        return fakePlayers.addAll(players
+                .stream()
+                .filter(player -> !getPlayers().contains(player) && !fakePlayers.contains(player))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    @Override
+    public boolean removeAllFakePlayer(List<LGPlayer> players) {
+        return fakePlayers.removeAll(players
+                .stream()
+                .filter(player -> !getPlayers().contains(player) && fakePlayers.contains(player))
+                .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    @Override
+    public List<LGPlayer> getVisiblePlayers()
+    {
+        List<LGPlayer> players = (List<LGPlayer>) getPlayers().clone();
+
+        players.removeAll(hiddenPlayers);
+        players.addAll(fakePlayers);
+
+        return players;
+    }
 
 	public void onNightTurn(Runnable callback) {
         LGVoteRequestedEvent event = new LGVoteRequestedEvent(getGame(), LGVoteCause.VAMPIRE);
@@ -200,7 +277,7 @@ public class RVampire extends Role{
 /*	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSkinChange(LGSkinLoadEvent e) {
 		if(e.getGame() == getGame())
-			if(getPlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()) && showSkins) {
+			if(getPlayers().contains(e.getPlayer()) && getVisiblePlayers().contains(e.getTo()) && showSkins) {
 				e.getProfile().getProperties().removeAll("textures");
 				e.getProfile().getProperties().put("textures", LGCustomSkin.WEREWOLF.getProperty());
 			}
@@ -216,8 +293,8 @@ public class RVampire extends Role{
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
 		if(e.getGame() == getGame())
-			if(getPlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
-				e.setPrefix(e.getPrefix()+DARK_PURPLE+"");
+			if(getVisiblePlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
+				e.setPrefix(e.getPrefix()+DARK_PURPLE);
 	}
 	
 	@EventHandler
