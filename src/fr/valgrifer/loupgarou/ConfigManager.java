@@ -198,13 +198,11 @@ public class ConfigManager extends LGInventoryHolder
                             }
                         });
 
-                System.out.println("role:" + MainLg.getInstance().getRoles().size());
 
                 MainLg.getInstance().getRoles().stream()
                         .filter(clazz -> !MainLg.getInstance().getNotSelectableRoles().contains(clazz))
                         .forEach(clazz -> {
                     String role = Role.getId(clazz);
-                    System.out.println("role register:" + role);
 
                     registerItem(new Slot(Role.getCard(clazz)) {
                                      @Override
