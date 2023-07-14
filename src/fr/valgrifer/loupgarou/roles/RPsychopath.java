@@ -109,10 +109,10 @@ public class RPsychopath extends Role {
 
                 LGPlayer target = holder.getCache().get(PsychopathPlayerSelectedKey);
 
-                LGRoleActionEvent guessTargetEvent = new LGRoleActionEvent(lgp.getGame(), new GuessTargetAction(target, role), lgp);
+                LGRoleActionEvent guessTargetEvent = new LGRoleActionEvent(lgp.getGame(), new PsychopathTargetAction(target, role), lgp);
                 Bukkit.getPluginManager().callEvent(guessTargetEvent);
 
-                GuessTargetAction action = (GuessTargetAction) guessTargetEvent.getAction();
+                PsychopathTargetAction action = (PsychopathTargetAction) guessTargetEvent.getAction();
 
                 if(action.isForceConsume())
                     lgp.getPlayer().getInventory().setItem(8, null);
@@ -126,8 +126,8 @@ public class RPsychopath extends Role {
 
                 LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(
                         lgr.getGame(),
-                        action.getTarget().getRole() == action.getRole() ? action.getTarget() : lgp,
-                        action.getTarget().getRole() == action.getRole() ? PSYCHOPATH_GOOD : PSYCHOPATH_BAD);
+                        action.isGoodGuess() ? action.getTarget() : lgp,
+                        action.isGoodGuess() ? PSYCHOPATH_GOOD : PSYCHOPATH_BAD);
                 Bukkit.getPluginManager().callEvent(killEvent);
 
                 if(!killEvent.isCancelled())
@@ -296,9 +296,9 @@ public class RPsychopath extends Role {
         }
     }
 
-    public static class GuessTargetAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, AbilityConsume
+    public static class PsychopathTargetAction implements LGRoleActionEvent.RoleAction, TakeTarget, Cancellable, AbilityConsume
     {
-        public GuessTargetAction(LGPlayer target, Role role)
+        public PsychopathTargetAction(LGPlayer target, Role role)
         {
             this.target = target;
             this.role = role;
@@ -308,5 +308,10 @@ public class RPsychopath extends Role {
         @Getter @Setter private boolean forceConsume;
         @Getter @Setter private LGPlayer target;
         @Getter @Setter private Role role;
+
+        public boolean isGoodGuess()
+        {
+            return this.target.getRole() == this.role;
+        }
     }
 }

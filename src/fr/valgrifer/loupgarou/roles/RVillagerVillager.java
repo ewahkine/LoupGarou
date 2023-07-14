@@ -1,6 +1,7 @@
 package fr.valgrifer.loupgarou.roles;
 
 import fr.valgrifer.loupgarou.classes.LGGame;
+import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -41,5 +42,20 @@ public class RVillagerVillager extends Role{
         if(e.getGame() == getGame())
             if(e.getPlayer().getRole() instanceof RVillagerVillager)
                 e.setPrefix(e.getPrefix() + GREEN);
+    }
+
+    @EventHandler
+    public void onTarget(LGRoleActionEvent e) {
+        if(e.getGame() != getGame())
+            return;
+
+        if(!e.isAction(RPsychopath.PsychopathTargetAction.class))
+            return;
+
+        RPsychopath.PsychopathTargetAction action = (RPsychopath.PsychopathTargetAction) e.getAction();
+
+        action.setCancelled(true);
+
+        e.getPlayers().forEach(player -> player.sendMessage(GRAY + "Vous ne pouvez pas tuer ce pauvre " + this.getName()));
     }
 }
