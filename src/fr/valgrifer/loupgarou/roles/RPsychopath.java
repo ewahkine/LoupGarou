@@ -222,7 +222,7 @@ public class RPsychopath extends Role {
         if(event.getHand() != EquipmentSlot.HAND)
             return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_AIR || event.getAction() != Action.RIGHT_CLICK_AIR)
+        if(event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
             return;
 
         LGPlayer player = LGPlayer.thePlayer(event.getPlayer());
