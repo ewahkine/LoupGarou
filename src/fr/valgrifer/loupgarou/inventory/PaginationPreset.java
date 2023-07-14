@@ -1,9 +1,7 @@
 package fr.valgrifer.loupgarou.inventory;
 
-import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 
