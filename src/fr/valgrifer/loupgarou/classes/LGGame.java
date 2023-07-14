@@ -612,7 +612,7 @@ public class LGGame implements Listener{
 		for(LGPlayer lgp : getInGame())//Avoid bugs
 			if(lgp.getPlayer() != null)
             {
-                event.getGame().broadcastMessage(GRAY + "" + (lgp.isDead() ? STRIKETHROUGH : BOLD) + lgp.getName() + BLUE + (lgp.isDead() ? " était " : " est ") + lgp.getRevealRole() + BLUE + ".");
+                event.getGame().broadcastMessage(GRAY + "" + (lgp.isDead() ? STRIKETHROUGH : BOLD) + lgp.getName() + BLUE + (lgp.isDead() ? " était " : " est ") + lgp.getRevealRole(true) + BLUE + ".");
                 lgp.getPlayer().closeInventory();
             }
 		

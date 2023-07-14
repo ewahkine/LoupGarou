@@ -240,7 +240,6 @@ public class RPsychopath extends Role {
         if (inventoryHolder == null)
             player.getCache().set(PsychopathInventoryKey, inventoryHolder = makeInventory(player));
 
-
         ((PaginationMapPreset) inventoryHolder.getPreset("player"))
                 .setObjectList(player.getGame().getAlive().stream()
                     .filter(lgp -> lgp != player)

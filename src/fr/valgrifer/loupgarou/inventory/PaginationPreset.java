@@ -1,7 +1,9 @@
 package fr.valgrifer.loupgarou.inventory;
 
+import fr.valgrifer.loupgarou.MainLg;
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryType;
 
@@ -13,7 +15,7 @@ import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public abstract class PaginationPreset extends MenuPreset
 {
-    private List<Slot> registeredSlots = new ArrayList<>();
+    private List<Slot> registeredSlots;
     public int getSize()
     {
         return registeredSlots.size();
@@ -33,10 +35,11 @@ public abstract class PaginationPreset extends MenuPreset
         if(holder.getMaxSlot() < 18)
             throw new RuntimeException("PaginationPreset need inventory with minimum 18 slots");
 
+        //noinspection DataFlowIssue
         registeredSlots = Collections.unmodifiableList(registeredSlots);
 
         maxPerPage = (holder.getMaxLine()-2)*9;
-        maxPage = (int) Math.ceil((double) registeredSlots.size() / ((holder.getMaxLine()-2)*9));
+        maxPage = Math.max((int) Math.ceil((double) registeredSlots.size() / ((holder.getMaxLine()-2)*9)), 1);
 
         setSlot(3, holder.getMaxLine()-1,
                 new Slot(ItemBuilder.make(Material.ARROW)

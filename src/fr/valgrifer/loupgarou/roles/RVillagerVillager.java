@@ -54,6 +54,9 @@ public class RVillagerVillager extends Role{
 
         RPsychopath.PsychopathTargetAction action = (RPsychopath.PsychopathTargetAction) e.getAction();
 
+        if(action.getTarget().getRole() != this || action.getRole() != this)
+            return;
+
         action.setCancelled(true);
 
         e.getPlayers().forEach(player -> player.sendMessage(GRAY + "Vous ne pouvez pas tuer ce pauvre " + this.getName()));
