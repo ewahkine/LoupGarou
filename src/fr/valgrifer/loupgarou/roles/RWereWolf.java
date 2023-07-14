@@ -239,7 +239,7 @@ public class RWereWolf extends Role implements CampTeam {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSkinChange(LGSkinLoadEvent e) {
 		if(e.getGame() == getGame())
-			if(getVisiblePlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()) && showSkins) {
+            if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()) && showSkins) {
 				e.getProfile().getProperties().removeAll("textures");
 				e.getProfile().getProperties().put("textures", LGCustomSkin.WEREWOLF.getProperty());
 			}
@@ -255,7 +255,7 @@ public class RWereWolf extends Role implements CampTeam {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
 		if(e.getGame() == getGame())
-			if(getVisiblePlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
+			if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()))
 				e.setPrefix(e.getPrefix()+RED);
 	}
 	

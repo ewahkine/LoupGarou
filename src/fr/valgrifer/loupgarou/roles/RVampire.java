@@ -293,7 +293,7 @@ public class RVampire extends Role implements CampTeam {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
 		if(e.getGame() == getGame())
-			if(getVisiblePlayers().contains(e.getTo()) && getPlayers().contains(e.getPlayer()))
+            if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()))
 				e.setPrefix(e.getPrefix()+DARK_PURPLE);
 	}
 	
