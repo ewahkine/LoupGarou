@@ -203,12 +203,11 @@ public class ConfigManager extends LGInventoryHolder
                         .forEach(clazz -> {
                     String role = Role.getId(clazz);
 
-                    registerItem(new Slot(Role.getCard(clazz))
-                                 {
+                    registerItem(new Slot(Role.getCard(clazz)) {
                                      @Override
                                      protected ItemBuilder getItem(LGInventoryHolder holder) {
                                          int count = MainLg.getInstance().getConfig().getInt("role." + role, 0);
-                                         ItemBuilder def =  getDefaultItem();
+                                         ItemBuilder def = getDefaultItem();
                                          if(count == 0)
                                              return def
                                                  .setType(Material.RED_CONCRETE);
@@ -230,7 +229,7 @@ public class ConfigManager extends LGInventoryHolder
                                 MainLg.getInstance().saveConfig();
                                 MainLg.getInstance().loadMaxPlayers();
                                 MainLg.makeNewGame();
-                                apply();
+                                reloadPreset();
                             });
                 });
             }

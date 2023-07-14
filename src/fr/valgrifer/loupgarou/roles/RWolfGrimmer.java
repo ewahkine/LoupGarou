@@ -16,7 +16,7 @@ public class RWolfGrimmer extends Role{
 	}
 
 	public static String _getName() {
-		return RED+BOLD+"Loup Grimmer";
+		return RED+BOLD+"Loup Grimeur";
 	}
 
 	public static String _getFriendlyName() {
@@ -28,7 +28,7 @@ public class RWolfGrimmer extends Role{
 	}
 
 	public static String _getDescription() {
-		return RWereWolf._getDescription()+". Au vote du Village si vous êtes le premier à voter sur le condamné, celui-ci seras indiqué étant un "+RoleType.LOUP_GAROU.getColoredName(BOLD)+WHITE+".";
+		return RWereWolf._getDescription()+". Au vote du Village si vous êtes le premier à voter sur le condamné, celui-ci sera indiqué comme étant un "+RoleType.LOUP_GAROU.getColoredName(BOLD)+WHITE+".";
 	}
 
 	public static String _getTask() {

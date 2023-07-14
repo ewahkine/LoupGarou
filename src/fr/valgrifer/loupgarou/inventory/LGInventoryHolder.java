@@ -48,8 +48,12 @@ public class LGInventoryHolder implements InventoryHolder
         if(!presets.containsKey(name))
             return;
 
-        currentPreset = presets.get(name);
-
+        (currentPreset = presets.get(name)).apply();
+    }
+    public void reloadPreset()
+    {
+        if(currentPreset == null)
+            return;
         currentPreset.apply();
     }
 

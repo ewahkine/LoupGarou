@@ -10,7 +10,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
@@ -43,9 +42,9 @@ public class RAngelV2Fallen extends Role {
 	}
 	public static String _getDescription() {
 		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif. " +
-                "Tu auras une Cible à tuer en "+RED+BOLD+"Ange Déchu"+WHITE+". " +
+                "Tu auras une cible à tuer en "+RED+BOLD+"Ange Déchu"+WHITE+". " +
                 "Vous aurez une vie supplémentaire contre les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pour réussir votre mission. " +
-                "En "+RED+BOLD+"Ange Déchu"+WHITE+", ton objectif est de tué ta Cible, Pour cela tu devras être le premier à le voté durant le vote du "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+".";
+                "En "+RED+BOLD+"Ange Déchu"+WHITE+", ton objectif est de tuer ta cible, pour cela tu devras être le premier à la voter durant le vote du "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+".";
 	}
     public static String _getTask() {
         return "Choisis ton Role";

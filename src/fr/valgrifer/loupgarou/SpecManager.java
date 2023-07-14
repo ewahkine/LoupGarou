@@ -47,7 +47,7 @@ public class SpecManager extends LGInventoryHolder
             inGame = lgp -> ItemBuilder
                     .make(Material.PLAYER_HEAD)
                     .setSkull(lgp.getPlayer())
-                    .setDisplayName((lgp.isDead() ? GRAY + "" + STRIKETHROUGH : WHITE + "" + BOLD) + lgp.getName())
+                    .setDisplayName((lgp.isDead() ? GRAY + STRIKETHROUGH : WHITE + BOLD) + lgp.getName())
                     .setLore(GRAY + (lgp.isDead() ? "étais" : "est"), lgp.getRevealRole())
                     .build();
         }

@@ -61,11 +61,14 @@ public class LGPlayer {
 	@Getter @Setter private String latestObjective;
 	@Getter private CustomScoreboard scoreboard;
     @Getter @Setter boolean roleActive = true;
+    @Getter boolean fakePlayer;
 	public LGPlayer(Player player) {
 		this.player = player;
+        this.fakePlayer = false;
 	}
 	public LGPlayer(String name) {
 		this.name = name;
+        this.fakePlayer = true;
 	}
 	
 	public void setScoreboard(CustomScoreboard scoreboard) {

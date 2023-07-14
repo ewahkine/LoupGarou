@@ -56,7 +56,7 @@ public class DebugCard extends LGInventoryHolder
                         LGCardItems.getVariantMappings().forEach(variant ->
                                 registerItem(
                                     new Slot(ResourcePack.getItem(String.format("card_%s_%s", Role.getId(role), variant))
-                                        .addLore("", RESET + "" + WHITE + variant)
+                                        .addLore("", RESET + WHITE + variant)
                                         .setCustomId("card")
                                 ))));
 

@@ -33,7 +33,7 @@ public class LGCardItems {
 
     public static void registerCardTexture(String id, InputStream texture)
     {
-        ResourcePack.addFile("textures/card/roles/" + id + ".png", texture);
+        ResourcePack.addFile("textures/item/card/roles/" + id + ".png", texture);
     }
 
     private static final JSONParser parser = new JSONParser();
@@ -44,11 +44,11 @@ public class LGCardItems {
         registerVariants(new CardModifier(), -1);
         Constraint.getValues().forEach(constraint ->
                 ResourcePack.addFile(
-                        "textures/card/overlays/" + constraint.getName() + ".png",
+                        "textures/item/card/overlays/" + constraint.getName() + ".png",
                         main.getResource("overlays/" + constraint.getName() + ".png"), true));
 
         ResourcePack.addFile(
-                "textures/card/empty.png",
+                "textures/item/card/empty.png",
                 main.getResource("empty.png"), true);
 
         ResourcePack.addFile(
@@ -56,7 +56,7 @@ public class LGCardItems {
                 main.getResource("models/role.json"), true);
 
         JSONObject uniqueCard = new JSONObject();
-        uniqueCard.put("parent", "lg:item/models/role");
+        uniqueCard.put("parent", "minecraft:item/models/role");
         JSONObject textures;
         uniqueCard.put("textures", textures = new JSONObject());
 
@@ -90,14 +90,14 @@ public class LGCardItems {
             {
                 String roleId = Role.getId(role);
                 finalTextures.clear();
-                finalTextures.put("role", String.format("lg:card/roles/%s", roleId));
+                finalTextures.put("role", String.format("minecraft:item/card/roles/%s", roleId));
 
                 CardModifier.fromKey(variant)
                         .constraintsMap
                         .forEach((slot, constraint) ->
                                 finalTextures.put(
                                         slot.getName(),
-                                        String.format("lg:card/overlays/%s", constraint.getName())));
+                                        String.format("minecraft:item/card/overlays/%s", constraint.getName())));
 
                 String path = String.format("models/item/%s/%s.json", roleId, variant);
                 ResourcePack.addFile(

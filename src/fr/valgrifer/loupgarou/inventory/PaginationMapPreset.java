@@ -2,41 +2,40 @@ package fr.valgrifer.loupgarou.inventory;
 
 import fr.valgrifer.loupgarou.utils.VariousUtils;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.GOLD;
+import static fr.valgrifer.loupgarou.utils.ChatColorQuick.GRAY;
 
-public abstract class PaginationPreset extends MenuPreset
+public abstract class PaginationMapPreset<T> extends MenuPreset
 {
-    private List<Slot> registeredSlots = new ArrayList<>();
+    @Getter @Setter
+    private List<T> objectList = new ArrayList<>();
     public int getSize()
     {
-        return registeredSlots.size();
+        return objectList.size();
     }
 
     @Getter
-    private final int maxPerPage;
+    private int maxPerPage;
     @Getter
-    private final int maxPage;
+    private int maxPage;
 
-    public PaginationPreset(LGInventoryHolder holder)
+
+    public PaginationMapPreset(LGInventoryHolder holder)
     {
         super(holder);
 
         if(holder.getInventory().getType() != InventoryType.CHEST)
             throw new RuntimeException("PaginationPreset need `InventoryType.CHEST`");
         if(holder.getMaxSlot() < 18)
-            throw new RuntimeException("PaginationPreset need inventory with minimum 18 slots");
-
-        registeredSlots = Collections.unmodifiableList(registeredSlots);
-
-        maxPerPage = (holder.getMaxLine()-2)*9;
-        maxPage = (int) Math.ceil((double) registeredSlots.size() / ((holder.getMaxLine()-2)*9));
+            throw new RuntimeException("PaginationMapPreset need inventory with minimum 18 slots");
 
         setSlot(3, holder.getMaxLine()-1,
                 new Slot(ItemBuilder.make(Material.ARROW)
@@ -83,41 +82,62 @@ public abstract class PaginationPreset extends MenuPreset
 
     protected abstract Slot makeInfoButtonIcon();
 
-    protected void registerItem(Slot slot)
-    {
-        registerItem(slot, null);
-    }
-    protected void registerItem(Slot item, ClickAction action)
-    {
-        if (registeredSlots == null)
-            registeredSlots = new ArrayList<>();
-        try {
-            this.registeredSlots.add(item);
+    protected abstract ItemBuilder mapList(T obj);
 
-            String customId = item.getDefaultItem().getCustomId();
-            if(customId != null && action != null)
-                putAction(customId, action);
-        }
-        catch (UnsupportedOperationException ignored)
-        {}
-    }
-
+    protected abstract void itemAction(LGInventoryHolder holder, InventoryClickEvent event, T obj);
 
     public void apply()
     {
         if(getHolder() == null)
             return;
 
+        maxPerPage = (getHolder().getMaxLine()-2)*9;
+        maxPage = (int) Math.ceil((double) objectList.size() / ((getHolder().getMaxLine()-2)*9));
+
+        ItemBuilder[] contentBuilder = new ItemBuilder[getHolder().getMaxSlot()];
+
         int pageIndex = getPageIndex();
 
         int i = 0,
                 offset = getMaxPerPage() * pageIndex,
-                to = Math.min(getMaxPerPage(), registeredSlots.size() - offset);
-        for(; i < to; i++)
-            content[i] = registeredSlots.get(i + offset);
+                to = Math.min(getMaxPerPage(), objectList.size() - offset);
+        for(; i < to; i++) {
+            T obj = objectList.get(i + offset);
+            contentBuilder[i] = mapList(obj);
+            putAction(contentBuilder[i].getCustomId(), (holder, event) -> this.itemAction(holder, event, obj));
+        }
         for(; i < getMaxPerPage(); i++)
-            content[i] = null;
+            contentBuilder[i] = null;
+        for(; i < getHolder().getMaxSlot(); i++)
+        {
+            Slot slot = content[i];
+            try {
+                if (slot == null)
+                {
+                    contentBuilder[i] = null;
+                    continue;
+                }
+                contentBuilder[i] = slot.getItem(getHolder());
+            } catch (Exception e) {
+                e.printStackTrace();
+                contentBuilder[i] = null;
+            }
+        }
 
-        super.apply();
+        getHolder().getInventory().setContents(
+                Arrays.stream(contentBuilder)
+                        .map(builder -> {
+                            try {
+                                if(builder == null)
+                                    return null;
+                                return builder.build();
+                            }
+                            catch (Exception e)
+                            {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        })
+                        .toArray(ItemStack[]::new));
     }
 }

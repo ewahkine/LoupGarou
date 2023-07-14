@@ -35,9 +35,9 @@ public class RAngelV2 extends Role {
             setSlot(2, new MenuPreset.Slot(ItemBuilder.make(Material.TOTEM_OF_UNDYING)
                             .setCustomId("ac_guardian")
                             .setDisplayName(YELLOW+BOLD+"Ange Gardian")
-                            .setLore(DARK_GRAY+"Vous devrez protéger votre Cible,",
-                                    DARK_GRAY+"Vous disposerais de 2 protections",
-                                    DARK_GRAY+"à lui appliquer pour le protéger.")),
+                            .setLore(DARK_GRAY+"Vous devrez protéger votre cible,",
+                                    DARK_GRAY+"Vous disposerez de 2 protections",
+                                    DARK_GRAY+"Pour le garder en vie.")),
                     ((holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
                             return;
@@ -54,8 +54,8 @@ public class RAngelV2 extends Role {
                         fallen.join(lgp);
 
                         role.closeInventory(lgp);
-                        lgp.sendActionBarMessage(BLUE+BOLD+"Tu devras protéger ta cible");
-                        lgp.sendMessage(GOLD+"Tu as choisis "+YELLOW+BOLD+"Ange Gardian"+GOLD+".");
+                        lgp.sendActionBarMessage(BLUE+BOLD+"Tu devras garder ton protégé");
+                        lgp.sendMessage(GOLD+"Tu as choisi "+YELLOW+BOLD+"Ange Gardian"+GOLD+".");
                         lgp.hideView();
                         role.callback.run();
                     }));
@@ -79,8 +79,8 @@ public class RAngelV2 extends Role {
             setSlot(6, new MenuPreset.Slot(ItemBuilder.make(Material.NETHERITE_SWORD)
                             .setCustomId("ac_fallen")
                             .setDisplayName(RED+BOLD+"Ange Déchu")
-                            .setLore(DARK_GRAY+"Vous devrez faire tuer votre Cible,",
-                                    DARK_GRAY+"par le vote du "+RoleType.VILLAGER.getColoredName(BOLD)+DARK_GRAY+" en étant le premier vote",
+                            .setLore(DARK_GRAY+"Vous devrez faire tuer votre cible,",
+                                    DARK_GRAY+"Par le vote du "+RoleType.VILLAGER.getColoredName(BOLD)+DARK_GRAY+" en étant le premier vote",
                                     DARK_GRAY+"Pour gagner en fin de partie")),
                     ((holder, event) -> {
                         if(!(holder instanceof LGPrivateInventoryHolder))
@@ -99,7 +99,7 @@ public class RAngelV2 extends Role {
 
                         role.closeInventory(lgp);
                         lgp.sendActionBarMessage(BLUE+BOLD+"Tu devras tué ta cible");
-                        lgp.sendMessage(GOLD+"Tu as choisis "+RED+BOLD+"Ange Déchu"+GOLD+".");
+                        lgp.sendMessage(GOLD+"Tu as choisi "+RED+BOLD+"Ange Déchu"+GOLD+".");
                         lgp.hideView();
                         role.callback.run();
                     }));
@@ -130,11 +130,11 @@ public class RAngelV2 extends Role {
 		return WHITE+"Tu gagnes si tu remplis ton objectif";
 	}
 	public static String _getDescription() {
-		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif en fonction de ce que tu as choisis. " +
-                "Tu auras une Cible à protéger en "+YELLOW+BOLD+"Ange Gardien"+WHITE+" ou à tuer en "+RED+BOLD+"Ange Déchu"+WHITE+". " +
+		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif en fonction de ce que tu as choisi. " +
+                "Tu auras une cible à protéger en "+YELLOW+BOLD+"Ange Gardien"+WHITE+" ou à tuer en "+RED+BOLD+"Ange Déchu"+WHITE+". " +
                 "Vous aurez une vie supplémentaire contre les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pour réussir votre mission. " +
-                "En "+YELLOW+BOLD+"Ange Gardien"+WHITE+", ton objectif est de protéger ta Cible, Pour cela tu pourras le protéger jusqu'à 2x durant la partie. " +
-                "En "+RED+BOLD+"Ange Déchu"+WHITE+", ton objectif est de tué ta Cible, Pour cela tu devras être le premier à le voté durant le vote du "+RoleWinType.VILLAGE.getColoredName(BOLD)+WHITE+".";
+                "En "+YELLOW+BOLD+"Ange Gardien"+WHITE+", ton objectif est de protéger ta cible, pour cela tu pourras le protéger jusqu'à 2x durant la partie. " +
+                "En "+RED+BOLD+"Ange Déchu"+WHITE+", ton objectif est de tuer ta cible, pour cela tu devras être le premier à la voter durant le vote du "+RoleWinType.VILLAGE.getColoredName(BOLD)+WHITE+".";
 	}
 	public static String _getTask() {
 		return "Choisis ton Role";
@@ -185,12 +185,12 @@ public class RAngelV2 extends Role {
 
         if(!target.isPresent())
         {
-            player.sendMessage(DARK_RED + "Une Erreur c'est produit, vous resterez Ange sans pouvoir gagné");
+            player.sendMessage(DARK_RED + "Une erreur s'est produite, vous resterez Ange sans pouvoir gagner");
             callback.run();
             return;
         }
 
-        target.get().sendMessage(AQUA + "Vous êtes la cible de l'ange, attention à vous, il peux être agressif comme protecteur.");
+        target.get().sendMessage(AQUA + "Attention à vous, vous êtes la cible de l'ange, il peut être agressif comme protecteur.");
 
         player.showView();
         this.callback = callback;
@@ -250,7 +250,7 @@ public class RAngelV2 extends Role {
         getGame().getAlive(lgPlayer -> lgPlayer.getCache().getBoolean(SavedKey))
                 .forEach(lgPlayer -> {
                     lgPlayer.getCache().remove(SavedKey);
-                    lgPlayer.sendMessage(BLUE+"Votre vie à étais consumer cette nuit, vous devrez être plus vigilant à partir de maintenant.");
+                    lgPlayer.sendMessage(BLUE+"Votre vie a été consumée cette nuit, vous devrez être plus vigilant à partir de maintenant.");
                 });
     }
 

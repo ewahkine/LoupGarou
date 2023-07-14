@@ -183,8 +183,10 @@ public class LGVote {
         };
 	}
 	public void vote(LGPlayer voter, LGPlayer voted) {
+        if(!participants.contains(voter) && !voter.isFakePlayer())
+            return;
 		if(blacklisted.contains(voted)) {
-			voter.sendMessage(RED+"Vous ne pouvez pas votre pour "+GRAY+BOLD+voted.getName()+RED+".");
+			voter.sendMessage(RED+"Vous ne pouvez pas voter pour "+GRAY+BOLD+voted.getName()+RED+".");
 			return;
 		}
 		if(voted == voter.getCache().get("vote"))

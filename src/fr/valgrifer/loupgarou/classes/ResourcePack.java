@@ -26,6 +26,7 @@ public class ResourcePack
     private static final Map<Material, Map<ItemBuilder, String>> customItems = new HashMap<>();
 
 
+    @SuppressWarnings("UnusedReturnValue")
     public static ItemBuilder addItem(ItemBuilder item, InputStream texture)
     {
         return addItem(item, texture, null);
@@ -65,7 +66,7 @@ public class ResourcePack
             base.put("parent", "minecraft:item/generated");
             JSONObject textures;
             base.put("textures", textures = new JSONObject());
-            textures.put("layer0", "lg:" + texturePath);
+            textures.put("layer0", "minecraft:" + texturePath);
 
             ResourcePack.addFile("models/" + model + ".json", VariousUtils.jsonToStream(base), true);
         }
@@ -150,7 +151,7 @@ public class ResourcePack
                 try
                 {
                     if (!key.startsWith("assets/"))
-                        addStream("assets/lg/" + key, value);
+                        addStream("assets/minecraft/" + key, value);
                     else
                         addStream(key, value);
                 }
@@ -181,7 +182,7 @@ public class ResourcePack
                     JSONObject predicate = new JSONObject();
                     predicate.put("custom_model_data", item.getCustomModelData());
                     override.put("predicate", predicate);
-                    override.put("model", String.format("lg:%s", modelPath));
+                    override.put("model", String.format("minecraft:%s", modelPath));
                     overrides.add(override);
                 }
 

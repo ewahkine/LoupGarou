@@ -1,11 +1,11 @@
 {
 	"textures": {
-		"role": "lg:card/empty",
-		"rip": "lg:card/empty",
-		"top_left": "lg:card/empty",
-		"top_right": "lg:card/empty",
-		"bottom_left": "lg:card/empty",
-		"bottom_right": "lg:card/empty"
+		"role": "minecraft:item/card/empty",
+		"rip": "minecraft:item/card/empty",
+		"top_left": "minecraft:item/card/empty",
+		"top_right": "minecraft:item/card/empty",
+		"bottom_left": "minecraft:item/card/empty",
+		"bottom_right": "minecraft:item/card/empty"
 	},
 	"elements": [
 		{

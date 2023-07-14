@@ -54,11 +54,11 @@ public class RHunter extends Role{
 		getGame().wait(getTimeout(), ()->{
 			this.onNightTurnTimeout(player);
 			callback.run();
-		}, (currentPlayer, secondsLeft)-> currentPlayer == player ? BLUE+BOLD+"C'est à ton tour !" : GOLD+"Le Chasseur choisit sa cible ("+YELLOW+secondsLeft+" s"+GOLD+")");
+		}, (currentPlayer, secondsLeft) -> currentPlayer == player ? BLUE+BOLD+"C'est à ton tour !" : GOLD+"Le Chasseur choisit sa cible ("+YELLOW+secondsLeft+" s"+GOLD+")");
 		getGame().broadcastMessage(BLUE+getBroadcastedTask(), true);
 		player.sendMessage(GOLD+getTask());
 		//player.sendTitle(GOLD+"C'est à vous de jouer", GREEN+getTask(), 60);
-		player.choose((choosen)->{
+		player.choose((choosen) -> {
 			if(choosen == null)
                 return;
 

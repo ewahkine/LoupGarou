@@ -145,7 +145,10 @@ public class MainLg extends JavaPlugin {
             }
             LGPlayer lgp = LGPlayer.thePlayer((Player) sender);
 
-            boolean canOpen = lgp.getGame() == null || !lgp.getGame().isStarted() || (lgp.getGame().isStarted() && lgp.isDead());
+            if(lgp.getGame() == null)
+                return true;
+
+            @SuppressWarnings("ConstantValue") boolean canOpen = !lgp.getGame().isStarted() || lgp.getGame().isStarted() && lgp.isDead();
 
             for (Role rl : lgp.getGame().getRoles())
                 if(blacklistRoleSpec.contains(rl.getClass()))
@@ -249,6 +252,7 @@ public class MainLg extends JavaPlugin {
             addRole(RBearShowman.class, getResource("roles/bearshowman.png"));
             addRole(RVampire.class, getResource("roles/vampire.png"));
             addRole(RVampireHunter.class, getResource("roles/vampirehunter.png"));
+            addRole(RPsychopath.class, getResource("roles/psychopath.png"));
 
             addBlackListSpecRole(RMedium.class);
             addBlackListSpecRole(RPriest.class);

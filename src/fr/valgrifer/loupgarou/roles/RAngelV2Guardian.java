@@ -141,9 +141,9 @@ public class RAngelV2Guardian extends Role {
 	}
 	public static String _getDescription() {
 		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif. " +
-                "Tu auras une Cible à protéger en "+YELLOW+BOLD+"Ange Gardien"+WHITE+". " +
+                "Tu auras une cible à protéger en "+YELLOW+BOLD+"Ange Gardien"+WHITE+". " +
                 "Vous aurez une vie supplémentaire contre les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+" pour réussir votre mission. " +
-                "En "+YELLOW+BOLD+"Ange Gardien"+WHITE+", ton objectif est de protéger ta Cible, Pour cela tu pourras le protéger jusqu'à 2x durant la partie.";
+                "En "+YELLOW+BOLD+"Ange Gardien"+WHITE+", ton objectif est de garder en vie ton protégé, pour cela tu pourras le protéger jusqu'à 2x durant la partie.";
 	}
     public static String _getTask() {
         return "Choisis ton Role";

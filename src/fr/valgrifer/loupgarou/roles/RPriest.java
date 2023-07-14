@@ -75,7 +75,7 @@ public class RPriest extends Role{
                             role.callback.run();
                         }));
                 setSlot(5, new Slot(ItemBuilder.make(Material.ROTTEN_FLESH)
-                                .setCustomId("ac_no")
+                                .setCustomId("ac_yes")
                                 .setDisplayName(DARK_GREEN+BOLD+"Ressusciter")
                                 .setLore(DARK_GRAY+"Tu peux ressusciter un "+RoleWinType.VILLAGE.getColoredName(BOLD),
                                         DARK_GRAY+"mort précédemment pendant la partie.")),
