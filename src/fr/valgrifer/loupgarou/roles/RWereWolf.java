@@ -9,10 +9,11 @@ import fr.valgrifer.loupgarou.classes.*;
 import fr.valgrifer.loupgarou.events.*;
 import org.bukkit.Bukkit;
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import fr.valgrifer.loupgarou.classes.chat.LGChat;
 import fr.valgrifer.loupgarou.events.LGPlayerKilledEvent.Reason;
 import lombok.Getter;
@@ -224,18 +225,6 @@ public class RWereWolf extends Role implements CampTeam {
 				player.sendMessage(GOLD+"Personne n'a été désigné pour mourir.");
 	}
 	
-	@EventHandler
-	public void onGameJoin(LGGameEndEvent e) {
-		if(e.getGame() == getGame()) {
-			WrapperPlayServerScoreboardTeam teamDelete = new WrapperPlayServerScoreboardTeam();
-			teamDelete.setMode(1);
-			teamDelete.setName("loup_garou_list");
-			
-			for(LGPlayer lgp : getGame().getInGame())
-				teamDelete.sendPacket(lgp.getPlayer());
-		}
-	}
-	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onSkinChange(LGSkinLoadEvent e) {
 		if(e.getGame() == getGame())
@@ -244,6 +233,14 @@ public class RWereWolf extends Role implements CampTeam {
 				e.getProfile().getProperties().put("textures", LGCustomSkin.WEREWOLF.getProperty());
 			}
 	}
+
+    @EventHandler
+    public void onUpdatePrefix (LGUpdatePrefixEvent e) {
+//        System.out.printf("player: '%s', to: '%s', players contains: '%s', visible contains: '%s'%n", e.getPlayer().getName(), e.getTo().getName(), getVisiblePlayers().contains(e.getPlayer()), getPlayers().contains(e.getTo()));
+        if(e.getGame() == getGame())
+            if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()))
+                e.setColorName(ChatColor.RED);
+    }
 	@EventHandler
 	public void onGameEnd(LGGameEndEvent e) {
 		if(e.getGame() == getGame() && e.getWinType() == LGWinType.LOUPGAROU)
@@ -252,15 +249,8 @@ public class RWereWolf extends Role implements CampTeam {
 					e.getWinners().add(lgp);
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
-		if(e.getGame() == getGame())
-			if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()))
-				e.setPrefix(e.getPrefix()+RED);
-	}
-	
 	@EventHandler
-	public void onDay(LGNightEndEvent e) {
+	public void onDay(LGPreNightEndEvent e) {
 		if(e.getGame() == getGame()) {
 			showSkins = false;
 			for(LGPlayer player : getVisiblePlayers())

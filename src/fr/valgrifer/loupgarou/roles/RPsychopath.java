@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
 public class RPsychopath extends Role {
+    public static final String LifeKey = "psychopath_life";
+    public static final String SavedKey = "psychopath_saved";
 
     private static final String PsychopathInventoryKey = "psychopath_inventory";
     private static final String PsychopathPlayerSelectedKey = "psychopath_player_selected";
@@ -123,7 +125,6 @@ public class RPsychopath extends Role {
                     return;
                 }
 
-
                 LGPlayerKilledEvent killEvent = new LGPlayerKilledEvent(
                         lgr.getGame(),
                         action.isGoodGuess() ? action.getTarget() : lgp,
@@ -132,7 +133,7 @@ public class RPsychopath extends Role {
 
                 if(!killEvent.isCancelled())
                 {
-                    lgp.getGame().kill(target, killEvent.getReason(), true);
+                    lgp.getGame().kill(killEvent.getKilled(), killEvent.getReason(), true);
 
                     lgr.vote.getParticipants().remove(killEvent.getKilled());
                     lgr.vote.getVotes().remove(killEvent.getKilled());
@@ -150,7 +151,7 @@ public class RPsychopath extends Role {
         inventoryHolder.savePreset("player", playerPreset);
         inventoryHolder.savePreset("role", rolePreset);
 
-        playerPreset.setObjectList(player.getGame().getAlive().stream()
+        playerPreset.setObjectList(player.getGame().getInGame().stream()
                 .filter(lgp -> lgp != player)
                 .collect(Collectors.toCollection(ArrayList::new)));
 
@@ -195,12 +196,24 @@ public class RPsychopath extends Role {
         return "";
     }
 
+    @Override
+    public void join(LGPlayer player) {
+        super.join(player);
+        player.getCache().set(LifeKey, 1);
+    }
+
 
 
     @EventHandler
     public void onDay(LGDayStartEvent event) {
         if(event.getGame() != getGame())
             return;
+
+        getGame().getAlive(lgPlayer -> lgPlayer.getCache().getBoolean(SavedKey))
+                .forEach(lgPlayer -> {
+                    lgPlayer.getCache().remove(SavedKey);
+                    lgPlayer.sendMessage(BLUE+"Votre vie a été consumée cette nuit, vous devrez être plus vigilant à partir de maintenant.");
+                });
 
         getPlayers().forEach(player -> player.getPlayer().getInventory().setItem(8, PsychopathItem));
     }
@@ -292,6 +305,27 @@ public class RPsychopath extends Role {
         if(e.getWinType() == PSYCHOPATH) {
             e.getWinners().clear();
             e.getWinners().addAll(getPlayers());
+        }
+    }
+
+
+    @EventHandler
+    public void onPlayerKill(LGNightPlayerPreKilledEvent e)
+    {
+        if(e.getGame() != getGame())
+            return;
+
+        if(!e.isCancelled() &&
+                (e.getReason() == LGPlayerKilledEvent.Reason.LOUP_GAROU ||
+                        e.getReason() == LGPlayerKilledEvent.Reason.LOUP_BLANC ||
+                        e.getReason() == LGPlayerKilledEvent.Reason.GM_LOUP_GAROU ||
+                        e.getReason() == LGPlayerKilledEvent.Reason.ASSASSIN) &&
+                e.getKilled().getCache().get(LifeKey, 0) > 0 &&
+                e.getKilled().isRoleActive())
+        {
+            e.setCancelled(true);
+            e.getKilled().getCache().set(LifeKey, e.getKilled().getCache().<Integer>get(LifeKey)-1);
+            e.getKilled().getCache().set(SavedKey, true);
         }
     }
 

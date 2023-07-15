@@ -37,7 +37,6 @@ import com.comphenix.packetwrapper.WrapperPlayServerChat;
 import com.comphenix.packetwrapper.WrapperPlayServerEntityDestroy;
 import com.comphenix.packetwrapper.WrapperPlayServerExperience;
 import com.comphenix.packetwrapper.WrapperPlayServerPlayerInfo;
-import com.comphenix.packetwrapper.WrapperPlayServerScoreboardObjective;
 import com.comphenix.packetwrapper.WrapperPlayServerScoreboardTeam;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateHealth;
 import com.comphenix.packetwrapper.WrapperPlayServerUpdateTime;
@@ -232,12 +231,6 @@ public class LGGame implements Listener{
 			player.setGameMode(GameMode.ADVENTURE);
 			broadcastMessage(GRAY+"Le joueur "+DARK_GRAY+lgp.getName()+GRAY+" a rejoint la partie "+BLUE+"("+DARK_GRAY+inGame.size()+GRAY+"/"+DARK_GRAY+maxPlayers+BLUE+")", true);
 			
-			//Reset scoreboard
-			WrapperPlayServerScoreboardObjective obj = new WrapperPlayServerScoreboardObjective();
-			obj.setName("lg_scoreboard");
-			obj.setMode(1);
-			obj.sendPacket(player);
-			
 			Bukkit.getPluginManager().callEvent(new LGGameJoinEvent(this, lgp));
 			//AutoStart
 			if(autoStart)
@@ -352,7 +345,9 @@ public class LGGame implements Listener{
 		ArrayList<LGPlayer> toGive = (ArrayList<LGPlayer>) inGame.clone();
 		started = false;
 
-		for(Role role : new ArrayList<>(getRoles()))
+		for(Role role : getRoles().stream()
+                .sorted((o1, o2) -> (o2 instanceof CampTeam ? 1 : 0) - (o1 instanceof CampTeam ? 1 : 0))
+                .collect(Collectors.toCollection(ArrayList::new)))
         {
             while (role.getWaitedPlayers() > 0) {
                 int randomized = random.nextInt(toGive.size());
@@ -577,17 +572,10 @@ public class LGGame implements Listener{
 		}
 		
 		//Update scoreboard
-
         if(MainLg.getInstance().getConfig().getBoolean("compo.update_on_kill", true))
 		    updateRoleScoreboard();
-		
-		//End update scoreboard
-		
-		if(!checkEndGame(false))
-			return false;
-		if(endGame)
-			checkEndGame();
-		return true;
+
+		return checkEndGame(endGame);
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -671,7 +659,7 @@ public class LGGame implements Listener{
 			if(lgp.getPlayer().isOnline()) {
 				LGPlayer.removePlayer(lgp.getPlayer());
 				WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
-				team.setMode(1);
+				team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED);
 				team.setName("you_are");
 				team.sendPacket(lgp.getPlayer());
                 lgp = LGPlayer.thePlayer(lgp.getPlayer());
@@ -685,73 +673,93 @@ public class LGGame implements Listener{
 	}
 	public void endNight() {
 		if(ended)return;
-		broadcastSpacer();
-		broadcastMessage(BLUE+"----------- "+BOLD+"Jour n°"+night+BLUE+" -----------", true);
-		broadcastMessage(DARK_GRAY+ITALIC+"Le jour se lève sur le village...");
-		
-		for(LGPlayer p : getInGame()) {
-			p.stopAudio(LGSound.AMBIENT_NIGHT);
-			p.playAudio(LGSound.START_DAY, 0.5);
-			p.playAudio(LGSound.AMBIENT_DAY, 0.07);
-		}
-		
-		LGNightEndEvent eventNightEnd = new LGNightEndEvent(this);
-		Bukkit.getPluginManager().callEvent(eventNightEnd);
-		if(eventNightEnd.isCancelled())
-			return;
-		
-		int died = 0;
-		boolean endGame = false;
-		
-		
-		for(Entry<Reason, LGPlayer> entry : deaths.entrySet()) {
-			if(entry.getKey() == Reason.DONT_DIE)
-				continue;
-			if(entry.getValue().isDead())//On ne fait pas mourir quelqu'un qui est déjà mort (résout le problème du dictateur tué par le chasseur)
-				continue;
-			if(entry.getValue().getPlayer() != null) {//S'il a deco bah au moins ça crash pas hehe
-				LGPlayerKilledEvent event = new LGPlayerKilledEvent(this, entry.getValue(), entry.getKey());
-				Bukkit.getPluginManager().callEvent(event);
-				if(!event.isCancelled()) {
-					endGame |= kill(event.getKilled(), event.getReason(), false);
-					died++;
-				}
-			}
-		}
-		deaths.clear();
-		if(died == 0)
-			broadcastMessage(BLUE+"Étonnamment, personne n'est mort cette nuit.");
 
-		day = true;
-		for(LGPlayer player : getInGame())
-			player.showView();
+        for(LGPlayer player : getInGame())
+        {
+            player.updatePrefix();
+            Bukkit.getScheduler().runTaskLater(MainLg.getInstance(), () -> player.hideView(), 20L);
+        }
 
-		
-		new BukkitRunnable() {
-			int timeoutLeft = 20;
-			@Override
-			public void run() {
-				if(timeoutLeft++ > 20) {
-					if(timeoutLeft == 20+(2*20))
-						cancel();
-					WrapperPlayServerUpdateTime time = new WrapperPlayServerUpdateTime();
-					time.setAgeOfTheWorld(0);
-					time.setTimeOfDay(LGGame.this.time = (long)(18000-(timeoutLeft-20D)/(20*2D)*12000D));
-					for(LGPlayer lgp : getInGame())
-						time.sendPacket(lgp.getPlayer());
-				}
-			}
-		}.runTaskTimer(MainLg.getInstance(), 1, 1);
-		
-		LGPreDayStartEvent dayStart = new LGPreDayStartEvent(this);
-		Bukkit.getPluginManager().callEvent(dayStart);
-		if(dayStart.isCancelled())
+        LGPreNightEndEvent eventPreNightEnd = new LGPreNightEndEvent(this);
+        Bukkit.getPluginManager().callEvent(eventPreNightEnd);
+        if(eventPreNightEnd.isCancelled())
             return;
 
-        if(endGame)
-            checkEndGame();
-        else
-            startDay();
+        wait(2, () -> {
+            broadcastSpacer();
+            broadcastMessage(BLUE+"----------- "+BOLD+"Jour n°"+night+BLUE+" -----------", true);
+            broadcastMessage(DARK_GRAY+ITALIC+"Le jour se lève sur le village...");
+
+            for(LGPlayer p : getInGame()) {
+                p.stopAudio(LGSound.AMBIENT_NIGHT);
+                p.playAudio(LGSound.START_DAY, 0.5);
+                p.playAudio(LGSound.AMBIENT_DAY, 0.07);
+            }
+
+            LGNightEndEvent eventNightEnd = new LGNightEndEvent(this);
+            Bukkit.getPluginManager().callEvent(eventNightEnd);
+            if(eventNightEnd.isCancelled())
+                return;
+
+            int died = 0;
+            boolean endGame = false;
+
+            for(Entry<Reason, LGPlayer> entry : deaths.entrySet()) {
+                if(entry.getKey() == Reason.DONT_DIE)
+                    continue;
+                if(entry.getValue().isDead())//On ne fait pas mourir quelqu'un qui est déjà mort (résout le problème du dictateur tué par le chasseur)
+                    continue;
+                if(entry.getValue().getPlayer() != null) {//S'il a deco bah au moins ça crash pas hehe
+                    LGPlayerKilledEvent event = new LGPlayerKilledEvent(this, entry.getValue(), entry.getKey());
+                    Bukkit.getPluginManager().callEvent(event);
+                    if(!event.isCancelled()) {
+                        endGame |= kill(event.getKilled(), event.getReason(), false);
+                        died++;
+                    }
+                }
+            }
+            deaths.clear();
+            if(died == 0)
+                broadcastMessage(BLUE+"Étonnamment, personne n'est mort cette nuit.");
+
+            day = true;
+            for(LGPlayer player : getInGame()) {
+                player.showView();
+
+                Bukkit.getScheduler().runTaskLater(MainLg.getInstance(), () -> {
+                    player.updatePrefix();
+                    player.updateOwnSkin();
+                    player.updateSkin();
+                }, 20L);
+            }
+
+
+            new BukkitRunnable() {
+                int timeoutLeft = 20;
+                @Override
+                public void run() {
+                    if(timeoutLeft++ > 20) {
+                        if(timeoutLeft == 20+(2*20))
+                            cancel();
+                        WrapperPlayServerUpdateTime time = new WrapperPlayServerUpdateTime();
+                        time.setAgeOfTheWorld(0);
+                        time.setTimeOfDay(LGGame.this.time = (long)(18000-(timeoutLeft-20D)/(20*2D)*12000D));
+                        for(LGPlayer lgp : getInGame())
+                            time.sendPacket(lgp.getPlayer());
+                    }
+                }
+            }.runTaskTimer(MainLg.getInstance(), 1, 1);
+
+            LGPreDayStartEvent dayStart = new LGPreDayStartEvent(this);
+            Bukkit.getPluginManager().callEvent(dayStart);
+            if(dayStart.isCancelled())
+                return;
+
+            if(endGame)
+                checkEndGame();
+            else
+                startDay();
+        });
 	}
 	public void startDay() {
 		for(LGPlayer player : getInGame())

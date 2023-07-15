@@ -5,12 +5,9 @@ import java.util.Arrays;
 import fr.valgrifer.loupgarou.classes.ResourcePack;
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
-import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
 import fr.valgrifer.loupgarou.listeners.LoveListener;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.comphenix.protocol.wrappers.EnumWrappers.ItemSlot;
@@ -177,19 +174,4 @@ public class RCupid extends Role{
 			}
 		}.runTaskLater(MainLg.getInstance(), 2);
 	}
-	
-	@Override
-	protected void onNightTurnTimeout(LGPlayer player) {
-		player.getCache().remove("cupidon_first");
-		player.stopChoosing();
-		player.hideView();
-		player.sendTitle(RED+"Vous n'avez mis personne en couple", DARK_RED+"Vous avez mis trop de temps à vous décider...", 80);
-		player.sendMessage(BLUE+"Tu n'as pas créé de couple.");
-	}
-
-    @EventHandler(priority = EventPriority.HIGH)
-    public void onUpdatePrefix (LGUpdatePrefixEvent e) {
-        if(e.getTo().getRole() instanceof RCupid && e.getPlayer().getCache().has(LoveListener.loveKey))
-            e.setPrefix(LIGHT_PURPLE+"❤ "+e.getPrefix());
-    }
 }

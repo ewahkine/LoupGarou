@@ -90,6 +90,7 @@ public class MainLg extends JavaPlugin {
         pm.registerEvents(new VoteListener(), this);
         pm.registerEvents(new ChatListener(), this);
         pm.registerEvents(new LoupGarouListener(), this);
+        pm.registerEvents(new LoveListener(), this);
 
         for (Player player : Bukkit.getOnlinePlayers())
             Bukkit.getPluginManager().callEvent(new PlayerJoinEvent(player, "is connected"));

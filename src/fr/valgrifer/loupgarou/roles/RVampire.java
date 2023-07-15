@@ -10,6 +10,8 @@ import fr.valgrifer.loupgarou.events.*;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
+
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -289,13 +291,13 @@ public class RVampire extends Role implements CampTeam {
 				if(lgp.getRoleWinType() == RoleWinType.VAMPIRE)//Changed to wintype
 					e.getWinners().add(lgp);
 	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onUpdatePrefix (LGUpdatePrefixEvent e) {
-		if(e.getGame() == getGame())
-            if(getVisiblePlayers().contains(e.getPlayer()) && getPlayers().contains(e.getTo()))
-				e.setPrefix(e.getPrefix()+DARK_PURPLE);
-	}
+
+    @EventHandler
+    public void onUpdatePrefix (LGUpdatePrefixEvent e) {
+        if(e.getGame() == getGame())
+            if((e.getPlayer().getRoleType() == this.getType() || getVisiblePlayers().contains(e.getPlayer())) && getPlayers().contains(e.getTo()))
+                e.setColorName(ChatColor.DARK_PURPLE);
+    }
 	
 	@EventHandler
 	public void onCustomItemChange(LGCustomItemChangeEvent e) {

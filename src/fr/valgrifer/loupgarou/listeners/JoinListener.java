@@ -35,12 +35,11 @@ public class JoinListener implements Listener {
 
         if(e.getJoinMessage() == null || !e.getJoinMessage().equals("joinall"))
         {
-
             WrapperPlayServerScoreboardTeam myTeam = new WrapperPlayServerScoreboardTeam();
             myTeam.setName(p.getName());
             myTeam.setPrefix(WrappedChatComponent.fromText(""));
             myTeam.setPlayers(Collections.singletonList(p.getName()));
-            myTeam.setMode(0);
+            myTeam.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED);
             for(Player player : Bukkit.getOnlinePlayers())
                 if(player != p) {
                     if(player.getGameMode() != GameMode.SPECTATOR)
@@ -49,11 +48,12 @@ public class JoinListener implements Listener {
                     team.setName(player.getName());
                     team.setPrefix(WrappedChatComponent.fromText(""));
                     team.setPlayers(Collections.singletonList(player.getName()));
-                    team.setMode(0);
+                    team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED);
 
                     team.sendPacket(p);
                     myTeam.sendPacket(player);
                 }
+
             Objects.requireNonNull(p.getPlayer()).setResourcePack(VariousUtils.resourcePackAddress());
         }
 		else

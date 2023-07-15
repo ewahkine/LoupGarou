@@ -62,7 +62,7 @@ public class RAngelV2Fallen extends Role {
     public void onUpdatePrefix (LGUpdatePrefixEvent e) {
         if(e.getGame() == getGame())
             if(e.getTo().getRole() instanceof RAngelV2Fallen && e.getTo().getCache().has(RAngelV2.TargetKey) && e.getTo().getCache().<LGPlayer>get(RAngelV2.TargetKey).equals(e.getPlayer()))
-                e.setPrefix(RED + "⌖ " + e.getPrefix()+RESET);
+                e.setPrefix(RED + "⌖ "+WHITE+e.getPrefix());
     }
 
     private final List<LGPlayer> winners = new ArrayList<>();

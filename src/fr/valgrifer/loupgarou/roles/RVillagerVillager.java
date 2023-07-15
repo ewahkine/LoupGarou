@@ -3,6 +3,7 @@ package fr.valgrifer.loupgarou.roles;
 import fr.valgrifer.loupgarou.classes.LGGame;
 import fr.valgrifer.loupgarou.events.LGRoleActionEvent;
 import fr.valgrifer.loupgarou.events.LGUpdatePrefixEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
@@ -37,11 +38,11 @@ public class RVillagerVillager extends Role{
 		return "";
 	}
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onUpdatePrefix (LGUpdatePrefixEvent e) {
         if(e.getGame() == getGame())
             if(e.getPlayer().getRole() instanceof RVillagerVillager)
-                e.setPrefix(e.getPrefix() + GREEN);
+                e.setColorName(ChatColor.GREEN);
     }
 
     @EventHandler

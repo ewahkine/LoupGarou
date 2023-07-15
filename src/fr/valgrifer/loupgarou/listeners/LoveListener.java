@@ -14,6 +14,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static fr.valgrifer.loupgarou.utils.ChatColorQuick.*;
 
@@ -54,6 +55,10 @@ public class LoveListener implements Listener {
 
         if(e.getWinType() == LGWinType.COUPLE)
             e.getWinners().addAll(e.getGame().getAlive());
+        else
+            e.getWinners().removeAll(e.getWinners().stream()
+                .filter(player -> player.getCache().has(loveKey))
+                .collect(Collectors.toCollection(ArrayList::new)));
     }
 
     @EventHandler

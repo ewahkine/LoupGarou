@@ -60,16 +60,16 @@ public class ProtocolLibHook
                 for(PlayerInfoData data : info.getData()) {
                     LGPlayer lgp = LGPlayer.thePlayer(Bukkit.getPlayer(data.getProfile().getUUID()));
                     if(player.getGame() != null && player.getGame() == lgp.getGame()) {
-                        LGUpdatePrefixEvent evt2 = new LGUpdatePrefixEvent(player.getGame(), lgp, player, "");
+                        LGUpdatePrefixEvent evt2 = new LGUpdatePrefixEvent(player.getGame(), lgp, player, "", WHITE);
                         WrappedChatComponent displayName = data.getDisplayName();
                         Bukkit.getPluginManager().callEvent(evt2);
                         if(evt2.getPrefix().length() > 0) {
                             try {
                                 if(displayName != null) {
                                     JSONObject obj = (JSONObject) new JSONParser().parse(displayName.getJson());
-                                    displayName = WrappedChatComponent.fromText(evt2.getPrefix()+obj.get("text"));
+                                    displayName = WrappedChatComponent.fromText(evt2.getPrefix()+evt2.getColorName()+obj.get("text"));
                                 } else
-                                    displayName = WrappedChatComponent.fromText(evt2.getPrefix()+data.getProfile().getName());
+                                    displayName = WrappedChatComponent.fromText(evt2.getPrefix()+evt2.getColorName()+data.getProfile().getName());
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
@@ -98,17 +98,17 @@ public class ProtocolLibHook
             public void onPacketSending(PacketEvent event) {
                 LGPlayer player = LGPlayer.thePlayer(event.getPlayer());
                 WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam(event.getPacket());
-                team.setColor(WHITE);
                 Player other = Bukkit.getPlayer(team.getName());
                 if(other == null)return;
                 LGPlayer lgp = LGPlayer.thePlayer(other);
                 if(player.getGame() != null && player.getGame() == lgp.getGame()) {
-                    LGUpdatePrefixEvent evt2 = new LGUpdatePrefixEvent(player.getGame(), lgp, player, "");
+                    LGUpdatePrefixEvent evt2 = new LGUpdatePrefixEvent(player.getGame(), lgp, player, "", WHITE);
                     Bukkit.getPluginManager().callEvent(evt2);
+                    team.setColor(evt2.getColorName());
                     if(evt2.getPrefix().length() > 0)
                         team.setPrefix(WrappedChatComponent.fromText(evt2.getPrefix()));
                     else
-                        team.setPrefix(WrappedChatComponent.fromText(WHITE.toString()));
+                        team.setPrefix(WrappedChatComponent.fromText(evt2.getColorName().toString()));
                 }
             }
         });

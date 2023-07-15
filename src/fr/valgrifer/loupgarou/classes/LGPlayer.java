@@ -159,9 +159,10 @@ public class LGPlayer {
                 if(!lgp.isDead()) {
                     if(lgp != this && lgp.getPlayer() != null)
                         getPlayer().showPlayer(lgp.getPlayer());
-                    else{
+                    else
+                    {
                         WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
-                        team.setMode(2);
+                        team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED);
                         team.setName(lgp.getName());
                         team.setPrefix(WrappedChatComponent.fromText(""));
                         team.setPlayers(Arrays.asList(lgp.getName()));
@@ -192,7 +193,7 @@ public class LGPlayer {
 				info.sendPacket(lgp.getPlayer());
 
 				WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
-				team.setMode(2);
+				team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED);
 				team.setName(getName());
 				team.setPrefix(WrappedChatComponent.fromText(""));
 				team.setPlayers(meList);
@@ -240,29 +241,28 @@ public class LGPlayer {
 		}
 	}
 	public void updateOwnSkin() {
-		if(player != null) {
-			//On change son skin avec un packet de PlayerInfo (dans le tab)
-			WrapperPlayServerPlayerInfo infos = new WrapperPlayServerPlayerInfo();
-			infos.setAction(PlayerInfoAction.ADD_PLAYER);
-			WrappedGameProfile gameProfile = new WrappedGameProfile(getPlayer().getUniqueId(), getPlayer().getName());
-			infos.setData(Arrays.asList(new PlayerInfoData(gameProfile, 10, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(getPlayer().getName()))));
-			infos.sendPacket(getPlayer());
-            //Pour qu'il voit son skin changer (sa main et en f5), on lui dit qu'il respawn (alors qu'il n'est pas mort mais ça marche quand même mdr)
-            NMSUtils.getInstance().sendRespawn(getPlayer());
-			//Enfin, on le téléporte à sa potion actuelle car sinon il se verra dans le vide
-			getPlayer().teleport(getPlayer().getLocation());
-			float speed = getPlayer().getWalkSpeed();
-			getPlayer().setWalkSpeed(0.2f);
-			new BukkitRunnable() {
-				
-				@Override
-				public void run() {
-					getPlayer().updateInventory();
-					getPlayer().setWalkSpeed(speed);
-				}
-			}.runTaskLater(MainLg.getInstance(), 5);
-			//Et c'est bon, le joueur se voit avec un nouveau skin avec quasiment aucun problème visible à l'écran :D
-		}
+		if(player == null)
+            return;
+        //On change son skin avec un packet de PlayerInfo (dans le tab)
+        WrapperPlayServerPlayerInfo infos = new WrapperPlayServerPlayerInfo();
+        infos.setAction(PlayerInfoAction.ADD_PLAYER);
+        WrappedGameProfile gameProfile = new WrappedGameProfile(getPlayer().getUniqueId(), getPlayer().getName());
+        infos.setData(Arrays.asList(new PlayerInfoData(gameProfile, 10, NativeGameMode.SURVIVAL, WrappedChatComponent.fromText(getPlayer().getName()))));
+        infos.sendPacket(getPlayer());
+        //Pour qu'il voit son skin changer (sa main et en f5), on lui dit qu'il respawn (alors qu'il n'est pas mort mais ça marche quand même mdr)
+        NMSUtils.getInstance().sendRespawn(getPlayer());
+        //Enfin, on le téléporte à sa potion actuelle car sinon il se verra dans le vide
+        getPlayer().teleport(getPlayer().getLocation());
+        float speed = getPlayer().getWalkSpeed();
+        getPlayer().setWalkSpeed(0.2f);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getPlayer().updateInventory();
+                getPlayer().setWalkSpeed(speed);
+            }
+        }.runTaskLater(MainLg.getInstance(), 5);
+        //Et c'est bon, le joueur se voit avec un nouveau skin avec quasiment aucun problème visible à l'écran :D
 	}
 	public boolean canSelectDead;
 	public LGPlayer getPlayerOnCursor(List<LGPlayer> list) {
@@ -388,7 +388,7 @@ public class LGPlayer {
     }
     public String getRevealRole(boolean endReaveal)
     {
-        return getRevealRole(this.getRole().getClass(), false);
+        return getRevealRole(this.getRole().getClass(), endReaveal);
     }
     public String getRevealRole(Class<? extends Role> role)
     {

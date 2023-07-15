@@ -31,7 +31,7 @@ public class CustomScoreboardEntry {
 			WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 			team.setPlayers(Collections.singletonList(name));
 			team.setName(name);
-			team.setMode(0);
+			team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_CREATED);
 			team.setPrefix(prefix);
 			if(suffix != null)
 				team.setSuffix(suffix);
@@ -79,7 +79,7 @@ public class CustomScoreboardEntry {
 				WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 				team.setPlayers(Collections.singletonList(name));
 				team.setName(name);
-				team.setMode(2);
+				team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_UPDATED);
 				team.setPrefix(prefix);
 				if(suffix != null)
 					team.setSuffix(suffix);
@@ -101,7 +101,7 @@ public class CustomScoreboardEntry {
 			
 			WrapperPlayServerScoreboardTeam team = new WrapperPlayServerScoreboardTeam();
 			team.setName(name);
-			team.setMode(1);
+			team.setMode(WrapperPlayServerScoreboardTeam.Mode.TEAM_REMOVED);
 			team.sendPacket(scoreboard.getPlayer().getPlayer());
 		}
 	}
