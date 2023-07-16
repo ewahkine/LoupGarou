@@ -187,7 +187,8 @@ public class RPsychopath extends Role {
         return WHITE+"Tu gagnes "+RoleWinType.SOLO.getColoredName(BOLD);
     }
     public static String _getDescription() {
-        return _getShortDescription()+WHITE+". Durant le jour, tu peux deviner le role d'un joueur, si tu as raison il meurt sur le coup, mais si tu as tort tu mourras.";
+        return _getShortDescription()+WHITE+". Durant le jour, tu peux deviner le role d'un joueur, si tu as raison il meurt sur le coup, mais si tu as tort tu mourras. " +
+        "Vous aurez également une vie supplémentaire contre les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+". ";
     }
     public static String _getTask() {
         return "";
