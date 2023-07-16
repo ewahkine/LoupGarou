@@ -126,7 +126,7 @@ public class RSurvivor extends Role{
 		return WHITE+"Tu gagnes si tu remplis ton objectif";
 	}
 	public static String _getDescription() {
-		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif. Ton objectif est de survivre. Tu disposes de "+BOLD+"2"+WHITE+" protections. Chaque nuit, tu peux utiliser une protection pour ne pas être tué par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+". Tu peux gagner aussi bien avec les "+RoleWinType.VILLAGE.getColoredName(BOLD)+WHITE+" qu'avec les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", tu dois juste rester en vie jusqu'à la fin de la partie.";
+		return WHITE+"Tu es "+RoleType.NEUTRAL.getColoredName(LIGHT_PURPLE, BOLD)+WHITE+" et tu gagnes si tu remplis ton objectif. Ton objectif est de survivre. Tu disposes de "+BOLD+"2"+WHITE+" protections. Chaque nuit, tu peux utiliser une protection pour ne pas être tué par les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+". Tu peux gagner aussi bien avec les "+RoleType.VILLAGER.getColoredName(BOLD)+WHITE+" qu'avec les "+RoleWinType.LOUP_GAROU.getColoredName(BOLD)+WHITE+", tu dois juste rester en vie jusqu'à la fin de la partie.";
 	}
 	public static String _getTask() {
 		return "Veux-tu utiliser une protection cette nuit ?";
